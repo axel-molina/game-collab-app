@@ -17,7 +17,7 @@ import { Loader2, Gamepad2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Auth() {
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, signIn, signUp, resetPassword } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -29,6 +29,9 @@ export default function Auth() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupUsername, setSignupUsername] = useState("");
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSent, setResetSent] = useState(false);
 
   if (loading) {
     return (
@@ -83,11 +86,37 @@ export default function Auth() {
         toast.error(error.message);
       }
     } else {
-      toast.success("¡Cuenta creada! Puedes confirmar tu email.");
-      navigate("/");
+      toast.success("¡Cuenta creada exitosamente! Por favor inicia sesión.");
+      setActiveTab("login");
     }
 
     setIsSubmitting(false);
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetEmail) {
+      toast.error("Por favor ingresa tu correo electrónico");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const { error } = await resetPassword(resetEmail);
+    
+    if (error) {
+      toast.error(error.message);
+    } else {
+      setResetSent(true);
+      toast.success("¡Correo de recuperación enviado! Revisa tu bandeja de entrada.");
+    }
+    
+    setIsSubmitting(false);
+  };
+
+  const handleBackToLogin = () => {
+    setShowResetPassword(false);
+    setResetEmail("");
+    setResetSent(false);
   };
 
   return (
@@ -97,20 +126,25 @@ export default function Auth() {
           <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-primary/10 mb-4">
             <Gamepad2 className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold">Bienvenido a GameCollab</h1>
+          <h1 className="text-2xl font-bold">
+            {showResetPassword ? 'Restablecer contraseña' : 'Bienvenido a GameCollab'}
+          </h1>
           <p className="text-muted-foreground">
-            Inicia sesión o crea una cuenta para publicar proyectos
+            {showResetPassword 
+              ? 'Ingresa tu correo para restablecer tu contraseña'
+              : 'Inicia sesión o crea una cuenta para publicar proyectos'}
           </p>
         </div>
 
-        <Card>
-          <Tabs defaultValue="login">
-            <CardHeader>
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
-                <TabsTrigger value="signup">Registrarse</TabsTrigger>
-              </TabsList>
-            </CardHeader>
+        {!showResetPassword ? (
+          <Card>
+            <Tabs defaultValue="login">
+              <CardHeader>
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
+                  <TabsTrigger value="signup">Registrarse</TabsTrigger>
+                </TabsList>
+              </CardHeader>
 
             <CardContent>
               <TabsContent value="login" className="mt-0">
@@ -127,7 +161,17 @@ export default function Auth() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Contraseña</Label>
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="login-password">Contraseña</Label>
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="h-auto p-0 text-xs"
+                        onClick={() => setShowResetPassword(true)}
+                      >
+                        ¿Olvidaste tu contraseña?
+                      </Button>
+                    </div>
                     <Input
                       id="login-password"
                       type="password"
@@ -201,6 +245,75 @@ export default function Auth() {
             </CardContent>
           </Tabs>
         </Card>
+        ) : (
+          <Card>
+            <CardContent className="pt-6">
+              {!resetSent ? (
+                <form onSubmit={handleResetPassword} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="reset-email">Correo electrónico</Label>
+                    <Input
+                      id="reset-email"
+                      type="email"
+                      placeholder="tu@email.com"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Enviando...
+                      </>
+                    ) : (
+                      'Enviar enlace de recuperación'
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={handleBackToLogin}
+                    disabled={isSubmitting}
+                  >
+                    Volver al inicio de sesión
+                  </Button>
+                </form>
+              ) : (
+                <div className="text-center space-y-4">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                    <svg
+                      className="h-6 w-6 text-green-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium">¡Correo enviado!</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Hemos enviado un enlace para restablecer tu contraseña a {resetEmail}.
+                    Revisa tu bandeja de entrada y sigue las instrucciones.
+                  </p>
+                  <Button
+                    onClick={handleBackToLogin}
+                    className="w-full mt-4"
+                  >
+                    Volver al inicio de sesión
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </Layout>
   );
