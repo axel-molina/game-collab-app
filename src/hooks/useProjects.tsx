@@ -51,13 +51,15 @@ export function useProjects(filters: ProjectFilters = {}) {
     queryFn: async () => {
       let query = supabase
         .from("projects")
-        .select(`
+        .select(
+          `
           *,
           profiles(username),
           project_images(*),
           project_tasks(*),
           project_positions(*)
-        `)
+        `
+        )
         .order("created_at", { ascending: false });
 
       if (filters.engine && filters.engine !== "all") {
@@ -77,7 +79,9 @@ export function useProjects(filters: ProjectFilters = {}) {
       // Filter by position client-side (needs to check nested data)
       if (filters.position && filters.position !== "all") {
         projects = projects.filter((project) =>
-          project.project_positions?.some((pos) => pos.position === filters.position)
+          project.project_positions?.some(
+            (pos) => pos.position === filters.position
+          )
         );
       }
 
@@ -92,13 +96,15 @@ export function useProject(id: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("projects")
-        .select(`
+        .select(
+          `
           *,
           profiles(username),
           project_images(*),
           project_tasks(*),
           project_positions(*)
-        `)
+        `
+        )
         .eq("id", id)
         .maybeSingle();
 
@@ -126,7 +132,9 @@ export function useCreateProject() {
 
   return useMutation({
     mutationFn: async (data: CreateProjectData) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("No user logged in");
 
       // Create project
@@ -150,8 +158,10 @@ export function useCreateProject() {
       const imageUrls: string[] = [];
       for (const file of data.images) {
         const fileExt = file.name.split(".").pop();
-        const fileName = `${user.id}/${project.id}/${crypto.randomUUID()}.${fileExt}`;
-        
+        const fileName = `${user.id}/${
+          project.id
+        }/${crypto.randomUUID()}.${fileExt}`;
+
         const { error: uploadError } = await supabase.storage
           .from("project-images")
           .upload(fileName, file);
@@ -169,7 +179,9 @@ export function useCreateProject() {
       if (imageUrls.length > 0) {
         const { error: imagesError } = await supabase
           .from("project_images")
-          .insert(imageUrls.map((url) => ({ project_id: project.id, image_url: url })));
+          .insert(
+            imageUrls.map((url) => ({ project_id: project.id, image_url: url }))
+          );
 
         if (imagesError) throw imagesError;
       }
@@ -178,11 +190,13 @@ export function useCreateProject() {
       if (data.tasks.length > 0) {
         const { error: tasksError } = await supabase
           .from("project_tasks")
-          .insert(data.tasks.map((task) => ({ 
-            project_id: project.id, 
-            title: task.title, 
-            completed: task.completed 
-          })));
+          .insert(
+            data.tasks.map((task) => ({
+              project_id: project.id,
+              title: task.title,
+              completed: task.completed,
+            }))
+          );
 
         if (tasksError) throw tasksError;
       }
@@ -191,11 +205,13 @@ export function useCreateProject() {
       if (data.positions.length > 0) {
         const { error: positionsError } = await supabase
           .from("project_positions")
-          .insert(data.positions.map((pos) => ({ 
-            project_id: project.id, 
-            position: pos.position, 
-            is_custom: pos.is_custom 
-          })));
+          .insert(
+            data.positions.map((pos) => ({
+              project_id: project.id,
+              position: pos.position,
+              is_custom: pos.is_custom,
+            }))
+          );
 
         if (positionsError) throw positionsError;
       }
@@ -216,8 +232,16 @@ export function useUpdateProject() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<CreateProjectData> & { imagesToDelete?: string[] } }) => {
-      const { data: { user } } = await supabase.auth.getUser();
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<CreateProjectData> & { imagesToDelete?: string[] };
+    }) => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("No user logged in");
 
       // Update project
@@ -249,7 +273,7 @@ export function useUpdateProject() {
         for (const file of data.images) {
           const fileExt = file.name.split(".").pop();
           const fileName = `${user.id}/${id}/${crypto.randomUUID()}.${fileExt}`;
-          
+
           const { error: uploadError } = await supabase.storage
             .from("project-images")
             .upload(fileName, file);
@@ -266,7 +290,9 @@ export function useUpdateProject() {
         if (imageUrls.length > 0) {
           await supabase
             .from("project_images")
-            .insert(imageUrls.map((url) => ({ project_id: id, image_url: url })));
+            .insert(
+              imageUrls.map((url) => ({ project_id: id, image_url: url }))
+            );
         }
       }
 
@@ -274,13 +300,13 @@ export function useUpdateProject() {
       if (data.tasks) {
         await supabase.from("project_tasks").delete().eq("project_id", id);
         if (data.tasks.length > 0) {
-          await supabase
-            .from("project_tasks")
-            .insert(data.tasks.map((task) => ({ 
-              project_id: id, 
-              title: task.title, 
-              completed: task.completed 
-            })));
+          await supabase.from("project_tasks").insert(
+            data.tasks.map((task) => ({
+              project_id: id,
+              title: task.title,
+              completed: task.completed,
+            }))
+          );
         }
       }
 
@@ -288,13 +314,13 @@ export function useUpdateProject() {
       if (data.positions) {
         await supabase.from("project_positions").delete().eq("project_id", id);
         if (data.positions.length > 0) {
-          await supabase
-            .from("project_positions")
-            .insert(data.positions.map((pos) => ({ 
-              project_id: id, 
-              position: pos.position, 
-              is_custom: pos.is_custom 
-            })));
+          await supabase.from("project_positions").insert(
+            data.positions.map((pos) => ({
+              project_id: id,
+              position: pos.position,
+              is_custom: pos.is_custom,
+            }))
+          );
         }
       }
 

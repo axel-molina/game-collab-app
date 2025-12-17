@@ -1,14 +1,39 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { Gamepad2, Plus, LogOut, User, Moon, Sun } from "lucide-react";
+import { Menu, X, Plus, LogOut, User, Moon, Sun, Home, Box, Bell } from "lucide-react";
 import logo from "/favicon.png";
 import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+
+const navItems = [
+  { name: "Inicio", path: "/", icon: Home },
+  { name: "Proyectos", path: "/projects", icon: Box },
+  { name: "Noticias", path: "/news", icon: Bell },
+];
 
 export function Navbar() {
   const { user, signOut, loading } = useAuth();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  // Add scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -23,20 +48,53 @@ export function Navbar() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  // Don't render anything while loading to prevent layout shifts
+  if (loading) {
+    return null;
+  }
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={cn(
+      "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200",
+      isScrolled && "shadow-sm"
+    )}>
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-semibold text-xl">
-          <img src={logo} alt="Logo" className="w-8 h-8" />
-          <span>GameCollab</span>
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-2 font-semibold text-xl">
+            <img src={logo} alt="Logo" className="w-8 h-8" />
+            <span className="hidden sm:inline">GameCollab</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              return (
+                <Button
+                  key={item.path}
+                  asChild
+                  variant={isActive ? "secondary" : "ghost"}
+                  size="sm"
+                  className="gap-1.5"
+                >
+                  <Link to={item.path}>
+                    <Icon className="h-4 w-4" />
+                    <span>{item.name}</span>
+                  </Link>
+                </Button>
+              );
+            })}
+          </nav>
+        </div>
 
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            onClick={toggleTheme}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             title="Cambiar tema"
+            className="hidden sm:flex"
           >
             {theme === "dark" ? (
               <Sun className="h-5 w-5" />
@@ -45,23 +103,31 @@ export function Navbar() {
             )}
           </Button>
 
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+
           {!loading && (
             <>
               {user ? (
                 <>
-                  <Button asChild variant="ghost" size="sm">
+                  <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
                     <Link to="/profile" className="flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      <span className="hidden sm:inline">Perfil</span>
+                      <span>Perfil</span>
                     </Link>
                   </Button>
-                  <Button asChild size="sm">
-                    <Link
-                      to="/projects/new"
-                      className="flex items-center gap-2"
-                    >
+                  <Button asChild size="sm" className="hidden sm:flex">
+                    <Link to="/projects/new" className="flex items-center gap-2">
                       <Plus className="h-4 w-4" />
-                      <span className="hidden sm:inline">Nuevo proyecto</span>
+                      <span>Nuevo proyecto</span>
                     </Link>
                   </Button>
                   <Button
@@ -69,15 +135,16 @@ export function Navbar() {
                     size="icon"
                     onClick={handleSignOut}
                     title="Cerrar sesión"
+                    className="hidden sm:flex"
                   >
                     <LogOut className="h-5 w-5" />
                   </Button>
                 </>
               ) : (
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="hidden sm:flex">
                   <Link to="/auth" className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span className="hidden sm:inline">Iniciar sesión</span>
+                    <span>Iniciar sesión</span>
                   </Link>
                 </Button>
               )}
@@ -85,6 +152,87 @@ export function Navbar() {
           )}
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur">
+          <div className="container py-2">
+            <nav className="flex flex-col space-y-1 py-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <Button
+                    key={item.path}
+                    asChild
+                    variant={isActive ? "secondary" : "ghost"}
+                    className="w-full justify-start gap-2"
+                  >
+                    <Link to={item.path}>
+                      <Icon className="h-4 w-4" />
+                      <span>{item.name}</span>
+                    </Link>
+                  </Button>
+                );
+              })}
+
+              {!loading && user && (
+                <>
+                  <div className="border-t border-border/40 my-2"></div>
+                  <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                    <Link to="/profile">
+                      <User className="h-4 w-4" />
+                      <span>Perfil</span>
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full justify-start gap-2">
+                    <Link to="/projects/new">
+                      <Plus className="h-4 w-4" />
+                      <span>Nuevo proyecto</span>
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2 text-destructive"
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Cerrar sesión</span>
+                  </Button>
+                </>
+              )}
+
+              {!loading && !user && (
+                <Button asChild variant="default" className="w-full justify-center gap-2 mt-2">
+                  <Link to="/auth">
+                    <User className="h-4 w-4" />
+                    <span>Iniciar sesiÃ³n</span>
+                  </Link>
+                </Button>
+              )}
+
+              <div className="flex justify-center pt-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  title="Cambiar tema"
+                  className="h-9 w-9"
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-5 w-5" />
+                  ) : (
+                    <Moon className="h-5 w-5" />
+                  )}
+                </Button>
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
