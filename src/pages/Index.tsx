@@ -3,8 +3,8 @@ import { Layout } from "@/components/layout/Layout";
 import { ProjectList } from "@/components/projects/ProjectList";
 import { ProjectFilters } from "@/components/projects/ProjectFilters";
 import { useProjects } from "@/hooks/useProjects";
-import { Gamepad2 } from "lucide-react";
 import { useDebounce } from "@/hooks/useDebounce";
+import banner from "../../assets/banner.jpg";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -21,20 +21,19 @@ const Index = () => {
 
   return (
     <Layout>
-      <div className="container py-8">
-        {/* Hero */}
-        <section className="text-center py-12 mb-8">
-          <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-primary/10 mb-6">
-            <Gamepad2 className="h-10 w-10 text-primary" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-            Conecta con desarrolladores
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Encuentra el equipo perfecto para tu próximo videojuego o únete a proyectos que te apasionen.
-          </p>
-        </section>
+      {/* Hero */}
+      <section className="text-center mb-8 w-full">
+        <img src={banner} alt="Banner" className="mb-6 w-full" />
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
+          Conecta con desarrolladores
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          Encuentra el equipo perfecto para tu próximo videojuego o únete a
+          proyectos que te apasionen.
+        </p>
+      </section>
 
+      <div className="container">
         {/* Filters */}
         <ProjectFilters
           search={search}
@@ -48,7 +47,8 @@ const Index = () => {
         {/* Results count */}
         {!isLoading && (
           <p className="text-sm text-muted-foreground mb-6">
-            {projects.length} proyecto{projects.length !== 1 ? "s" : ""} encontrado{projects.length !== 1 ? "s" : ""}
+            {projects.length} proyecto{projects.length !== 1 ? "s" : ""}{" "}
+            encontrado{projects.length !== 1 ? "s" : ""}
           </p>
         )}
 

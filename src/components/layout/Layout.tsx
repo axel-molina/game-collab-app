@@ -12,7 +12,7 @@ export function Layout({ children }: LayoutProps) {
       <main className="flex-1">{children}</main>
       <footer className="border-t border-border py-6 mt-auto">
         <div className="container text-center text-sm text-muted-foreground">
-          <p>© 2024 GameCollab. Conectando desarrolladores de videojuegos.</p>
+          <p>© 2025 GameCollab. Conectando desarrolladores de videojuegos.</p>
         </div>
       </footer>
     </div>

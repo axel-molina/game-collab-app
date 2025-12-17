@@ -5,7 +5,13 @@ import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Gamepad2 } from "lucide-react";
 import { toast } from "sonner";
@@ -45,9 +51,11 @@ export default function Auth() {
     const { error } = await signIn(loginEmail, loginPassword);
 
     if (error) {
-      toast.error(error.message === "Invalid login credentials" 
-        ? "Credenciales inválidas" 
-        : error.message);
+      toast.error(
+        error.message === "Invalid login credentials"
+          ? "Credenciales inválidas"
+          : error.message
+      );
     } else {
       toast.success("¡Bienvenido!");
       navigate("/");
@@ -75,7 +83,7 @@ export default function Auth() {
         toast.error(error.message);
       }
     } else {
-      toast.success("¡Cuenta creada! Ya puedes iniciar sesión.");
+      toast.success("¡Cuenta creada! Puedes confirmar tu email.");
       navigate("/");
     }
 
@@ -129,8 +137,14 @@ export default function Auth() {
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting && (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    )}
                     Iniciar sesión
                   </Button>
                 </form>
@@ -172,8 +186,14 @@ export default function Auth() {
                       minLength={6}
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting && (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    )}
                     Crear cuenta
                   </Button>
                 </form>
