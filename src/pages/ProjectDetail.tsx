@@ -180,53 +180,50 @@ export default function ProjectDetail() {
           </div>
         )}
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Main content */}
-          <div className="md:col-span-2 space-y-8">
-            {/* Description */}
+        <div className="space-y-8">
+          {/* Description */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Descripción</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="whitespace-pre-wrap">{project.description}</p>
+            </CardContent>
+          </Card>
+
+          {/* Tasks */}
+          {tasks.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Descripción</CardTitle>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Tareas</span>
+                  <span className="text-sm font-normal text-muted-foreground">
+                    {completedTasks}/{tasks.length} completadas
+                  </span>
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="whitespace-pre-wrap">{project.description}</p>
+                <div className="space-y-2">
+                  {tasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"
+                    >
+                      <Checkbox checked={task.completed} disabled />
+                      <span
+                        className={task.completed ? "line-through text-muted-foreground" : ""}
+                      >
+                        {task.title}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
+          )}
 
-            {/* Tasks */}
-            {tasks.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span>Tareas</span>
-                    <span className="text-sm font-normal text-muted-foreground">
-                      {completedTasks}/{tasks.length} completadas
-                    </span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {tasks.map((task) => (
-                      <div
-                        key={task.id}
-                        className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"
-                      >
-                        <Checkbox checked={task.completed} disabled />
-                        <span
-                          className={task.completed ? "line-through text-muted-foreground" : ""}
-                        >
-                          {task.title}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
+          {/* Positions and Contact */}
+          <div className="grid md:grid-cols-2 gap-6">
             {/* Positions */}
             {positions.length > 0 && (
               <Card>

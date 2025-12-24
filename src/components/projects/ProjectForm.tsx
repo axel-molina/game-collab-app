@@ -8,19 +8,46 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ENGINES, POSITIONS } from "@/lib/constants";
 import { Plus, X, Upload, Loader2 } from "lucide-react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Project, ProjectTask, ProjectPosition, ProjectImage } from "@/hooks/useProjects";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Project,
+  ProjectTask,
+  ProjectPosition,
+  ProjectImage,
+} from "@/hooks/useProjects";
 
 const formSchema = z.object({
-  name: z.string().min(1, "El nombre es requerido").max(100, "Máximo 100 caracteres"),
+  name: z
+    .string()
+    .min(1, "El nombre es requerido")
+    .max(100, "Máximo 100 caracteres"),
   engine: z.string().min(1, "Selecciona un motor"),
   custom_engine: z.string().optional(),
   engine_version: z.string().min(1, "La versión es requerida"),
-  description: z.string().min(10, "Mínimo 10 caracteres").max(2000, "Máximo 2000 caracteres"),
-  contact: z.string().min(1, "El contacto es requerido").max(200, "Máximo 200 caracteres"),
+  description: z
+    .string()
+    .min(10, "Mínimo 10 caracteres")
+    .max(2000, "Máximo 2000 caracteres"),
+  contact: z
+    .string()
+    .min(1, "El contacto es requerido")
+    .max(200, "Máximo 200 caracteres"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -42,16 +69,33 @@ interface ProjectFormProps {
   isLoading: boolean;
 }
 
-export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) {
+export function ProjectForm({
+  project,
+  onSubmit,
+  isLoading,
+}: ProjectFormProps) {
   const [images, setImages] = useState<File[]>([]);
-  const [existingImages, setExistingImages] = useState<ProjectImage[]>(project?.project_images || []);
+  const [existingImages, setExistingImages] = useState<ProjectImage[]>(
+    project?.project_images || []
+  );
   const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
-  const [tasks, setTasks] = useState<{ id?: string; title: string; completed: boolean }[]>(
-    project?.project_tasks?.map((t) => ({ id: t.id, title: t.title, completed: t.completed })) || []
+  const [tasks, setTasks] = useState<
+    { id?: string; title: string; completed: boolean }[]
+  >(
+    project?.project_tasks?.map((t) => ({
+      id: t.id,
+      title: t.title,
+      completed: t.completed,
+    })) || []
   );
   const [newTaskTitle, setNewTaskTitle] = useState("");
-  const [selectedPositions, setSelectedPositions] = useState<{ position: string; is_custom: boolean }[]>(
-    project?.project_positions?.map((p) => ({ position: p.position, is_custom: p.is_custom })) || []
+  const [selectedPositions, setSelectedPositions] = useState<
+    { position: string; is_custom: boolean }[]
+  >(
+    project?.project_positions?.map((p) => ({
+      position: p.position,
+      is_custom: p.is_custom,
+    })) || []
   );
   const [customPosition, setCustomPosition] = useState("");
 
@@ -85,7 +129,10 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
 
   const addTask = () => {
     if (newTaskTitle.trim()) {
-      setTasks((prev) => [...prev, { title: newTaskTitle.trim(), completed: false }]);
+      setTasks((prev) => [
+        ...prev,
+        { title: newTaskTitle.trim(), completed: false },
+      ]);
       setNewTaskTitle("");
     }
   };
@@ -96,7 +143,9 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
 
   const toggleTask = (index: number) => {
     setTasks((prev) =>
-      prev.map((task, i) => (i === index ? { ...task, completed: !task.completed } : task))
+      prev.map((task, i) =>
+        i === index ? { ...task, completed: !task.completed } : task
+      )
     );
   };
 
@@ -111,8 +160,14 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
   };
 
   const addCustomPosition = () => {
-    if (customPosition.trim() && !selectedPositions.some((p) => p.position === customPosition.trim())) {
-      setSelectedPositions((prev) => [...prev, { position: customPosition.trim(), is_custom: true }]);
+    if (
+      customPosition.trim() &&
+      !selectedPositions.some((p) => p.position === customPosition.trim())
+    ) {
+      setSelectedPositions((prev) => [
+        ...prev,
+        { position: customPosition.trim(), is_custom: true },
+      ]);
       setCustomPosition("");
     }
   };
@@ -166,7 +221,10 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Motor</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Selecciona un motor" />
@@ -244,8 +302,15 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {existingImages.map((img) => (
-                <div key={img.id} className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                  <img src={img.image_url} alt="" className="w-full h-full object-cover" />
+                <div
+                  key={img.id}
+                  className="relative aspect-video rounded-lg overflow-hidden bg-muted"
+                >
+                  <img
+                    src={img.image_url}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                   <button
                     type="button"
                     onClick={() => removeExistingImage(img)}
@@ -256,8 +321,15 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
                 </div>
               ))}
               {images.map((file, index) => (
-                <div key={index} className="relative aspect-video rounded-lg overflow-hidden bg-muted">
-                  <img src={URL.createObjectURL(file)} alt="" className="w-full h-full object-cover" />
+                <div
+                  key={index}
+                  className="relative aspect-video rounded-lg overflow-hidden bg-muted"
+                >
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
@@ -270,7 +342,13 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
               <label className="aspect-video rounded-lg border-2 border-dashed border-border hover:border-primary cursor-pointer flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors">
                 <Upload className="h-8 w-8 mb-2" />
                 <span className="text-sm">Subir imagen</span>
-                <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
               </label>
             </div>
           </CardContent>
@@ -287,7 +365,9 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
                 placeholder="Nueva tarea..."
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTask())}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && (e.preventDefault(), addTask())
+                }
               />
               <Button type="button" variant="secondary" onClick={addTask}>
                 <Plus className="h-4 w-4" />
@@ -295,12 +375,19 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
             </div>
             <div className="space-y-2">
               {tasks.map((task, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"
+                >
                   <Checkbox
                     checked={task.completed}
                     onCheckedChange={() => toggleTask(index)}
                   />
-                  <span className={task.completed ? "line-through text-muted-foreground" : ""}>
+                  <span
+                    className={
+                      task.completed ? "line-through text-muted-foreground" : ""
+                    }
+                  >
                     {task.title}
                   </span>
                   <button
@@ -324,7 +411,9 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {POSITIONS.map((pos) => {
-                const isSelected = selectedPositions.some((p) => p.position === pos.value);
+                const isSelected = selectedPositions.some(
+                  (p) => p.position === pos.value
+                );
                 return (
                   <button
                     key={pos.value}
@@ -350,9 +439,16 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
                   placeholder="Otra posición..."
                   value={customPosition}
                   onChange={(e) => setCustomPosition(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCustomPosition())}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" &&
+                    (e.preventDefault(), addCustomPosition())
+                  }
                 />
-                <Button type="button" variant="secondary" onClick={addCustomPosition}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={addCustomPosition}
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -368,7 +464,10 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
                     className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary text-primary-foreground text-sm"
                   >
                     {pos.position}
-                    <button type="button" onClick={() => removePosition(pos.position)}>
+                    <button
+                      type="button"
+                      onClick={() => removePosition(pos.position)}
+                    >
                       <X className="h-3 w-3" />
                     </button>
                   </span>
@@ -390,7 +489,10 @@ export function ProjectForm({ project, onSubmit, isLoading }: ProjectFormProps) 
                 <FormItem>
                   <FormLabel>Información de contacto</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email, Discord, Twitter, etc." {...field} />
+                    <Input
+                      placeholder="Email, Discord, Twitter, etc."
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

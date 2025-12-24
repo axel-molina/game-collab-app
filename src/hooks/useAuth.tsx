@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUp = async (email: string, password: string, username: string) => {
     const redirectUrl = `${window.location.origin}/`;
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -58,6 +58,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: { username },
       },
     });
+
+    // If user was created, ensure profile exists
+    if (!error && data.user) {
+      // Check if profile exists, if not create it
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", data.user.id)
+        .maybeSingle();
+
+      if (!existingProfile) {
+        // Create profile manually if trigger didn't fire
+        await supabase.from("profiles").insert({
+          id: data.user.id,
+          username: username,
+          email: email,
+        });
+      }
+    }
 
     return { error };
   };

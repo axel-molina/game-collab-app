@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["DM Sans", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        sans: ["Nunito", "system-ui", "sans-serif"],
+        serif: ["IM Fell English", "serif"],
+        mono: ["Nunito", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
