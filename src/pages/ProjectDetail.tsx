@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useProject, useDeleteProject } from "@/hooks/useProjects";
+import { useProjectLikes } from "@/hooks/useProjectLikes";
 import { Layout } from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getEngineLabel, getPositionLabel, getEngineColor } from "@/lib/constants";
-import { ArrowLeft, Calendar, User, Edit, Trash2, Mail, ExternalLink, Loader2 } from "lucide-react";
+import { ArrowLeft, Calendar, User, Edit, Trash2, Mail, ExternalLink, Loader2, Heart } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { useState } from "react";
@@ -31,6 +32,7 @@ export default function ProjectDetail() {
   const { data: project, isLoading, error } = useProject(id!);
   const deleteProject = useDeleteProject();
   const [selectedImage, setSelectedImage] = useState(0);
+  const { count: likesCount, userLiked, toggleLike, isToggling } = useProjectLikes(id!);
 
   if (isLoading) {
     return (
@@ -113,6 +115,20 @@ export default function ProjectDetail() {
                 </span>
               </div>
               <Badge variant="outline">v{project.engine_version}</Badge>
+              <Button
+                variant={userLiked ? "default" : "outline"}
+                size="sm"
+                onClick={() => toggleLike()}
+                disabled={isToggling || isOwner}
+                className="gap-2"
+              >
+                {isToggling ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Heart className={`h-4 w-4 ${userLiked ? "fill-current" : ""}`} />
+                )}
+                <span>{likesCount}</span>
+              </Button>
             </div>
           </div>
 
