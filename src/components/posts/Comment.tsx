@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
@@ -79,9 +80,12 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2 text-sm">
             <User className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">
+            <Link
+              to={`/users/${comment.profiles?.username}`}
+              className="font-medium hover:text-primary hover:underline"
+            >
               {comment.profiles?.username || "Anónimo"}
-            </span>
+            </Link>
             <span className="text-muted-foreground">·</span>
             <span className="text-muted-foreground">
               {formatDistanceToNow(new Date(comment.created_at), {

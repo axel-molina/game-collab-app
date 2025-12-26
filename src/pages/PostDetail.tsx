@@ -166,7 +166,12 @@ export default function PostDetail() {
             <div className="flex items-center gap-4 text-sm text-muted-foreground mt-4">
               <div className="flex items-center gap-1">
                 <User className="h-4 w-4" />
-                <span>{post.profiles?.username || "Anónimo"}</span>
+                <Link
+                  to={`/users/${post.profiles?.username}`}
+                  className="hover:text-primary hover:underline"
+                >
+                  {post.profiles?.username || "Anónimo"}
+                </Link>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />

@@ -62,7 +62,13 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
             <div className="flex items-center gap-4 text-sm text-muted-foreground pt-3 border-t">
               <div className="flex items-center gap-1">
                 <User className="h-4 w-4" />
-                <span>{post.profiles?.username || "Anónimo"}</span>
+                <Link
+                  to={`/users/${post.profiles?.username}`}
+                  className="hover:text-primary hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {post.profiles?.username || "Anónimo"}
+                </Link>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />

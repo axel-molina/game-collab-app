@@ -25,9 +25,9 @@ const Index = () => {
       <section className="relative mb-8 w-full overflow-hidden">
         <div className="relative">
           <div className="absolute inset-0 z-0">
-            <img 
-              src={banner} 
-              alt="Banner" 
+            <img
+              src={banner}
+              alt="Banner"
               className="w-full h-[400px] object-cover filter blur-sm brightness-75"
             />
           </div>
@@ -37,8 +37,8 @@ const Index = () => {
                 Conecta con desarrolladores
               </h1>
               <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-                Encuentra el equipo perfecto para tu próximo videojuego o únete a
-                proyectos que te apasionen.
+                Encuentra el equipo perfecto para tu próximo videojuego o únete
+                a proyectos que te apasionen.
               </p>
             </div>
           </div>
