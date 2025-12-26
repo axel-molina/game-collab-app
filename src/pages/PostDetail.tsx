@@ -110,11 +110,16 @@ export default function PostDetail() {
             )}
 
             {/* Title and Actions */}
-            <div className="flex items-start justify-between gap-4">
-              <h1 className="text-3xl md:text-4xl font-bold flex-1">{title}</h1>
+            <div className="flex flex-col gap-4">
+              <h1 className="text-3xl md:text-4xl font-bold">{title}</h1>
               {isAuthor && (
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" asChild>
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="flex-1 sm:flex-none"
+                  >
                     <Link to={`/posts/${post.id}/edit`}>
                       <Edit className="h-4 w-4 mr-2" />
                       Editar
@@ -122,7 +127,11 @@ export default function PostDetail() {
                   </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="destructive" size="sm">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="flex-1 sm:flex-none"
+                      >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Eliminar
                       </Button>
