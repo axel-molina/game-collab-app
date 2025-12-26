@@ -1,5 +1,11 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Menu,
@@ -154,15 +160,36 @@ export function Navbar() {
                       <span>Perfil</span>
                     </Link>
                   </Button>
-                  <Button asChild size="sm" className="hidden sm:flex">
-                    <Link
-                      to="/projects/new"
-                      className="flex items-center gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span>Nuevo proyecto</span>
-                    </Link>
-                  </Button>
+
+                  {/* Dropdown Publish Menu */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="sm" className="hidden sm:flex gap-2">
+                        <Plus className="h-4 w-4" />
+                        <span>Publicar</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem asChild>
+                        <Link
+                          to="/projects/new"
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <Box className="h-4 w-4" />
+                          <span>Nuevo Proyecto</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link
+                          to="/posts/new"
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <Bell className="h-4 w-4" />
+                          <span>Nuevo Posteo</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </>
               ) : (
                 <Button asChild size="sm" className="hidden sm:flex">
@@ -219,8 +246,18 @@ export function Navbar() {
                     className="w-full justify-start gap-2"
                   >
                     <Link to="/projects/new">
-                      <Plus className="h-4 w-4" />
-                      <span>Nuevo proyecto</span>
+                      <Box className="h-4 w-4" />
+                      <span>Nuevo Proyecto</span>
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
+                    <Link to="/posts/new">
+                      <Bell className="h-4 w-4" />
+                      <span>Nuevo Posteo</span>
                     </Link>
                   </Button>
                   <Button
