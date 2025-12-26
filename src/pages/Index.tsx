@@ -45,7 +45,7 @@ const Index = () => {
         </div>
       </section>
 
-      <div className="container">
+      <div className="container mb-4">
         {/* Filters */}
         <ProjectFilters
           search={search}
