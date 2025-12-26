@@ -246,5 +246,3 @@ export default function Profile() {
     </Layout>
   );
 }
-
-export default Profile;
