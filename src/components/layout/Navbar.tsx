@@ -163,15 +163,6 @@ export function Navbar() {
                       <span>Nuevo proyecto</span>
                     </Link>
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleSignOut}
-                    title="Cerrar sesión"
-                    className="hidden sm:flex"
-                  >
-                    <LogOut className="h-5 w-5" />
-                  </Button>
                 </>
               ) : (
                 <Button asChild size="sm" className="hidden sm:flex">

@@ -7,8 +7,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Mail, User, Upload, Camera } from "lucide-react";
+import { Loader2, Mail, User, Upload, Camera, Bookmark, LogOut } from "lucide-react";
 import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FollowingProjectsTab } from "@/components/profile/FollowingProjectsTab";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const { user, loading: authLoading } = useAuth();
@@ -16,6 +19,20 @@ export default function Profile() {
   const updateProfile = useUpdateProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      setIsSigningOut(true);
+      await supabase.auth.signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   if (authLoading || profileLoading) {
     return (
@@ -104,10 +121,26 @@ export default function Profile() {
 
   return (
     <Layout>
-      <div className="container max-w-2xl py-16">
+      <div className="container max-w-2xl py-8">
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-3xl">Mi Perfil</CardTitle>
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between w-full">
+              <CardTitle className="text-2xl">{profile?.username || 'Perfil'}</CardTitle>
+              <Button 
+                variant="ghost"
+                size="sm"
+                onClick={handleSignOut}
+                disabled={isSigningOut}
+                className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+              >
+                {isSigningOut ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <LogOut className="mr-2 h-4 w-4" />
+                )}
+                Cerrar sesión
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Avatar Section */}
@@ -158,35 +191,55 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* User Info */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
-                <User className="h-5 w-5 text-muted-foreground" />
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">Nombre de usuario</p>
-                  <p className="text-lg font-semibold">{profile?.username || "Sin nombre"}</p>
-                </div>
-              </div>
+            {/* Tabs */}
+            <Tabs defaultValue="profile" className="w-full mt-6">
+              <TabsList className="grid w-full grid-cols-2 max-w-xs mx-auto mb-6">
+                <TabsTrigger value="profile">Perfil</TabsTrigger>
+                <TabsTrigger value="saved" className="flex items-center gap-1.5">
+                  <Bookmark className="h-3.5 w-3.5" />
+                  <span>Guardados</span>
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="profile" className="space-y-4">
+                {/* User Info */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
+                    <User className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">Nombre de usuario</p>
+                      <p className="text-lg font-semibold">{profile?.username || "Sin nombre"}</p>
+                    </div>
+                  </div>
 
-              <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
-                <Mail className="h-5 w-5 text-muted-foreground" />
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground">Correo electrónico</p>
-                  <p className="text-lg font-semibold">{profile?.email || user.email || "Sin email"}</p>
-                </div>
-              </div>
+                  <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
+                    <Mail className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex-1">
+                      <p className="text-sm text-muted-foreground">Correo electrónico</p>
+                      <p className="text-lg font-semibold">{profile?.email || user.email || "Sin email"}</p>
+                    </div>
+                  </div>
 
-              {profile?.created_at && (
-                <div className="text-center text-sm text-muted-foreground pt-2">
-                  Miembro desde{" "}
-                  {new Date(profile.created_at).toLocaleDateString("es-ES", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
+                  {profile?.created_at && (
+                    <div className="text-center text-sm text-muted-foreground pt-2">
+                      Miembro desde{" "}
+                      {profile.created_at && new Date(profile.created_at).toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                      })}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </TabsContent>
+
+              <TabsContent value="saved">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Proyectos guardados</h3>
+                  <FollowingProjectsTab userId={user.id} />
+                </div>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
@@ -194,3 +247,4 @@ export default function Profile() {
   );
 }
 
+export default Profile;

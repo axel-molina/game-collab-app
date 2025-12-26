@@ -13,7 +13,10 @@ export function ProjectList({ projects, isLoading }: ProjectListProps) {
     return (
       <div className="space-y-6">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="flex flex-col md:flex-row gap-4 p-4 border rounded-lg">
+          <div
+            key={i}
+            className="flex flex-col md:flex-row gap-4 p-4 border rounded-lg"
+          >
             <Skeleton className="w-full md:w-64 h-48" />
             <div className="flex-1 space-y-4">
               <Skeleton className="h-6 w-3/4" />
@@ -44,7 +47,7 @@ export function ProjectList({ projects, isLoading }: ProjectListProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 flex flex-col gap-4">
       {projects.map((project) => (
         <ProjectCard key={project.id} project={project} />
       ))}

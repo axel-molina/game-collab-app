@@ -1,22 +1,37 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Project } from "@/hooks/useProjects";
-import { getEngineLabel, getPositionLabel, getEngineColor } from "@/lib/constants";
-import { Calendar, User } from "lucide-react";
+import {
+  getEngineLabel,
+  getPositionLabel,
+  getEngineColor,
+} from "@/lib/constants";
+import { Calendar, User, Bookmark, BookmarkCheck, Users } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
+import { useProjectFollows } from "@/hooks/useProjectFollows";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { user } = useAuth();
+  const { isFollowing, toggleFollow, useProjectFollowerCount } =
+    useProjectFollows(user?.id);
+  const { data: followerCount = 0 } = useProjectFollowerCount(project.id);
+
   const mainImage = project.project_images?.[0]?.image_url;
   const positions = project.project_positions || [];
-  const engineLabel = project.engine === "other" && project.custom_engine 
-    ? project.custom_engine 
-    : getEngineLabel(project.engine);
+  const engineLabel =
+    project.engine === "other" && project.custom_engine
+      ? project.custom_engine
+      : getEngineLabel(project.engine);
+
+  const isOwner = user?.id === project.user_id;
 
   return (
     <Link to={`/projects/${project.id}`}>
@@ -36,8 +51,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
                   <span className="text-4xl">🎮</span>
                 </div>
               )}
-              <Badge 
-                className={`absolute top-3 left-3 ${getEngineColor(project.engine)} text-primary-foreground border-0`}
+              <Badge
+                className={`absolute top-3 left-3 ${getEngineColor(
+                  project.engine
+                )} text-primary-foreground border-0`}
               >
                 {engineLabel}
               </Badge>
@@ -57,8 +74,14 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 {positions.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
                     {positions.slice(0, 5).map((pos) => (
-                      <Badge key={pos.id} variant="secondary" className="text-xs">
-                        {pos.is_custom ? pos.position : getPositionLabel(pos.position)}
+                      <Badge
+                        key={pos.id}
+                        variant="secondary"
+                        className="text-xs"
+                      >
+                        {pos.is_custom
+                          ? pos.position
+                          : getPositionLabel(pos.position)}
                       </Badge>
                     ))}
                     {positions.length > 5 && (
@@ -85,9 +108,44 @@ export function ProjectCard({ project }: ProjectCardProps) {
                     })}
                   </span>
                 </div>
-                <Badge variant="outline" className="ml-auto">
-                  v{project.engine_version}
-                </Badge>
+                <div className="flex items-center gap-2 ml-auto">
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <Users className="h-4 w-4" />
+                    <span>{followerCount}</span>
+                  </div>
+                  <Badge variant="outline">v{project.engine_version}</Badge>
+                  {!isOwner && user && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleFollow.mutate({
+                          projectId: project.id,
+                          userId: user.id,
+                        });
+                      }}
+                      title={
+                        isFollowing(project.id)
+                          ? "Quitar de guardados"
+                          : "Guardar"
+                      }
+                    >
+                      {isFollowing(project.id) ? (
+                        <BookmarkCheck className="h-4 w-4 text-primary fill-current" />
+                      ) : (
+                        <Bookmark className="h-4 w-4" />
+                      )}
+                      <span className="sr-only">
+                        {isFollowing(project.id)
+                          ? "Quitar de guardados"
+                          : "Guardar"}
+                      </span>
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
