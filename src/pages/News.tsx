@@ -1,63 +1,44 @@
 import { Layout } from "@/components/layout/Layout";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProjectPosts } from "@/hooks/useProjectPosts";
 import { usePostComments } from "@/hooks/usePostComments";
 import { PostCard } from "@/components/posts/PostCard";
-import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
-import { Plus } from "lucide-react";
+import { FileText } from "lucide-react";
 
 export default function News() {
-  const { user } = useAuth();
   const { data: posts, isLoading } = useProjectPosts();
 
   return (
     <Layout>
-      <div className="container py-8">
+      <div className="container max-w-3xl py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight">
-              Novedades
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Últimas actualizaciones de los proyectos
-            </p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Novedades</h1>
+          <p className="text-muted-foreground">
+            Últimas actualizaciones de los proyectos
+          </p>
         </div>
 
-        {/* Posts Grid */}
+        {/* Posts Feed */}
         {isLoading ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-64" />
+          <div className="space-y-6">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-64 w-full" />
             ))}
           </div>
         ) : posts && posts.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-6">
             {posts.map((post) => (
               <PostCardWithComments key={post.id} post={post} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <h2 className="text-2xl font-semibold mb-2">
-              No hay novedades aún
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              {user
-                ? "Sé el primero en compartir novedades de tu proyecto"
-                : "Inicia sesión para crear posts"}
+          <div className="text-center py-12">
+            <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No hay posts aún</h3>
+            <p className="text-muted-foreground">
+              Sé el primero en compartir una actualización
             </p>
-            {user && (
-              <Button asChild>
-                <Link to="/posts/new">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Crear Post
-                </Link>
-              </Button>
-            )}
           </div>
         )}
       </div>
