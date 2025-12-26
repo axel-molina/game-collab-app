@@ -9,7 +9,7 @@ export interface ProjectPost {
   content: string;
   created_at: string;
   updated_at: string;
-  profiles?: { username: string } | null;
+  profiles?: { username: string; avatar_url: string | null } | null;
   projects?: {
     id: string;
     name: string;
@@ -39,7 +39,7 @@ export function useProjectPosts() {
         .select(
           `
           *,
-          profiles(username),
+          profiles(username, avatar_url),
           projects(id, name, engine, custom_engine)
         `
         )
@@ -61,7 +61,7 @@ export function useProjectPost(id: string) {
         .select(
           `
           *,
-          profiles(username),
+          profiles(username, avatar_url),
           projects(id, name, engine, custom_engine)
         `
         )
@@ -107,7 +107,7 @@ export function useUserPosts(userId: string) {
         .select(
           `
           *,
-          profiles(username),
+          profiles(username, avatar_url),
           projects(id, name, engine, custom_engine)
         `
         )

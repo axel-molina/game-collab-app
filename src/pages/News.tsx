@@ -25,14 +25,6 @@ export default function News() {
               Últimas actualizaciones de los proyectos
             </p>
           </div>
-          {user && (
-            <Button asChild>
-              <Link to="/posts/new">
-                <Plus className="h-4 w-4 mr-2" />
-                Crear Post
-              </Link>
-            </Button>
-          )}
         </div>
 
         {/* Posts Grid */}
