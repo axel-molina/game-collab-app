@@ -22,7 +22,7 @@ import { Colors } from "@/lib/colors";
 
 const navItems = [
   { name: "Inicio", path: "/", icon: Home },
-  { name: "Noticias", path: "/news", icon: Bell },
+  { name: "Proyectos", path: "/projects", icon: Box },
   { name: "Sobre nosotros", path: "/about", icon: Info },
 ];
 

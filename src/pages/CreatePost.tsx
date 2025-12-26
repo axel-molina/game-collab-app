@@ -35,7 +35,7 @@ export default function CreatePost() {
   };
 
   const handleCancel = () => {
-    navigate("/news");
+    navigate("/");
   };
 
   if (!user) {

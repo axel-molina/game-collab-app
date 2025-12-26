@@ -57,7 +57,7 @@ export default function PostDetail() {
             El post que buscas no existe o ha sido eliminado.
           </p>
           <Button asChild>
-            <Link to="/news">Volver a Novedades</Link>
+            <Link to="/">Volver al Inicio</Link>
           </Button>
         </div>
       </Layout>
@@ -78,7 +78,7 @@ export default function PostDetail() {
 
   const handleDelete = async () => {
     await deletePost.mutateAsync(post.id);
-    navigate("/news");
+    navigate("/");
   };
 
   return (
@@ -86,9 +86,9 @@ export default function PostDetail() {
       <div className="container max-w-4xl py-8">
         {/* Back button */}
         <Button variant="ghost" asChild className="mb-6">
-          <Link to="/news">
+          <Link to="/">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Volver a Novedades
+            Volver al Inicio
           </Link>
         </Button>
 

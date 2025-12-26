@@ -14,9 +14,9 @@ export function Layout({ children }: LayoutProps) {
       <footer className="border-t border-border py-6 mt-auto">
         <div className="container text-center text-sm text-muted-foreground">
           <p>
-            © 2025{" "}
-            <span style={{ color: Colors.gameBlue }}>Game</span>
-            <span style={{ color: Colors.collabGreen }}>Collab</span>. Conectando desarrolladores de videojuegos.
+            © 2025 <span style={{ color: Colors.gameBlue }}>Game</span>
+            <span style={{ color: Colors.collabGreen }}>Collab</span>.
+            Conectando desarrolladores de videojuegos.
           </p>
         </div>
       </footer>
