@@ -15,6 +15,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Gamepad2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { Colors } from "@/lib/colors";
 
 export default function Auth() {
   const { user, loading, signIn, signUp, resetPassword } = useAuth();
@@ -130,7 +131,15 @@ export default function Auth() {
             <Gamepad2 className="h-8 w-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold">
-            {showResetPassword ? 'Restablecer contraseña' : 'Bienvenido a GameCollab'}
+            {showResetPassword ? (
+              'Restablecer contraseña'
+            ) : (
+              <>
+                Bienvenido a{" "}
+                <span style={{ color: Colors.gameBlue }}>Game</span>
+                <span style={{ color: Colors.collabGreen }}>Collab</span>
+              </>
+            )}
           </h1>
           <p className="text-muted-foreground">
             {showResetPassword 

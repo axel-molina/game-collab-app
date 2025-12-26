@@ -1,15 +1,29 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { Menu, X, Plus, LogOut, User, Moon, Sun, Home, Box, Bell } from "lucide-react";
-import logo from "/favicon.png";
+import {
+  Menu,
+  X,
+  Plus,
+  LogOut,
+  User,
+  Moon,
+  Sun,
+  Home,
+  Box,
+  Bell,
+  Info,
+} from "lucide-react";
+import logo from "../../../assets/icon.png";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Colors } from "@/lib/colors";
 
 const navItems = [
   { name: "Inicio", path: "/", icon: Home },
   { name: "Noticias", path: "/news", icon: Bell },
+  { name: "Sobre nosotros", path: "/about", icon: Info },
 ];
 
 export function Navbar() {
@@ -30,8 +44,8 @@ export function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleSignOut = async () => {
@@ -53,15 +67,23 @@ export function Navbar() {
   }
 
   return (
-    <header className={cn(
-      "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200",
-      isScrolled && "shadow-sm"
-    )}>
+    <header
+      className={cn(
+        "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200",
+        isScrolled && "shadow-sm"
+      )}
+    >
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-2 font-semibold text-xl">
-            <img src={logo} alt="Logo" className="w-8 h-8" />
-            <span className="hidden sm:inline">GameCollab</span>
+          <Link
+            to="/"
+            className="flex items-center gap-2 font-semibold text-xl mr-6"
+          >
+            <img src={logo} alt="Logo" className="w-10 h-8" />
+            <span className="hidden sm:inline">
+              <span style={{ color: Colors.gameBlue }}>Game</span>
+              <span style={{ color: Colors.collabGreen }}>Collab</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -110,21 +132,33 @@ export function Navbar() {
             className="md:hidden"
             aria-label="Toggle menu"
           >
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
 
           {!loading && (
             <>
               {user ? (
                 <>
-                  <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="sm"
+                    className="hidden sm:flex"
+                  >
                     <Link to="/profile" className="flex items-center gap-2">
                       <User className="h-4 w-4" />
                       <span>Perfil</span>
                     </Link>
                   </Button>
                   <Button asChild size="sm" className="hidden sm:flex">
-                    <Link to="/projects/new" className="flex items-center gap-2">
+                    <Link
+                      to="/projects/new"
+                      className="flex items-center gap-2"
+                    >
                       <Plus className="h-4 w-4" />
                       <span>Nuevo proyecto</span>
                     </Link>
@@ -178,13 +212,21 @@ export function Navbar() {
               {!loading && user && (
                 <>
                   <div className="border-t border-border/40 my-2"></div>
-                  <Button asChild variant="ghost" className="w-full justify-start gap-2">
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className="w-full justify-start gap-2"
+                  >
                     <Link to="/profile">
                       <User className="h-4 w-4" />
                       <span>Perfil</span>
                     </Link>
                   </Button>
-                  <Button asChild variant="outline" className="w-full justify-start gap-2">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                  >
                     <Link to="/projects/new">
                       <Plus className="h-4 w-4" />
                       <span>Nuevo proyecto</span>
@@ -205,7 +247,11 @@ export function Navbar() {
               )}
 
               {!loading && !user && (
-                <Button asChild variant="default" className="w-full justify-center gap-2 mt-2">
+                <Button
+                  asChild
+                  variant="default"
+                  className="w-full justify-center gap-2 mt-2"
+                >
                   <Link to="/auth">
                     <User className="h-4 w-4" />
                     <span>Iniciar sesiÃ³n</span>
