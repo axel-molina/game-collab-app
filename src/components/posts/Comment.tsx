@@ -223,9 +223,9 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
       </div>
 
       {/* Nested Replies */}
-      {comment.replies && comment.replies.length > 0 && (
+      {comment?.replies && comment.replies.length > 0 && (
         <div className="mt-2">
-          {comment.replies.map((reply) => (
+          {comment?.replies.map((reply) => (
             <Comment
               key={reply.id}
               comment={reply}

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -11,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUserProjects } from "@/hooks/useProjectPosts";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 import { Loader2 } from "lucide-react";
 import { getEngineLabel } from "@/lib/constants";
 
@@ -113,20 +115,55 @@ export function PostForm({
         </p>
       </div>
 
-      {/* Content */}
+      {/* Content with Markdown Preview */}
       <div className="space-y-2">
         <Label htmlFor="content">Contenido *</Label>
-        <Textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Escribe aquí el contenido de tu novedad..."
-          rows={10}
-          required
-          className="resize-none"
-        />
+        <Tabs defaultValue="write" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="write">Escribir</TabsTrigger>
+            <TabsTrigger value="preview">Vista Previa</TabsTrigger>
+          </TabsList>
+          <TabsContent value="write" className="mt-2">
+            <Textarea
+              id="content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Escribe aquí el contenido de tu novedad usando Markdown...
+
+**Ejemplos de formato:**
+- **Negrita** o __negrita__
+- *Cursiva* o _cursiva_
+- [Enlaces](https://ejemplo.com)
+- `código en línea`
+- # Título grande
+- ## Título mediano
+- ### Título pequeño
+- - Lista con viñetas
+- 1. Lista numerada
+- > Cita
+"
+              rows={15}
+              required
+              className="resize-none font-mono text-sm"
+            />
+          </TabsContent>
+          <TabsContent value="preview" className="mt-2">
+            <div className="min-h-[400px] border rounded-md p-4 bg-muted/30">
+              {content ? (
+                <div className="prose prose-neutral dark:prose-invert max-w-none">
+                  <MarkdownRenderer content={content} />
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  Escribe algo para ver la vista previa...
+                </p>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
         <p className="text-xs text-muted-foreground">
-          Puedes usar Markdown para dar formato al texto
+          Usa Markdown para dar formato al texto. Cambia a "Vista Previa" para
+          ver cómo se verá.
         </p>
       </div>
 

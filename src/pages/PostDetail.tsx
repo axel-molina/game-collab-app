@@ -11,6 +11,7 @@ import {
   extractTitleFromContent,
 } from "@/hooks/useProjectPosts";
 import { CommentSection } from "@/components/posts/CommentSection";
+import { MarkdownRenderer } from "@/components/posts/MarkdownRenderer";
 import { getEngineLabel, getEngineColor } from "@/lib/constants";
 import { ArrowLeft, Calendar, User, Edit, Trash2, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -171,14 +172,12 @@ export default function PostDetail() {
           </CardHeader>
 
           <CardContent>
-            <div className="prose prose-neutral dark:prose-invert max-w-none">
-              <p className="whitespace-pre-wrap">{content}</p>
-            </div>
+            <MarkdownRenderer content={content} />
           </CardContent>
         </Card>
 
         {/* Comments */}
-        <CommentSection postId={post.id} />
+        <CommentSection postId={post?.id} />
       </div>
     </Layout>
   );
