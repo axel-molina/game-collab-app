@@ -1,30 +1,65 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useProjectPosts } from "@/hooks/useProjectPosts";
+import { Button } from "@/components/ui/button";
+import { useInfiniteFeed } from "@/hooks/useInfiniteFeed";
 import { usePostComments } from "@/hooks/usePostComments";
 import { useFollowedProjects } from "@/hooks/useFollowedProjects";
 import { useAuth } from "@/hooks/useAuth";
 import { PostCard } from "@/components/posts/PostCard";
-import { FileText } from "lucide-react";
+import { ProjectAnnouncementCard } from "@/components/posts/ProjectAnnouncementCard";
+import { FileText, Loader2 } from "lucide-react";
 
 export default function News() {
   const { user } = useAuth();
-  const { data: posts, isLoading } = useProjectPosts();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+    useInfiniteFeed(10);
   const { data: followedProjectIds } = useFollowedProjects(user?.id);
   const [filter, setFilter] = useState<"all" | "following">("all");
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Filter posts based on selected tab
-  const filteredPosts = useMemo(() => {
-    if (!posts) return [];
-    if (filter === "all") return posts;
+  // Flatten all pages into a single array
+  const allItems = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap((page) => page.items);
+  }, [data]);
+
+  // Filter items based on selected tab
+  const filteredItems = useMemo(() => {
+    if (!allItems) return [];
+    if (filter === "all") return allItems;
     if (!followedProjectIds || followedProjectIds.length === 0) return [];
 
-    return posts.filter(
-      (post) => post.project_id && followedProjectIds.includes(post.project_id)
+    return allItems.filter((item) => {
+      if (item.type === "post") {
+        return (
+          item.data.project_id &&
+          followedProjectIds.includes(item.data.project_id)
+        );
+      } else {
+        return followedProjectIds.includes(item.data.id);
+      }
+    });
+  }, [allItems, filter, followedProjectIds]);
+
+  // Intersection Observer for infinite scroll
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
     );
-  }, [posts, filter, followedProjectIds]);
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <Layout>
@@ -33,7 +68,7 @@ export default function News() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">Novedades</h1>
           <p className="text-muted-foreground">
-            Últimas actualizaciones de los proyectos
+            Últimas actualizaciones y proyectos nuevos
           </p>
         </div>
 
@@ -51,26 +86,64 @@ export default function News() {
           </Tabs>
         )}
 
-        {/* Posts Feed */}
+        {/* Feed */}
         {isLoading ? (
           <div className="space-y-6">
             {[...Array(3)].map((_, i) => (
               <Skeleton key={i} className="h-64 w-full" />
             ))}
           </div>
-        ) : filteredPosts && filteredPosts.length > 0 ? (
-          <div className="space-y-6">
-            {filteredPosts.map((post) => (
-              <PostCardWithComments key={post.id} post={post} />
-            ))}
-          </div>
+        ) : filteredItems && filteredItems.length > 0 ? (
+          <>
+            <div className="space-y-6">
+              {filteredItems.map((item, index) => {
+                if (item.type === "post") {
+                  return (
+                    <PostCardWithComments
+                      key={`post-${item.data.id}`}
+                      post={item.data}
+                    />
+                  );
+                } else {
+                  return (
+                    <ProjectAnnouncementCard
+                      key={`project-${item.data.id}`}
+                      project={item.data}
+                    />
+                  );
+                }
+              })}
+            </div>
+
+            {/* Load More Trigger */}
+            <div ref={loadMoreRef} className="py-8 flex justify-center">
+              {isFetchingNextPage ? (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span>Cargando más...</span>
+                </div>
+              ) : hasNextPage ? (
+                <Button
+                  variant="outline"
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                >
+                  Cargar más
+                </Button>
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  No hay más contenido para mostrar
+                </p>
+              )}
+            </div>
+          </>
         ) : (
           <div className="text-center py-12">
             <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">
               {filter === "following"
-                ? "No hay posts de proyectos seguidos"
-                : "No hay posts aún"}
+                ? "No hay contenido de proyectos seguidos"
+                : "No hay contenido aún"}
             </h3>
             <p className="text-muted-foreground">
               {filter === "following"

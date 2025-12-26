@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -9,6 +14,7 @@ export interface ProjectPost {
   content: string;
   created_at: string;
   updated_at: string;
+  is_project_announcement?: boolean;
   profiles?: { username: string; avatar_url: string | null } | null;
   projects?: {
     id: string;
@@ -48,6 +54,40 @@ export function useProjectPosts() {
       if (error) throw error;
       return data as ProjectPost[];
     },
+  });
+}
+
+// Fetch posts with infinite scroll pagination
+export function useInfiniteProjectPosts(pageSize: number = 10) {
+  return useInfiniteQuery({
+    queryKey: ["infinite-project-posts"],
+    queryFn: async ({ pageParam = 0 }) => {
+      const from = pageParam * pageSize;
+      const to = from + pageSize - 1;
+
+      const { data, error, count } = await supabase
+        .from("project_posts")
+        .select(
+          `
+          *,
+          profiles(username, avatar_url),
+          projects(id, name, engine, custom_engine)
+        `,
+          { count: "exact" }
+        )
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+      if (error) throw error;
+
+      return {
+        posts: data as ProjectPost[],
+        nextPage: data.length === pageSize ? pageParam + 1 : undefined,
+        totalCount: count || 0,
+      };
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
   });
 }
 
