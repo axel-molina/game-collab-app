@@ -51,13 +51,18 @@ export function ProjectCard({ project }: ProjectCardProps) {
                   <span className="text-4xl">🎮</span>
                 </div>
               )}
-              <Badge
-                className={`absolute top-3 left-3 ${getEngineColor(
-                  project.engine
-                )} text-primary-foreground border-0`}
-              >
-                {engineLabel}
-              </Badge>
+              <div className="absolute top-3 left-3 flex items-center gap-2">
+                <Badge
+                  className={`${getEngineColor(
+                    project.engine
+                  )} text-primary-foreground border-0`}
+                >
+                  {engineLabel}
+                </Badge>
+                <Badge variant="outline" className="bg-background/80 backdrop-blur-sm">
+                  v{project.engine_version}
+                </Badge>
+              </div>
             </div>
 
             {/* Content */}
@@ -113,7 +118,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
                     <Users className="h-4 w-4" />
                     <span>{followerCount}</span>
                   </div>
-                  <Badge variant="outline">v{project.engine_version}</Badge>
                   {!isOwner && user && (
                     <Button
                       variant="ghost"
