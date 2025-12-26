@@ -11,6 +11,9 @@ import Profile from "./pages/Profile";
 import NewProject from "./pages/NewProject";
 import ProjectDetail from "./pages/ProjectDetail";
 import EditProject from "./pages/EditProject";
+import CreatePost from "./pages/CreatePost";
+import PostDetail from "./pages/PostDetail";
+import EditPost from "./pages/EditPost";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -27,6 +30,9 @@ const App = () => (
         <Route path="/projects/new" element={<NewProject />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />
         <Route path="/projects/:id/edit" element={<EditProject />} />
+        <Route path="/posts/new" element={<CreatePost />} />
+        <Route path="/posts/:id" element={<PostDetail />} />
+        <Route path="/posts/:id/edit" element={<EditPost />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </TooltipProvider>
