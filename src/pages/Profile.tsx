@@ -7,10 +7,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, Mail, User, Upload, Camera, Bookmark, LogOut } from "lucide-react";
+import {
+  Loader2,
+  Mail,
+  User,
+  Upload,
+  Camera,
+  Bookmark,
+  LogOut,
+  FileText,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FollowingProjectsTab } from "@/components/profile/FollowingProjectsTab";
+import { UserPostsTab } from "@/components/profile/UserPostsTab";
 import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
@@ -26,9 +36,9 @@ export default function Profile() {
     try {
       setIsSigningOut(true);
       await supabase.auth.signOut();
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
     } finally {
       setIsSigningOut(false);
     }
@@ -105,7 +115,9 @@ export default function Profile() {
         .list(user.id);
 
       if (existingFiles && existingFiles.length > 0) {
-        const filesToDelete = existingFiles.map((file) => `${user.id}/${file.name}`);
+        const filesToDelete = existingFiles.map(
+          (file) => `${user.id}/${file.name}`
+        );
         await supabase.storage.from("avatars").remove(filesToDelete);
       }
 
@@ -125,8 +137,10 @@ export default function Profile() {
         <Card>
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between w-full">
-              <CardTitle className="text-2xl">{profile?.username || 'Perfil'}</CardTitle>
-              <Button 
+              <CardTitle className="text-2xl">
+                {profile?.username || "Perfil"}
+              </CardTitle>
+              <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSignOut}
@@ -147,7 +161,10 @@ export default function Profile() {
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
                 <Avatar className="h-32 w-32">
-                  <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.username || "Usuario"} />
+                  <AvatarImage
+                    src={profile?.avatar_url || undefined}
+                    alt={profile?.username || "Usuario"}
+                  />
                   <AvatarFallback className="text-3xl bg-primary text-primary-foreground">
                     {getInitials()}
                   </AvatarFallback>
@@ -193,43 +210,72 @@ export default function Profile() {
 
             {/* Tabs */}
             <Tabs defaultValue="profile" className="w-full mt-6">
-              <TabsList className="grid w-full grid-cols-2 max-w-xs mx-auto mb-6">
+              <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto mb-6">
                 <TabsTrigger value="profile">Perfil</TabsTrigger>
-                <TabsTrigger value="saved" className="flex items-center gap-1.5">
+                <TabsTrigger
+                  value="posts"
+                  className="flex items-center gap-1.5"
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  <span>Posts</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="saved"
+                  className="flex items-center gap-1.5"
+                >
                   <Bookmark className="h-3.5 w-3.5" />
                   <span>Guardados</span>
                 </TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="profile" className="space-y-4">
                 {/* User Info */}
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
                     <User className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Nombre de usuario</p>
-                      <p className="text-lg font-semibold">{profile?.username || "Sin nombre"}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Nombre de usuario
+                      </p>
+                      <p className="text-lg font-semibold">
+                        {profile?.username || "Sin nombre"}
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
                     <Mail className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <p className="text-sm text-muted-foreground">Correo electrónico</p>
-                      <p className="text-lg font-semibold">{profile?.email || user.email || "Sin email"}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Correo electrónico
+                      </p>
+                      <p className="text-lg font-semibold">
+                        {profile?.email || user.email || "Sin email"}
+                      </p>
                     </div>
                   </div>
 
                   {profile?.created_at && (
                     <div className="text-center text-sm text-muted-foreground pt-2">
                       Miembro desde{" "}
-                      {profile.created_at && new Date(profile.created_at).toLocaleDateString("es-ES", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric"
-                      })}
+                      {profile.created_at &&
+                        new Date(profile.created_at).toLocaleDateString(
+                          "es-ES",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
                     </div>
                   )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="posts">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Mis Posts</h3>
+                  <UserPostsTab userId={user.id} />
                 </div>
               </TabsContent>
 

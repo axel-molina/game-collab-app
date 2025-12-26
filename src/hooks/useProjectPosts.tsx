@@ -97,6 +97,30 @@ export function useUserProjects() {
   });
 }
 
+// Fetch posts by user ID
+export function useUserPosts(userId: string) {
+  return useQuery({
+    queryKey: ["user-posts", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("project_posts")
+        .select(
+          `
+          *,
+          profiles(username),
+          projects(id, name, engine, custom_engine)
+        `
+        )
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data as ProjectPost[];
+    },
+    enabled: !!userId,
+  });
+}
+
 // Create new post
 export function useCreatePost() {
   const queryClient = useQueryClient();
