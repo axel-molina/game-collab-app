@@ -245,7 +245,7 @@ export function Navbar() {
                 >
                   <Link to="/auth">
                     <User className="h-4 w-4" />
-                    <span>Iniciar sesiÃ³n</span>
+                    <span>Iniciar sesión</span>
                   </Link>
                 </Button>
               )}
