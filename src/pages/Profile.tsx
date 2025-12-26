@@ -16,11 +16,13 @@ import {
   Bookmark,
   LogOut,
   FileText,
+  FolderOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FollowingProjectsTab } from "@/components/profile/FollowingProjectsTab";
 import { UserPostsTab } from "@/components/profile/UserPostsTab";
+import { UserProjectsTab } from "@/components/profile/UserProjectsTab";
 import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
@@ -210,21 +212,28 @@ export default function Profile() {
 
             {/* Tabs */}
             <Tabs defaultValue="profile" className="w-full mt-6">
-              <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto mb-6">
+              <TabsList className="grid w-full grid-cols-4 max-w-2xl mx-auto mb-6">
                 <TabsTrigger value="profile">Perfil</TabsTrigger>
+                <TabsTrigger
+                  value="projects"
+                  className="flex items-center gap-1.5"
+                >
+                  <FolderOpen className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Proyectos</span>
+                </TabsTrigger>
                 <TabsTrigger
                   value="posts"
                   className="flex items-center gap-1.5"
                 >
                   <FileText className="h-3.5 w-3.5" />
-                  <span>Posts</span>
+                  <span className="hidden sm:inline">Posts</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="saved"
                   className="flex items-center gap-1.5"
                 >
                   <Bookmark className="h-3.5 w-3.5" />
-                  <span>Guardados</span>
+                  <span className="hidden sm:inline">Guardados</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -269,6 +278,13 @@ export default function Profile() {
                         )}
                     </div>
                   )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="projects">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Mis Proyectos</h3>
+                  <UserProjectsTab userId={user.id} />
                 </div>
               </TabsContent>
 
