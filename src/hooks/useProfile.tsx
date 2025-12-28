@@ -34,8 +34,8 @@ export function useProfile() {
 
       // Fetch roles
       const { data: rolesData, error: rolesError } = await supabase
-        .from("profile_roles_user")
-        .select("role_id, profile_roles(id, name)")
+        .from("profile_roles")
+        .select("role_id, roles(id, name)")
         .eq("profile_id", user.id);
 
       if (rolesError) throw rolesError;
@@ -50,7 +50,7 @@ export function useProfile() {
 
       return {
         ...profile,
-        roles: rolesData?.map((r) => r.profile_roles) as any[],
+        roles: rolesData?.map((r) => r.roles) as any[],
         technologies: techsData?.map((t) => t.technologies) as any[],
       } as Profile;
     },
@@ -89,7 +89,7 @@ export function useUpdateProfile() {
       if (role_ids !== undefined) {
         // Delete current roles
         const { error: deleteRolesError } = await supabase
-          .from("profile_roles_user")
+          .from("profile_roles")
           .delete()
           .eq("profile_id", user.id);
 
@@ -98,7 +98,7 @@ export function useUpdateProfile() {
         // Insert new roles
         if (role_ids.length > 0) {
           const { error: insertRolesError } = await supabase
-            .from("profile_roles_user")
+            .from("profile_roles")
             .insert(
               role_ids.map((role_id) => ({ profile_id: user.id, role_id }))
             );
@@ -144,13 +144,50 @@ export function useUpdateProfile() {
   });
 }
 
-export function useRoles() {
+export function useRoles(search?: string) {
   return useQuery({
-    queryKey: ["roles"],
+    queryKey: ["roles", search],
     queryFn: async () => {
-      const { data, error } = await supabase.from("profile_roles").select("*");
+      let query = supabase
+        .from("roles")
+        .select("id, name, is_custom, created_by")
+        .order("is_custom", { ascending: true })
+        .order("name", { ascending: true });
+
+      if (search && search.trim().length > 0) {
+        query = query.ilike("name", `%${search}%`);
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
       return data;
+    },
+  });
+}
+
+export function useCreateRole() {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (name: string) => {
+      if (!user?.id) throw new Error("No user logged in");
+
+      const { data, error } = await supabase
+        .from("roles")
+        .insert({
+          name,
+          is_custom: true,
+          created_by: user.id,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["roles"] });
     },
   });
 }

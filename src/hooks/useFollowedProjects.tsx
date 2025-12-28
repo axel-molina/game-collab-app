@@ -9,7 +9,7 @@ export function useFollowedProjects(userId: string | undefined) {
       if (!userId) return [];
 
       const { data, error } = await supabase
-        .from("saved_projects")
+        .from("project_followers")
         .select("project_id")
         .eq("user_id", userId);
 

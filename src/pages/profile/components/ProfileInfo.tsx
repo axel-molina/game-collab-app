@@ -9,6 +9,7 @@ import {
   Check,
   X,
   Plus,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,7 +18,9 @@ import {
   useRoles,
   useTechnologies,
   useUpdateProfile,
+  useCreateRole,
 } from "@/hooks/useProfile";
+import { Input } from "@/components/ui/input";
 
 interface ProfileInfoProps {
   profile: any;
@@ -30,9 +33,22 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
   const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
   const [selectedTechs, setSelectedTechs] = useState<number[]>([]);
 
-  const { data: allRoles } = useRoles();
+  const [roleSearch, setRoleSearch] = useState("");
+  const { data: allRoles } = useRoles(roleSearch);
   const { data: allTechs } = useTechnologies();
   const updateProfile = useUpdateProfile();
+  const createRole = useCreateRole();
+
+  const handleCreateRole = async () => {
+    if (!roleSearch.trim()) return;
+    try {
+      const newRole = await createRole.mutateAsync(roleSearch.trim());
+      toggleRole(newRole.id);
+      setRoleSearch("");
+    } catch (error) {
+      console.error("Error creating role:", error);
+    }
+  };
 
   useEffect(() => {
     if (profile) {
@@ -150,21 +166,55 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
           </div>
           <div className="flex flex-wrap gap-2">
             {isEditing ? (
-              allRoles?.map((role: any) => (
-                <Badge
-                  key={role.id}
-                  variant={
-                    selectedRoles.includes(role.id) ? "default" : "outline"
-                  }
-                  className="cursor-pointer py-1.5 px-3 hover:bg-primary/90"
-                  onClick={() => toggleRole(role.id)}
-                >
-                  {role.name}
-                  {selectedRoles.includes(role.id) && (
-                    <Check className="ml-1 h-3 w-3" />
-                  )}
-                </Badge>
-              ))
+              <div className="w-full space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Buscar o crear rol (p. ej. VFX Artist)..."
+                    value={roleSearch}
+                    onChange={(e) => setRoleSearch(e.target.value)}
+                    className="h-9"
+                  />
+                  {roleSearch &&
+                    !allRoles?.some(
+                      (r) => r.name.toLowerCase() === roleSearch.toLowerCase()
+                    ) && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="h-9 gap-1"
+                        onClick={handleCreateRole}
+                        disabled={createRole.isPending}
+                      >
+                        {createRole.isPending ? (
+                          <Plus className="h-3 w-3 animate-spin" />
+                        ) : (
+                          <Plus className="h-3 w-3" />
+                        )}
+                        Crear
+                      </Button>
+                    )}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {allRoles?.map((role: any) => (
+                    <Badge
+                      key={role.id}
+                      variant={
+                        selectedRoles.includes(role.id) ? "default" : "outline"
+                      }
+                      className="cursor-pointer py-1.5 px-3 hover:bg-primary/90"
+                      onClick={() => toggleRole(role.id)}
+                    >
+                      {role.name}
+                      {role.is_custom && (
+                        <Sparkles className="ml-1 h-3 w-3 text-yellow-400 fill-current" />
+                      )}
+                      {selectedRoles.includes(role.id) && (
+                        <Check className="ml-1 h-3 w-3" />
+                      )}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
             ) : profile?.roles && profile.roles.length > 0 ? (
               profile.roles.map((role: any) => (
                 <Badge key={role.id} variant="secondary" className="py-1 px-3">

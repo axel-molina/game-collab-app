@@ -27,8 +27,8 @@ export function usePublicProfile(username: string) {
 
       // Fetch roles
       const { data: rolesData, error: rolesError } = await supabase
-        .from("profile_roles_user")
-        .select("role_id, profile_roles(id, name)")
+        .from("profile_roles")
+        .select("roles(id, name)")
         .eq("profile_id", profile.id);
 
       if (rolesError) throw rolesError;
@@ -43,7 +43,7 @@ export function usePublicProfile(username: string) {
 
       return {
         ...profile,
-        roles: rolesData?.map((r) => r.profile_roles) as any[],
+        roles: rolesData?.map((r) => r.roles) as any[],
         technologies: techsData?.map((t) => t.technologies) as any[],
       } as PublicProfile;
     },

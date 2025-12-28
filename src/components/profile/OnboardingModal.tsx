@@ -14,6 +14,7 @@ import {
   useRoles,
   useTechnologies,
   useUpdateProfile,
+  useCreateRole,
   Profile,
 } from "@/hooks/useProfile";
 import {
@@ -24,8 +25,10 @@ import {
   Cpu,
   ArrowRight,
   ArrowLeft,
+  Plus,
 } from "lucide-react";
 import { Colors } from "@/lib/colors";
+import { Input } from "@/components/ui/input";
 
 interface OnboardingModalProps {
   profile: Profile;
@@ -35,12 +38,22 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(0); // 0: Welcome, 1: Bio, 2: Roles, 3: Techs
   const [bio, setBio] = useState("");
-  const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
-  const [selectedTechs, setSelectedTechs] = useState<number[]>([]);
-
-  const { data: allRoles } = useRoles();
+  const [roleSearch, setRoleSearch] = useState("");
+  const { data: allRoles } = useRoles(roleSearch);
   const { data: allTechs } = useTechnologies();
   const updateProfile = useUpdateProfile();
+  const createRole = useCreateRole();
+
+  const handleCreateRole = async () => {
+    if (!roleSearch.trim()) return;
+    try {
+      const newRole = await createRole.mutateAsync(roleSearch.trim());
+      toggleRole(newRole.id);
+      setRoleSearch("");
+    } catch (error) {
+      console.error("Error creating role:", error);
+    }
+  };
 
   useEffect(() => {
     if (profile && !profile.onboarding_completed) {
@@ -140,23 +153,54 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
           )}
 
           {step === 2 && (
-            <div className="flex flex-wrap gap-2 justify-center">
-              {allRoles?.map((role: any) => (
-                <Badge
-                  key={role.id}
-                  variant={
-                    selectedRoles.includes(role.id) ? "default" : "outline"
-                  }
-                  className="cursor-pointer py-2 px-4 text-sm transition-all hover:scale-105"
-                  onClick={() => toggleRole(role.id)}
-                >
-                  <Briefcase className="h-3 w-3 mr-2" />
-                  {role.name}
-                  {selectedRoles.includes(role.id) && (
-                    <Check className="ml-2 h-3 w-3" />
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Buscar o crear rol (p. ej. VFX Artist)..."
+                  value={roleSearch}
+                  onChange={(e) => setRoleSearch(e.target.value)}
+                  className="h-10"
+                />
+                {roleSearch &&
+                  !allRoles?.some(
+                    (r) => r.name.toLowerCase() === roleSearch.toLowerCase()
+                  ) && (
+                    <Button
+                      type="button"
+                      className="gap-1"
+                      onClick={handleCreateRole}
+                      disabled={createRole.isPending}
+                    >
+                      {createRole.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Plus className="h-4 w-4" />
+                      )}
+                      Añadir
+                    </Button>
                   )}
-                </Badge>
-              ))}
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center max-h-[250px] overflow-y-auto p-1">
+                {allRoles?.map((role: any) => (
+                  <Badge
+                    key={role.id}
+                    variant={
+                      selectedRoles.includes(role.id) ? "default" : "outline"
+                    }
+                    className="cursor-pointer py-2 px-4 text-sm transition-all hover:scale-105"
+                    onClick={() => toggleRole(role.id)}
+                  >
+                    <Briefcase className="h-3 w-3 mr-2" />
+                    {role.name}
+                    {role.is_custom && (
+                      <Sparkles className="ml-1 h-3 w-3 text-yellow-400 fill-current" />
+                    )}
+                    {selectedRoles.includes(role.id) && (
+                      <Check className="ml-2 h-3 w-3" />
+                    )}
+                  </Badge>
+                ))}
+              </div>
             </div>
           )}
 
