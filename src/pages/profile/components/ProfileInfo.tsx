@@ -1,5 +1,23 @@
+import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { User, Mail } from "lucide-react";
+import {
+  User,
+  Mail,
+  AlignLeft,
+  Briefcase,
+  Cpu,
+  Check,
+  X,
+  Plus,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import {
+  useRoles,
+  useTechnologies,
+  useUpdateProfile,
+} from "@/hooks/useProfile";
 
 interface ProfileInfoProps {
   profile: any;
@@ -7,31 +25,211 @@ interface ProfileInfoProps {
 }
 
 export function ProfileInfo({ profile, user }: ProfileInfoProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [bio, setBio] = useState(profile?.bio || "");
+  const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+  const [selectedTechs, setSelectedTechs] = useState<number[]>([]);
+
+  const { data: allRoles } = useRoles();
+  const { data: allTechs } = useTechnologies();
+  const updateProfile = useUpdateProfile();
+
+  useEffect(() => {
+    if (profile) {
+      setBio(profile.bio || "");
+      setSelectedRoles(profile.roles?.map((r: any) => r.id) || []);
+      setSelectedTechs(profile.technologies?.map((t: any) => t.id) || []);
+    }
+  }, [profile]);
+
+  const handleSave = async () => {
+    await updateProfile.mutateAsync({
+      bio,
+      role_ids: selectedRoles,
+      technology_ids: selectedTechs,
+    });
+    setIsEditing(false);
+  };
+
+  const toggleRole = (roleId: number) => {
+    setSelectedRoles((prev) =>
+      prev.includes(roleId)
+        ? prev.filter((id) => id !== roleId)
+        : [...prev, roleId]
+    );
+  };
+
+  const toggleTech = (techId: number) => {
+    setSelectedTechs((prev) =>
+      prev.includes(techId)
+        ? prev.filter((id) => id !== techId)
+        : [...prev, techId]
+    );
+  };
+
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>Información Personal</CardTitle>
+        <Button
+          variant={isEditing ? "ghost" : "outline"}
+          size="sm"
+          onClick={() => (isEditing ? setIsEditing(false) : setIsEditing(true))}
+        >
+          {isEditing ? <X className="h-4 w-4" /> : "Editar Perfil"}
+        </Button>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
-          <User className="h-5 w-5 text-muted-foreground" />
-          <div className="flex-1">
-            <p className="text-sm text-muted-foreground">Nombre de usuario</p>
-            <p className="text-lg font-semibold">
-              {profile?.username || "Sin nombre"}
-            </p>
+      <CardContent className="space-y-6 pt-4">
+        {/* Username and Email */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
+            <User className="h-5 w-5 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
+                Nombre de usuario
+              </p>
+              <p className="text-base font-semibold truncate">
+                {profile?.username || "Sin nombre"}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-3 rounded-lg border bg-muted/50">
+            <Mail className="h-5 w-5 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
+                Correo electrónico
+              </p>
+              <p className="text-base font-semibold truncate">
+                {profile?.email || user.email || "Sin email"}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
-          <Mail className="h-5 w-5 text-muted-foreground" />
-          <div className="flex-1">
-            <p className="text-sm text-muted-foreground">Correo electrónico</p>
-            <p className="text-lg font-semibold">
-              {profile?.email || user.email || "Sin email"}
+        {/* Biography */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <AlignLeft className="h-4 w-4" />
+            Biografía
+          </div>
+          {isEditing ? (
+            <>
+              <Textarea
+                placeholder="Cuéntanos un poco sobre ti..."
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                className={`min-h-[100px] resize-none ${
+                  bio.length > 300
+                    ? "border-destructive focus-visible:ring-destructive"
+                    : ""
+                }`}
+              />
+              <p
+                className={`text-xs text-right mt-1 ${
+                  bio.length > 300
+                    ? "text-destructive font-bold"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {bio.length}/300 caracteres
+              </p>
+            </>
+          ) : (
+            <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap italic">
+              {profile?.bio || "No se ha añadido una biografía todavía."}
             </p>
+          )}
+        </div>
+
+        {/* Roles */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <Briefcase className="h-4 w-4" />
+            Roles
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {isEditing ? (
+              allRoles?.map((role: any) => (
+                <Badge
+                  key={role.id}
+                  variant={
+                    selectedRoles.includes(role.id) ? "default" : "outline"
+                  }
+                  className="cursor-pointer py-1.5 px-3 hover:bg-primary/90"
+                  onClick={() => toggleRole(role.id)}
+                >
+                  {role.name}
+                  {selectedRoles.includes(role.id) && (
+                    <Check className="ml-1 h-3 w-3" />
+                  )}
+                </Badge>
+              ))
+            ) : profile?.roles && profile.roles.length > 0 ? (
+              profile.roles.map((role: any) => (
+                <Badge key={role.id} variant="secondary" className="py-1 px-3">
+                  {role.name}
+                </Badge>
+              ))
+            ) : (
+              <span className="text-sm text-muted-foreground italic">
+                No se han seleccionado roles.
+              </span>
+            )}
           </div>
         </div>
+
+        {/* Technologies */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <Cpu className="h-4 w-4" />
+            Tecnologías
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {isEditing ? (
+              allTechs?.map((tech: any) => (
+                <Badge
+                  key={tech.id}
+                  variant={
+                    selectedTechs.includes(tech.id) ? "default" : "outline"
+                  }
+                  className="cursor-pointer py-1.5 px-3 hover:bg-primary/90"
+                  onClick={() => toggleTech(tech.id)}
+                >
+                  {tech.name}
+                  {selectedTechs.includes(tech.id) && (
+                    <Check className="ml-1 h-3 w-3" />
+                  )}
+                </Badge>
+              ))
+            ) : profile?.technologies && profile.technologies.length > 0 ? (
+              profile.technologies.map((tech: any) => (
+                <Badge key={tech.id} variant="secondary" className="py-1 px-3">
+                  {tech.name}
+                </Badge>
+              ))
+            ) : (
+              <span className="text-sm text-muted-foreground italic">
+                No se han seleccionado tecnologías.
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Save Button */}
+        {isEditing && (
+          <div className="flex justify-end pt-4">
+            <Button
+              onClick={handleSave}
+              disabled={updateProfile.isPending || bio.length > 300}
+            >
+              {updateProfile.isPending && (
+                <Plus className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Guardar Cambios
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

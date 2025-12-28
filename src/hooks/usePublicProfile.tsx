@@ -4,9 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 export interface PublicProfile {
   id: string;
   username: string;
-  email: string;
   avatar_url: string | null;
+  bio: string | null;
   created_at: string;
+  roles?: Array<{ id: number; name: string }>;
+  technologies?: Array<{ id: number; name: string }>;
 }
 
 // Fetch public profile by username
@@ -14,14 +16,36 @@ export function usePublicProfile(username: string) {
   return useQuery({
     queryKey: ["public-profile", username],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("id, username, email, avatar_url, created_at")
+        .select("id, username, avatar_url, bio, created_at")
         .eq("username", username)
         .maybeSingle();
 
-      if (error) throw error;
-      return data as PublicProfile | null;
+      if (profileError) throw profileError;
+      if (!profile) return null;
+
+      // Fetch roles
+      const { data: rolesData, error: rolesError } = await supabase
+        .from("profile_roles_user")
+        .select("role_id, profile_roles(id, name)")
+        .eq("profile_id", profile.id);
+
+      if (rolesError) throw rolesError;
+
+      // Fetch technologies
+      const { data: techsData, error: techsError } = await supabase
+        .from("profile_technologies")
+        .select("technology_id, technologies(id, name)")
+        .eq("profile_id", profile.id);
+
+      if (techsError) throw techsError;
+
+      return {
+        ...profile,
+        roles: rolesData?.map((r) => r.profile_roles) as any[],
+        technologies: techsData?.map((t) => t.technologies) as any[],
+      } as PublicProfile;
     },
     enabled: !!username,
   });
