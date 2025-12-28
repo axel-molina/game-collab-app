@@ -1,7 +1,7 @@
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Gamepad2 } from "lucide-react";
-import IconGamepad from "../../assets/icon.png";
+import IconGamepad from "../../../assets/icon.png";
 import { Colors } from "@/lib/colors";
 
 export default function About() {
@@ -25,9 +25,7 @@ export default function About() {
           <CardHeader>
             <CardTitle className="text-2xl">
               <span style={{ color: Colors.gameBlue }}>Game</span>
-              <span style={{ color: Colors.collabGreen }}>
-                Collab
-              </span>
+              <span style={{ color: Colors.collabGreen }}>Collab</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">

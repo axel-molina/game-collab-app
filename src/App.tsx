@@ -3,19 +3,20 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-import Index from "./pages/Index";
-import Auth from "./pages/Auth";
-import News from "./pages/News";
-import About from "./pages/About";
-import Profile from "./pages/Profile";
-import UserProfile from "./pages/UserProfile";
-import NewProject from "./pages/NewProject";
-import ProjectDetail from "./pages/ProjectDetail";
-import EditProject from "./pages/EditProject";
-import CreatePost from "./pages/CreatePost";
-import PostDetail from "./pages/PostDetail";
-import EditPost from "./pages/EditPost";
-import NotFound from "./pages/NotFound";
+import Index from "./pages/index/Index";
+import Auth from "./pages/auth/Auth";
+import News from "./pages/news/News";
+import About from "./pages/about/About";
+import Profile from "./pages/profile/Profile";
+import UserProfile from "./pages/user-profile/UserProfile";
+import NewProject from "./pages/new-project/NewProject";
+import ProjectDetail from "./pages/project-detail/ProjectDetail";
+import EditProject from "./pages/edit-project/EditProject";
+import CreatePost from "./pages/create-post/CreatePost";
+import PostDetail from "./pages/post-detail/PostDetail";
+import EditPost from "./pages/edit-post/EditPost";
+import FollowingProjects from "./pages/following-projects/FollowingProjects";
+import NotFound from "./pages/not-found/NotFound";
 
 const App = () => (
   <AuthProvider>
@@ -35,6 +36,7 @@ const App = () => (
         <Route path="/posts/new" element={<CreatePost />} />
         <Route path="/posts/:id" element={<PostDetail />} />
         <Route path="/posts/:id/edit" element={<EditPost />} />
+        <Route path="/following" element={<FollowingProjects />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </TooltipProvider>

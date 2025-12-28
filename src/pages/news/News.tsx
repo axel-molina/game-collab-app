@@ -1,15 +1,15 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { useInfiniteFeed } from "@/hooks/useInfiniteFeed";
-import { usePostComments } from "@/hooks/usePostComments";
 import { useFollowedProjects } from "@/hooks/useFollowedProjects";
 import { useAuth } from "@/hooks/useAuth";
-import { PostCard } from "@/components/posts/PostCard";
 import { ProjectAnnouncementCard } from "@/components/posts/ProjectAnnouncementCard";
-import { FileText, Loader2 } from "lucide-react";
+import { FeedHeader } from "./components/FeedHeader";
+import { FilterTabs } from "./components/FilterTabs";
+import { EmptyFeed } from "./components/EmptyFeed";
+import { LoadMoreTrigger } from "./components/LoadMoreTrigger";
+import { PostCardWithComments } from "./components/PostCardWithComments";
 
 export default function News() {
   const { user } = useAuth();
@@ -64,27 +64,10 @@ export default function News() {
   return (
     <Layout>
       <div className="container max-w-3xl py-8">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">Novedades</h1>
-          <p className="text-muted-foreground">
-            Últimas actualizaciones y proyectos nuevos
-          </p>
-        </div>
+        <FeedHeader />
 
         {/* Filter Tabs */}
-        {user && (
-          <Tabs
-            value={filter}
-            onValueChange={(v) => setFilter(v as "all" | "following")}
-            className="mb-6"
-          >
-            <TabsList className="grid w-full max-w-md grid-cols-2">
-              <TabsTrigger value="all">Todas</TabsTrigger>
-              <TabsTrigger value="following">Seguidos</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
+        {user && <FilterTabs filter={filter} onFilterChange={setFilter} />}
 
         {/* Feed */}
         {isLoading ? (
@@ -116,59 +99,17 @@ export default function News() {
             </div>
 
             {/* Load More Trigger */}
-            <div ref={loadMoreRef} className="py-8 flex justify-center">
-              {isFetchingNextPage ? (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>Cargando más...</span>
-                </div>
-              ) : hasNextPage ? (
-                <Button
-                  variant="outline"
-                  onClick={() => fetchNextPage()}
-                  disabled={isFetchingNextPage}
-                >
-                  Cargar más
-                </Button>
-              ) : (
-                <p className="text-muted-foreground text-sm">
-                  No hay más contenido para mostrar
-                </p>
-              )}
-            </div>
+            <LoadMoreTrigger
+              ref={loadMoreRef}
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage}
+              onLoadMore={fetchNextPage}
+            />
           </>
         ) : (
-          <div className="text-center py-12">
-            <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">
-              {filter === "following"
-                ? "No hay contenido de proyectos seguidos"
-                : "No hay contenido aún"}
-            </h3>
-            <p className="text-muted-foreground">
-              {filter === "following"
-                ? "Guarda proyectos para ver sus actualizaciones aquí"
-                : "Sé el primero en compartir una actualización"}
-            </p>
-          </div>
+          <EmptyFeed filter={filter} />
         )}
       </div>
     </Layout>
   );
-}
-
-// Helper component to fetch comment count for each post
-function PostCardWithComments({ post }: { post: any }) {
-  const { data: comments } = usePostComments(post.id);
-
-  // Count all comments including nested replies
-  const countComments = (comments: any[]): number => {
-    return comments.reduce((total, comment) => {
-      return total + 1 + (comment.replies ? countComments(comment.replies) : 0);
-    }, 0);
-  };
-
-  const commentCount = comments ? countComments(comments) : 0;
-
-  return <PostCard post={post} commentCount={commentCount} />;
 }

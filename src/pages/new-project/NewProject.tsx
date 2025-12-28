@@ -6,6 +6,8 @@ import { ProjectForm } from "@/components/projects/ProjectForm";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import SpinnerComponent from "@/components/Spinner.component";
+import HeaderNewProject from "./components/HeaderNewProject";
 
 export default function NewProject() {
   const { user, loading: authLoading } = useAuth();
@@ -13,20 +15,16 @@ export default function NewProject() {
   const createProject = useCreateProject();
 
   if (authLoading) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </Layout>
-    );
+    return <SpinnerComponent />;
   }
 
   if (!user) {
     return <Navigate to="/auth" replace />;
   }
 
-  const handleSubmit = async (data: Parameters<typeof createProject.mutateAsync>[0]) => {
+  const handleSubmit = async (
+    data: Parameters<typeof createProject.mutateAsync>[0]
+  ) => {
     const project = await createProject.mutateAsync(data);
     navigate(`/projects/${project.id}`);
   };
@@ -34,20 +32,11 @@ export default function NewProject() {
   return (
     <Layout>
       <div className="container max-w-3xl py-8">
-        <div className="mb-8">
-          <Button variant="ghost" asChild className="mb-4">
-            <Link to="/">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Volver
-            </Link>
-          </Button>
-          <h1 className="text-3xl font-bold">Nuevo proyecto</h1>
-          <p className="text-muted-foreground">
-            Comparte tu proyecto con la comunidad y encuentra colaboradores.
-          </p>
-        </div>
-
-        <ProjectForm onSubmit={handleSubmit} isLoading={createProject.isPending} />
+        <HeaderNewProject />
+        <ProjectForm
+          onSubmit={handleSubmit}
+          isLoading={createProject.isPending}
+        />
       </div>
     </Layout>
   );

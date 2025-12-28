@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { PostForm } from "@/components/posts/PostForm";
 import {
   useProjectPost,
@@ -10,6 +9,7 @@ import {
 } from "@/hooks/useProjectPosts";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
+import LoadingSkeleton from "./components/LoadingSkeleton";
 
 export default function EditPost() {
   const { id } = useParams<{ id: string }>();
@@ -50,13 +50,7 @@ export default function EditPost() {
   };
 
   if (isLoading) {
-    return (
-      <Layout>
-        <div className="container max-w-3xl py-8">
-          <Skeleton className="h-64 w-full" />
-        </div>
-      </Layout>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (!post || !user || post.user_id !== user.id) {
