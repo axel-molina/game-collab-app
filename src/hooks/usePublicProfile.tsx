@@ -25,26 +25,44 @@ export function usePublicProfile(username: string) {
       if (profileError) throw profileError;
       if (!profile) return null;
 
-      // Fetch roles
+      // Fetch roles using joining table
       const { data: rolesData, error: rolesError } = await supabase
         .from("profile_roles")
-        .select("roles(id, name)")
+        .select(
+          `
+          roles (
+            id,
+            name,
+            is_custom
+          )
+        `
+        )
         .eq("profile_id", profile.id);
 
       if (rolesError) throw rolesError;
 
-      // Fetch technologies
+      // Fetch technologies using joining table
       const { data: techsData, error: techsError } = await supabase
         .from("profile_technologies")
-        .select("technology_id, technologies(id, name)")
+        .select(
+          `
+          technologies (
+            id,
+            name
+          )
+        `
+        )
         .eq("profile_id", profile.id);
 
       if (techsError) throw techsError;
 
       return {
         ...profile,
-        roles: rolesData?.map((r) => r.roles) as any[],
-        technologies: techsData?.map((t) => t.technologies) as any[],
+        roles: (rolesData?.map((r: any) => r.roles).filter(Boolean) ||
+          []) as any[],
+        technologies: (techsData
+          ?.map((t: any) => t.technologies)
+          .filter(Boolean) || []) as any[],
       } as PublicProfile;
     },
     enabled: !!username,

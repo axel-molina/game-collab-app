@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AlignLeft, Briefcase, Cpu } from "lucide-react";
+import { AlignLeft, Briefcase, Cpu, Sparkles } from "lucide-react";
 
 interface UserProfileCardProps {
   profile: any;
@@ -52,13 +52,16 @@ export function UserProfileCard({
               Roles
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {profile.roles.map((role: any) => (
+              {profile.roles?.filter(Boolean).map((role: any) => (
                 <Badge
                   key={role.id}
                   variant="secondary"
-                  className="px-2 py-0 text-[10px]"
+                  className="px-2 py-0 text-[10px] flex items-center gap-1"
                 >
                   {role.name}
+                  {role.is_custom && (
+                    <Sparkles className="h-2 w-2 text-yellow-500 fill-current" />
+                  )}
                 </Badge>
               ))}
             </div>

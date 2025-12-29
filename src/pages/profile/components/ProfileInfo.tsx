@@ -19,8 +19,10 @@ import {
   useTechnologies,
   useUpdateProfile,
   useCreateRole,
+  useDeleteRole,
 } from "@/hooks/useProfile";
 import { Input } from "@/components/ui/input";
+import { Trash2 } from "lucide-react";
 
 interface ProfileInfoProps {
   profile: any;
@@ -38,6 +40,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
   const { data: allTechs } = useTechnologies();
   const updateProfile = useUpdateProfile();
   const createRole = useCreateRole();
+  const deleteRole = useDeleteRole();
 
   const handleCreateRole = async () => {
     if (!roleSearch.trim()) return;
@@ -47,6 +50,17 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
       setRoleSearch("");
     } catch (error) {
       console.error("Error creating role:", error);
+    }
+  };
+
+  const handleDeleteRole = async (e: React.MouseEvent, roleId: number) => {
+    e.stopPropagation();
+    try {
+      await deleteRole.mutateAsync(roleId);
+      // Remove from selectedRoles if it was selected
+      setSelectedRoles((prev) => prev.filter((id) => id !== roleId));
+    } catch (error) {
+      console.error("Error deleting role:", error);
     }
   };
 
@@ -201,15 +215,24 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
                       variant={
                         selectedRoles.includes(role.id) ? "default" : "outline"
                       }
-                      className="cursor-pointer py-1.5 px-3 hover:bg-primary/90"
+                      className="group cursor-pointer py-1.5 px-3 hover:bg-primary/90 flex items-center gap-1.5"
                       onClick={() => toggleRole(role.id)}
                     >
                       {role.name}
                       {role.is_custom && (
-                        <Sparkles className="ml-1 h-3 w-3 text-yellow-400 fill-current" />
+                        <Sparkles className="h-3 w-3 text-yellow-400 fill-current" />
                       )}
                       {selectedRoles.includes(role.id) && (
-                        <Check className="ml-1 h-3 w-3" />
+                        <Check className="h-3 w-3" />
+                      )}
+                      {role.is_custom && role.created_by === user.id && (
+                        <button
+                          type="button"
+                          onClick={(e) => handleDeleteRole(e, role.id)}
+                          className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-destructive rounded-full transition-all"
+                        >
+                          <Trash2 className="h-3 w-3 text-white" />
+                        </button>
                       )}
                     </Badge>
                   ))}
