@@ -61,9 +61,9 @@ export function ShareProject({ projectName }: ShareProjectProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <Button variant="outline" className="gap-2 px-3 sm:px-4">
           <Share2 className="h-4 w-4" />
-          Compartir
+          <span className="hidden sm:inline">Compartir</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">

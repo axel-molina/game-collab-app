@@ -56,10 +56,12 @@ export function ProjectHeader({
             {engineLabel}
           </Badge>
         </div>
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <User className="h-4 w-4" />
-            <span>{project.profiles?.username || "Anónimo"}</span>
+            <span className="truncate max-w-[120px]">
+              {project.profiles?.username || "Anónimo"}
+            </span>
           </div>
           <div className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />
@@ -70,22 +72,29 @@ export function ProjectHeader({
               })}
             </span>
           </div>
-          <Badge variant="outline">v{project.engine_version}</Badge>
-          <Button
-            variant={userLiked ? "default" : "outline"}
-            size="sm"
-            onClick={() => toggleLike()}
-            disabled={isToggling || isOwner}
-            className="gap-2"
-          >
-            {isToggling ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Heart className={`h-4 w-4 ${userLiked ? "fill-current" : ""}`} />
-            )}
-            <span>{likesCount}</span>
-          </Button>
-          <ShareProject projectName={project.name} />
+          <Badge variant="outline" className="hidden sm:inline-flex">
+            v{project.engine_version}
+          </Badge>
+
+          <div className="flex items-center gap-2 ml-auto sm:ml-0">
+            <Button
+              variant={userLiked ? "default" : "outline"}
+              size="sm"
+              onClick={() => toggleLike()}
+              disabled={isToggling || isOwner}
+              className="gap-2 h-9 px-3 sm:px-4"
+            >
+              {isToggling ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Heart
+                  className={`h-4 w-4 ${userLiked ? "fill-current" : ""}`}
+                />
+              )}
+              <span>{likesCount}</span>
+            </Button>
+            <ShareProject projectName={project.name} />
+          </div>
         </div>
       </div>
 
