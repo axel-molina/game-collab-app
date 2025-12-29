@@ -16,6 +16,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { ShareProject } from "./ShareProject";
+
 interface ProjectHeaderProps {
   project: any;
   engineLabel: string;
@@ -83,6 +85,7 @@ export function ProjectHeader({
             )}
             <span>{likesCount}</span>
           </Button>
+          <ShareProject projectName={project.name} />
         </div>
       </div>
 
