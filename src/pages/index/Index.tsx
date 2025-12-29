@@ -5,6 +5,7 @@ import { ProjectFilters } from "@/components/projects/ProjectFilters";
 import { useProjects } from "@/hooks/useProjects";
 import { useDebounce } from "@/hooks/useDebounce";
 import Hero from "./components/Hero";
+import { RecommendedProjects } from "./components/RecommendedProjects";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -24,6 +25,9 @@ const Index = () => {
       {/* Hero */}
       <Hero />
       <div className="container mb-4">
+        {/* Recommended Projects (if any) */}
+        <RecommendedProjects />
+
         {/* Filters */}
         <ProjectFilters
           search={search}
