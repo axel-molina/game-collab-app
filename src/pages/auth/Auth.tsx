@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Card,
   CardContent,
@@ -14,12 +16,13 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SpinnerComponent from "@/components/Spinner.component";
-import { Loader2, Gamepad2, Eye, EyeOff } from "lucide-react";
+import { Loader2, Gamepad2, Eye, EyeOff, Info } from "lucide-react";
 import { toast } from "sonner";
 import { Colors } from "@/lib/colors";
 import HeaderLogin from "./components/HeaderLogin";
 
 export default function Auth() {
+  const { t } = useTranslation();
   const { user, loading, signIn, signUp, resetPassword } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,12 +58,12 @@ export default function Auth() {
 
     if (error) {
       toast.error(
-        error.message === "Invalid login credentials"
-          ? "Credenciales inválidas"
+        error.message === "Invalid credentials"
+          ? t("auth.invalid_credentials")
           : error.message
       );
     } else {
-      toast.success("¡Bienvenido!");
+      toast.success(t("auth.login_welcome"));
       navigate("/");
     }
 
@@ -72,7 +75,7 @@ export default function Auth() {
     setIsSubmitting(true);
 
     if (signupPassword.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
+      toast.error(t("auth.password_min_length"));
       setIsSubmitting(false);
       return;
     }
@@ -81,12 +84,12 @@ export default function Auth() {
 
     if (error) {
       if (error.message.includes("already registered")) {
-        toast.error("Este email ya está registrado");
+        toast.error(t("auth.email_already_registered"));
       } else {
         toast.error(error.message);
       }
     } else {
-      toast.success("¡Cuenta creada exitosamente! Por favor inicia sesión.");
+      toast.success(t("auth.signup_success"));
       setActiveTab("login");
     }
 
@@ -107,9 +110,7 @@ export default function Auth() {
       toast.error(error.message);
     } else {
       setResetSent(true);
-      toast.success(
-        "¡Correo de recuperación enviado! Revisa tu bandeja de entrada."
-      );
+      toast.success(t("auth.reset_instructions"));
     }
 
     setIsSubmitting(false);
@@ -132,8 +133,8 @@ export default function Auth() {
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <CardHeader>
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
-                  <TabsTrigger value="signup">Registrarse</TabsTrigger>
+                  <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
+                  <TabsTrigger value="signup">{t("auth.signup")}</TabsTrigger>
                 </TabsList>
               </CardHeader>
 
@@ -141,7 +142,7 @@ export default function Auth() {
                 <TabsContent value="login" className="mt-0">
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login-email">Email</Label>
+                      <Label htmlFor="login-email">{t("auth.email")}</Label>
                       <Input
                         id="login-email"
                         type="email"
@@ -153,14 +154,16 @@ export default function Auth() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="login-password">Contraseña</Label>
+                        <Label htmlFor="login-password">
+                          {t("auth.password")}
+                        </Label>
                         <Button
                           type="button"
                           variant="link"
                           className="h-auto p-0 text-xs"
                           onClick={() => setShowResetPassword(true)}
                         >
-                          ¿Olvidaste tu contraseña?
+                          {t("auth.forgot_password")}
                         </Button>
                       </div>
                       <div className="relative">
@@ -198,7 +201,7 @@ export default function Auth() {
                       {isSubmitting && (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       )}
-                      Iniciar sesión
+                      {t("auth.login")}
                     </Button>
                   </form>
                 </TabsContent>
@@ -206,7 +209,9 @@ export default function Auth() {
                 <TabsContent value="signup" className="mt-0">
                   <form onSubmit={handleSignup} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="signup-username">Nombre de usuario</Label>
+                      <Label htmlFor="signup-username">
+                        {t("auth.username")}
+                      </Label>
                       <Input
                         id="signup-username"
                         type="text"
@@ -217,7 +222,7 @@ export default function Auth() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="signup-email">Email</Label>
+                      <Label htmlFor="signup-email">{t("auth.email")}</Label>
                       <Input
                         id="signup-email"
                         type="email"
@@ -228,7 +233,9 @@ export default function Auth() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="signup-password">Contraseña</Label>
+                      <Label htmlFor="signup-password">
+                        {t("auth.password")}
+                      </Label>
                       <div className="relative">
                         <Input
                           id="signup-password"
@@ -265,8 +272,15 @@ export default function Auth() {
                       {isSubmitting && (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       )}
-                      Crear cuenta
+                      {t("auth.create_account")}
                     </Button>
+
+                    <Alert className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                      <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      <AlertDescription className="text-blue-700 dark:text-blue-300 text-xs">
+                        {t("auth.spam_reminder")}
+                      </AlertDescription>
+                    </Alert>
                   </form>
                 </TabsContent>
               </CardContent>
@@ -278,7 +292,7 @@ export default function Auth() {
               {!resetSent ? (
                 <form onSubmit={handleResetPassword} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="reset-email">Correo electrónico</Label>
+                    <Label htmlFor="reset-email">{t("auth.email")}</Label>
                     <Input
                       id="reset-email"
                       type="email"
@@ -296,10 +310,10 @@ export default function Auth() {
                     {isSubmitting ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Enviando...
+                        {t("common.translating")}...
                       </>
                     ) : (
-                      "Enviar enlace de recuperación"
+                      t("auth.send_reset_link")
                     )}
                   </Button>
                   <Button
@@ -309,7 +323,7 @@ export default function Auth() {
                     onClick={handleBackToLogin}
                     disabled={isSubmitting}
                   >
-                    Volver al inicio de sesión
+                    {t("auth.back_to_login")}
                   </Button>
                 </form>
               ) : (
@@ -329,14 +343,14 @@ export default function Auth() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium">¡Correo enviado!</h3>
+                  <h3 className="text-lg font-medium">
+                    {t("auth.reset_email_sent")}
+                  </h3>
                   <p className="text-sm text-muted-foreground">
-                    Hemos enviado un enlace para restablecer tu contraseña a{" "}
-                    {resetEmail}. Revisa tu bandeja de entrada y sigue las
-                    instrucciones.
+                    {t("auth.reset_instructions")}
                   </p>
                   <Button onClick={handleBackToLogin} className="w-full mt-4">
-                    Volver al inicio de sesión
+                    {t("auth.back_to_login")}
                   </Button>
                 </div>
               )}
