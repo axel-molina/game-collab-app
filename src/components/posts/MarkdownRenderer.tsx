@@ -25,7 +25,9 @@ export function MarkdownRenderer({
           <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />
         ),
         // Customize paragraph
-        p: ({ node, ...props }) => <p className="mb-4 leading-7" {...props} />,
+        p: ({ node, ...props }) => (
+          <p className="mb-4 leading-7 break-words" {...props} />
+        ),
         // Customize lists
         ul: ({ node, ...props }) => (
           <ul className="list-disc list-inside mb-4 space-y-2" {...props} />
@@ -36,7 +38,7 @@ export function MarkdownRenderer({
         // Customize links
         a: ({ node, ...props }) => (
           <a
-            className="text-primary hover:underline font-medium"
+            className="text-primary hover:underline font-medium break-words"
             target="_blank"
             rel="noopener noreferrer"
             {...props}
