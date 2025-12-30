@@ -40,6 +40,8 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(0); // 0: Welcome, 1: Bio, 2: Roles, 3: Techs
   const [bio, setBio] = useState("");
+  const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
+  const [selectedTechs, setSelectedTechs] = useState<number[]>([]);
   const [roleSearch, setRoleSearch] = useState("");
   const { data: allRoles } = useRoles(roleSearch);
   const { data: allTechs } = useTechnologies();
@@ -73,6 +75,12 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
     if (profile && !profile.onboarding_completed) {
       setIsOpen(true);
       setBio(profile.bio || "");
+      if (profile.roles) {
+        setSelectedRoles(profile.roles.map((r) => r.id));
+      }
+      if (profile.technologies) {
+        setSelectedTechs(profile.technologies.map((t) => t.id));
+      }
     }
   }, [profile]);
 
