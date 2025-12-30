@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import App from "./App.tsx";
 import "./index.css";
+import "./i18n/config";
 
 const queryClient = new QueryClient();
 

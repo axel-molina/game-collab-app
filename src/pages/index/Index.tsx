@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/layout/Layout";
 import { ProjectList } from "@/components/projects/ProjectList";
 import { ProjectFilters } from "@/components/projects/ProjectFilters";
@@ -8,6 +9,7 @@ import Hero from "./components/Hero";
 import { RecommendedProjects } from "./components/RecommendedProjects";
 
 const Index = () => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [engine, setEngine] = useState("all");
   const [position, setPosition] = useState("all");
@@ -40,8 +42,7 @@ const Index = () => {
         {/* Results count */}
         {!isLoading && (
           <p className="text-sm text-muted-foreground mb-6">
-            {projects.length} proyecto{projects.length !== 1 ? "s" : ""}{" "}
-            encontrado{projects.length !== 1 ? "s" : ""}
+            {t("home.results", { count: projects.length })}
           </p>
         )}
         {/* Projects List */}

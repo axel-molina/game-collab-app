@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Project } from "@/hooks/useProjects";
 import { ProjectCard } from "./ProjectCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,6 +10,8 @@ interface ProjectListProps {
 }
 
 export function ProjectList({ projects, isLoading }: ProjectListProps) {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -38,9 +41,12 @@ export function ProjectList({ projects, isLoading }: ProjectListProps) {
     return (
       <div className="text-center py-16 animate-fade-in">
         <Gamepad2 className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
-        <h3 className="text-xl font-semibold mb-2">No hay proyectos</h3>
+        <h3 className="text-xl font-semibold mb-2">{t("home.no_results")}</h3>
         <p className="text-muted-foreground">
-          No se encontraron proyectos con los filtros aplicados.
+          {t(
+            "home.filters.no_projects_description",
+            "No se encontraron proyectos con los filtros aplicados."
+          )}
         </p>
       </div>
     );

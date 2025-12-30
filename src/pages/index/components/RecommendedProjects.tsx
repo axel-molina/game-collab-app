@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { useProjectMatches } from "@/hooks/useProjectMatches";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function RecommendedProjects() {
+  const { t } = useTranslation();
   const { data: projects = [], isLoading } = useProjectMatches();
 
   if (isLoading) {
@@ -30,7 +32,7 @@ export function RecommendedProjects() {
           <Sparkles className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
         </div>
         <h2 className="text-2xl font-bold tracking-tight">
-          Recomendados para ti
+          {t("home.recommended")}
         </h2>
       </div>
 

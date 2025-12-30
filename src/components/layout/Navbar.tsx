@@ -1,4 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,26 +20,31 @@ import {
   Box,
   Bell,
   Info,
+  Languages,
 } from "lucide-react";
 import logo from "../../../assets/icon.png";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Colors } from "@/lib/colors";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const navItems = [
-  { name: "Inicio", path: "/", icon: Home },
-  { name: "Proyectos", path: "/projects", icon: Box },
-  { name: "Sobre nosotros", path: "/about", icon: Info },
+const getNavItems = (t: any) => [
+  { name: t("nav.home"), path: "/", icon: Home },
+  { name: t("nav.projects"), path: "/projects", icon: Box },
+  { name: t("nav.about"), path: "/about", icon: Info },
 ];
 
 export function Navbar() {
+  const { t } = useTranslation();
   const { user, signOut, loading } = useAuth();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const navItems = getNavItems(t);
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -120,7 +126,7 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            title="Cambiar tema"
+            title={t("common.toggle_theme")}
             className="hidden sm:flex"
           >
             {theme === "dark" ? (
@@ -129,6 +135,10 @@ export function Navbar() {
               <Moon className="h-5 w-5" />
             )}
           </Button>
+
+          <div className="hidden sm:flex">
+            <LanguageSwitcher />
+          </div>
 
           {/* Mobile menu button */}
           <Button
@@ -157,7 +167,7 @@ export function Navbar() {
                   >
                     <Link to="/profile" className="flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      <span>Perfil</span>
+                      <span>{t("nav.profile")}</span>
                     </Link>
                   </Button>
 
@@ -166,7 +176,7 @@ export function Navbar() {
                     <DropdownMenuTrigger asChild>
                       <Button size="sm" className="hidden sm:flex gap-2">
                         <Plus className="h-4 w-4" />
-                        <span>Publicar</span>
+                        <span>{t("nav.publish")}</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
@@ -176,7 +186,7 @@ export function Navbar() {
                           className="flex items-center gap-2 cursor-pointer"
                         >
                           <Box className="h-4 w-4" />
-                          <span>Nuevo Proyecto</span>
+                          <span>{t("nav.new_project")}</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
@@ -185,7 +195,7 @@ export function Navbar() {
                           className="flex items-center gap-2 cursor-pointer"
                         >
                           <Bell className="h-4 w-4" />
-                          <span>Nuevo Posteo</span>
+                          <span>{t("nav.new_post")}</span>
                         </Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -195,7 +205,7 @@ export function Navbar() {
                 <Button asChild size="sm" className="hidden sm:flex">
                   <Link to="/auth" className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    <span>Iniciar sesión</span>
+                    <span>{t("nav.login")}</span>
                   </Link>
                 </Button>
               )}
@@ -237,7 +247,7 @@ export function Navbar() {
                   >
                     <Link to="/profile">
                       <User className="h-4 w-4" />
-                      <span>Perfil</span>
+                      <span>{t("nav.profile")}</span>
                     </Link>
                   </Button>
                   <Button
@@ -247,7 +257,7 @@ export function Navbar() {
                   >
                     <Link to="/projects/new">
                       <Box className="h-4 w-4" />
-                      <span>Nuevo Proyecto</span>
+                      <span>{t("nav.new_project")}</span>
                     </Link>
                   </Button>
                   <Button
@@ -257,7 +267,7 @@ export function Navbar() {
                   >
                     <Link to="/posts/new">
                       <Bell className="h-4 w-4" />
-                      <span>Nuevo Posteo</span>
+                      <span>{t("nav.new_post")}</span>
                     </Link>
                   </Button>
                   <Button
@@ -269,7 +279,7 @@ export function Navbar() {
                     }}
                   >
                     <LogOut className="h-4 w-4" />
-                    <span>Cerrar sesión</span>
+                    <span>{t("nav.logout")}</span>
                   </Button>
                 </>
               )}
@@ -282,7 +292,7 @@ export function Navbar() {
                 >
                   <Link to="/auth">
                     <User className="h-4 w-4" />
-                    <span>Iniciar sesión</span>
+                    <span>{t("nav.login")}</span>
                   </Link>
                 </Button>
               )}
@@ -292,7 +302,7 @@ export function Navbar() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  title="Cambiar tema"
+                  title={t("common.toggle_theme")}
                   className="h-9 w-9"
                 >
                   {theme === "dark" ? (
@@ -301,6 +311,7 @@ export function Navbar() {
                     <Moon className="h-5 w-5" />
                   )}
                 </Button>
+                <LanguageSwitcher />
               </div>
             </nav>
           </div>

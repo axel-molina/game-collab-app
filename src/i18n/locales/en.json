@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "news": "News",
+    "about": "About Us",
+    "login": "Login",
+    "profile": "My Profile",
+    "logout": "Logout",
+    "publish": "Publish",
+    "new_project": "New Project",
+    "new_post": "New Post"
+  },
+  "common": {
+    "toggle_theme": "Toggle theme",
+    "toggle_language": "Toggle language"
+  },
+  "hero": {
+    "title": "Build the next big game as a team",
+    "subtitle": "Connect with developers, artists, musicians, and designers to bring your ideas to life.",
+    "cta": "Explore projects",
+    "stats": {
+      "projects": "Active projects",
+      "creators": "Creators"
+    }
+  },
+  "home": {
+    "recommended": "Recommended for you",
+    "filters": {
+      "search": "Search projects...",
+      "engine": "All engines",
+      "position": "All roles"
+    },
+    "results": "{{count}} project found",
+    "results_plural": "{{count}} projects found",
+    "no_results": "No projects found"
+  },
+  "engines": {
+    "unity": "Unity",
+    "godot": "Godot",
+    "gamemaker": "Game Maker",
+    "unreal": "Unreal Engine",
+    "rpgmaker": "RPG Maker",
+    "other": "Other"
+  },
+  "positions": {
+    "programmer": "Programmer",
+    "2d-designer": "2D Designer",
+    "3d-designer": "3D Designer",
+    "animator": "Animator",
+    "pixel-artist": "Pixel Artist",
+    "musician": "Musician",
+    "sound-designer": "Sound/FX Designer",
+    "game-designer": "Game Designer",
+    "ui-ux": "UI / UX Designer",
+    "qa-tester": "QA / Tester",
+    "narrative-designer": "Narrative Designer",
+    "technical-artist": "Technical Artist",
+    "producer": "Producer"
+  }
+}

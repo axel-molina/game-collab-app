@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "projects": "Proyectos",
+    "news": "Novedades",
+    "about": "Sobre nosotros",
+    "login": "Iniciar Sesión",
+    "profile": "Mi Perfil",
+    "logout": "Cerrar Sesión",
+    "publish": "Publicar",
+    "new_project": "Nuevo Proyecto",
+    "new_post": "Nuevo Posteo"
+  },
+  "common": {
+    "toggle_theme": "Cambiar tema",
+    "toggle_language": "Cambiar idioma"
+  },
+  "hero": {
+    "title": "Crea el próximo gran juego en equipo",
+    "subtitle": "Conecta con desarrolladores, artistas, músicos y diseñadores para dar vida a tus ideas.",
+    "cta": "Explorar proyectos",
+    "stats": {
+      "projects": "Proyectos activos",
+      "creators": "Creadores"
+    }
+  },
+  "home": {
+    "recommended": "Recomendados para ti",
+    "filters": {
+      "search": "Buscar proyectos...",
+      "engine": "Todos los motores",
+      "position": "Todos los roles"
+    },
+    "results": "{{count}} proyecto encontrado",
+    "results_plural": "{{count}} proyectos encontrados",
+    "no_results": "No hay proyectos"
+  },
+  "engines": {
+    "unity": "Unity",
+    "godot": "Godot",
+    "gamemaker": "Game Maker",
+    "unreal": "Unreal Engine",
+    "rpgmaker": "RPG Maker",
+    "other": "Otro"
+  },
+  "positions": {
+    "programmer": "Programador",
+    "2d-designer": "Diseñador 2D",
+    "3d-designer": "Diseñador 3D",
+    "animator": "Animador",
+    "pixel-artist": "Pixel Artist",
+    "musician": "Músico",
+    "sound-designer": "Diseñador de sonido / FX",
+    "game-designer": "Game Designer",
+    "ui-ux": "UI / UX Designer",
+    "qa-tester": "QA / Tester",
+    "narrative-designer": "Narrative Designer",
+    "technical-artist": "Technical Artist",
+    "producer": "Producer"
+  }
+}
