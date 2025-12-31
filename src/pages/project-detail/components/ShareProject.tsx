@@ -6,6 +6,12 @@ import {
   MessageCircle,
   Twitter,
 } from "lucide-react";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  LinkedinShareButton,
+} from "react-share";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,41 +20,44 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 interface ShareProjectProps {
   projectName: string;
 }
 
 export function ShareProject({ projectName }: ShareProjectProps) {
-  const shareUrl = window.location.href;
-  const encodedUrl = encodeURIComponent(shareUrl);
-  const encodedTitle = encodeURIComponent(
-    `¡Revisa mi proyecto en GameCollab: ${projectName}!`
-  );
+  const shareUrl =
+    "https://gamecollab.site/projects/bf4abe35-8fc1-45fe-9f80-93474b1670b4";
+  const shareTitle = `¡Revisa mi proyecto en GameCollab: ${projectName}!`;
 
   const shareLinks = [
     {
       name: "WhatsApp",
       icon: <MessageCircle className="h-4 w-4" />,
-      url: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+      Component: WhatsappShareButton,
+      props: { title: shareTitle },
       color: "hover:text-[#25D366]",
     },
     {
       name: "X (Twitter)",
       icon: <Twitter className="h-4 w-4" />,
-      url: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+      Component: TwitterShareButton,
+      props: { title: shareTitle },
       color: "hover:text-[#1DA1F2]",
     },
     {
       name: "Facebook",
       icon: <Facebook className="h-4 w-4" />,
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`,
+      Component: FacebookShareButton,
+      props: { hashtag: shareUrl, quote: shareTitle },
       color: "hover:text-[#4267B2]",
     },
     {
       name: "LinkedIn",
       icon: <Linkedin className="h-4 w-4" />,
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      Component: LinkedinShareButton,
+      props: { title: shareTitle },
       color: "hover:text-[#0077B5]",
     },
   ];
@@ -69,15 +78,14 @@ export function ShareProject({ projectName }: ShareProjectProps) {
       <DropdownMenuContent align="end" className="w-48">
         {shareLinks.map((link) => (
           <DropdownMenuItem key={link.name} asChild>
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center gap-2 cursor-pointer transition-colors ${link.color}`}
+            <link.Component
+              url={shareUrl}
+              {...link.props}
+              className={`flex items-center gap-2 ml-2 cursor-pointer transition-colors w-full px-2 py-1.5 text-sm outline-none ${link.color}`}
             >
               {link.icon}
               {link.name}
-            </a>
+            </link.Component>
           </DropdownMenuItem>
         ))}
         <DropdownMenuItem

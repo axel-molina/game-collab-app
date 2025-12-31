@@ -19,28 +19,28 @@ import FollowingProjects from "./pages/following-projects/FollowingProjects";
 import NotFound from "./pages/not-found/NotFound";
 
 const App = () => (
-  <AuthProvider>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <Routes>
-        <Route path="/" element={<News />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/projects" element={<Index />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/users/:username" element={<UserProfile />} />
-        <Route path="/projects/new" element={<NewProject />} />
-        <Route path="/projects/:id" element={<ProjectDetail />} />
-        <Route path="/projects/:id/edit" element={<EditProject />} />
-        <Route path="/posts/new" element={<CreatePost />} />
-        <Route path="/posts/:id" element={<PostDetail />} />
-        <Route path="/posts/:id/edit" element={<EditPost />} />
-        <Route path="/following" element={<FollowingProjects />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </TooltipProvider>
-  </AuthProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route path="/" element={<News />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/projects" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/users/:username" element={<UserProfile />} />
+          <Route path="/projects/new" element={<NewProject />} />
+          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/projects/:id/edit" element={<EditProject />} />
+          <Route path="/posts/new" element={<CreatePost />} />
+          <Route path="/posts/:id" element={<PostDetail />} />
+          <Route path="/posts/:id/edit" element={<EditPost />} />
+          <Route path="/following" element={<FollowingProjects />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </TooltipProvider>
+    </AuthProvider>
 );
 
 export default App;
