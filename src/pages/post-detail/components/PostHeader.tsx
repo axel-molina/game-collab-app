@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useTranslation } from "react-i18next";
+import { ShareProject } from "@/pages/project-detail/components/ShareProject";
 
 interface PostHeaderProps {
   post: any;
@@ -40,15 +41,20 @@ export function PostHeader({
     <>
       {/* Project Badge */}
       {post.projects && (
-        <div className="flex items-center gap-2 mb-4">
-          <Badge
-            className={`${getEngineColor(
-              post.projects.engine
-            )} text-primary-foreground border-0`}
-          >
-            {post.projects.name}
-          </Badge>
-          <Badge variant="outline">{engineLabel}</Badge>
+        <div className="flex items-center gap-2 mb-4 justify-between">
+          <div>
+            <Badge
+              className={`${getEngineColor(
+                post.projects.engine
+              )} text-primary-foreground border-0`}
+            >
+              {post.projects.name}
+            </Badge>
+            <Badge variant="outline">{engineLabel}</Badge>
+          </div>
+          <div>
+            <ShareProject projectName={post.title} />
+          </div>
         </div>
       )}
 
