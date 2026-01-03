@@ -2,6 +2,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useProject, useDeleteProject } from "@/hooks/useProjects";
 import { useProjectLikes } from "@/hooks/useProjectLikes";
+import { useProjectFollows } from "@/hooks/useProjectFollows";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,8 @@ export default function ProjectDetail() {
     toggleLike,
     isToggling,
   } = useProjectLikes(id!);
+
+  const { isFollowing, toggleFollow } = useProjectFollows(user?.id);
 
   if (isLoading) {
     return (
@@ -90,6 +93,11 @@ export default function ProjectDetail() {
           userLiked={userLiked}
           isToggling={isToggling}
           toggleLike={toggleLike}
+          isFollowing={isFollowing(project.id)}
+          toggleFollow={() =>
+            toggleFollow.mutate({ projectId: project.id, userId: user!.id })
+          }
+          isFollowPending={toggleFollow.isPending}
           handleDelete={handleDelete}
           deleteProjectPending={deleteProject.isPending}
         />

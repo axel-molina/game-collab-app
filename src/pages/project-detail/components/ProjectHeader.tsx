@@ -1,7 +1,16 @@
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { User, Calendar, Edit, Trash2, Loader2, Heart } from "lucide-react";
+import {
+  User,
+  Calendar,
+  Edit,
+  Trash2,
+  Loader2,
+  Heart,
+  Bookmark,
+  BookmarkCheck,
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import {
@@ -27,6 +36,9 @@ interface ProjectHeaderProps {
   userLiked: boolean;
   isToggling: boolean;
   toggleLike: () => void;
+  isFollowing: boolean;
+  toggleFollow: () => void;
+  isFollowPending: boolean;
   handleDelete: () => void;
   deleteProjectPending: boolean;
 }
@@ -40,6 +52,9 @@ export function ProjectHeader({
   userLiked,
   isToggling,
   toggleLike,
+  isFollowing,
+  toggleFollow,
+  isFollowPending,
   handleDelete,
   deleteProjectPending,
 }: ProjectHeaderProps) {
@@ -92,6 +107,25 @@ export function ProjectHeader({
                 />
               )}
               <span>{likesCount}</span>
+            </Button>
+
+            <Button
+              variant={isFollowing ? "default" : "outline"}
+              size="sm"
+              onClick={() => toggleFollow()}
+              disabled={isFollowPending || isOwner}
+              className="gap-2 h-9 px-3 sm:px-4"
+              title={
+                isFollowing ? "Quitar de favoritos" : "Agregar a favoritos"
+              }
+            >
+              {isFollowPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : isFollowing ? (
+                <BookmarkCheck className="h-4 w-4 fill-current" />
+              ) : (
+                <Bookmark className="h-4 w-4" />
+              )}
             </Button>
             <ShareProject projectName={project.name} />
           </div>
