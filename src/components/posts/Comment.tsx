@@ -10,7 +10,7 @@ import {
   useDeleteComment,
 } from "@/hooks/usePostComments";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import { User, Edit, Trash2, Reply, Loader2 } from "lucide-react";
 import {
   AlertDialog,
@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useTranslation } from "react-i18next";
 
 interface CommentProps {
   comment: PostComment;
@@ -31,6 +32,7 @@ interface CommentProps {
 }
 
 export function Comment({ comment, postId, depth = 0 }: CommentProps) {
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
@@ -73,6 +75,8 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
     await deleteComment.mutateAsync({ id: comment.id, postId });
   };
 
+  const dateLocale = i18n.language === "es" ? es : enUS;
+
   return (
     <div className={`${depth > 0 ? "ml-8 mt-4" : ""}`}>
       <div className="bg-muted/30 rounded-lg p-4">
@@ -84,13 +88,13 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
               to={`/users/${comment.profiles?.username}`}
               className="font-medium hover:text-primary hover:underline"
             >
-              {comment.profiles?.username || "Anónimo"}
+              {comment.profiles?.username || t("common.anonymous")}
             </Link>
             <span className="text-muted-foreground">·</span>
             <span className="text-muted-foreground">
               {formatDistanceToNow(new Date(comment.created_at), {
                 addSuffix: true,
-                locale: es,
+                locale: dateLocale,
               })}
             </span>
           </div>
@@ -114,13 +118,17 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>¿Eliminar comentario?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {t("comments.delete_title")}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      Esta acción no se puede deshacer.
+                      {t("comments.delete_desc")}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogCancel>
+                      {t("projects.cancel")}
+                    </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDelete}
                       disabled={deleteComment.isPending}
@@ -128,7 +136,7 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
                       {deleteComment.isPending && (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       )}
-                      Eliminar
+                      {t("projects.delete")}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -155,7 +163,7 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
                   setEditContent(comment.content);
                 }}
               >
-                Cancelar
+                {t("projects.cancel")}
               </Button>
               <Button
                 size="sm"
@@ -165,7 +173,7 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
                 {updateComment.isPending && (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 )}
-                Guardar
+                {t("comments.save")}
               </Button>
             </div>
           </div>
@@ -184,7 +192,7 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
                 onClick={() => setIsReplying(true)}
               >
                 <Reply className="h-3 w-3 mr-1" />
-                Responder
+                {t("comments.reply")}
               </Button>
             )}
           </>
@@ -196,7 +204,7 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
             <Textarea
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
-              placeholder="Escribe tu respuesta..."
+              placeholder={t("comments.reply_placeholder")}
               rows={2}
               className="resize-none"
             />
@@ -209,7 +217,7 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
                   setReplyContent("");
                 }}
               >
-                Cancelar
+                {t("projects.cancel")}
               </Button>
               <Button
                 size="sm"
@@ -219,7 +227,7 @@ export function Comment({ comment, postId, depth = 0 }: CommentProps) {
                 {createComment.isPending && (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 )}
-                Responder
+                {t("comments.reply")}
               </Button>
             </div>
           </div>

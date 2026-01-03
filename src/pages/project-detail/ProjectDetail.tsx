@@ -13,6 +13,7 @@ import {
   getEngineColor,
 } from "@/lib/constants";
 import { ArrowLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { ProjectHeader } from "./components/ProjectHeader";
 import { ProjectImages } from "./components/ProjectImages";
 import { ProjectTasks } from "./components/ProjectTasks";
@@ -21,6 +22,7 @@ import { ProjectContact } from "./components/ProjectContact";
 import { NotFoundState } from "./components/NotFoundState";
 
 export default function ProjectDetail() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -79,7 +81,7 @@ export default function ProjectDetail() {
         <Button variant="ghost" asChild className="mb-6">
           <Link to="/">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Volver
+            {t("projects.back")}
           </Link>
         </Button>
 
@@ -109,7 +111,7 @@ export default function ProjectDetail() {
           {/* Description */}
           <Card>
             <CardHeader>
-              <CardTitle>Descripción</CardTitle>
+              <CardTitle>{t("projects.description_label")}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="whitespace-pre-wrap">{project.description}</p>

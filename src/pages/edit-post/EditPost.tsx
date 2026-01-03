@@ -66,9 +66,9 @@ export default function EditPost() {
       <div className="container max-w-3xl py-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Editar Novedad</CardTitle>
+            <CardTitle className="text-2xl">{t("posts.edit_title")}</CardTitle>
             <p className="text-sm text-muted-foreground">
-              Actualiza el contenido de tu post
+              {t("posts.edit_subtitle")}
             </p>
           </CardHeader>
           <CardContent>
@@ -81,7 +81,7 @@ export default function EditPost() {
               onSubmit={handleSubmit}
               onCancel={handleCancel}
               isSubmitting={updatePost.isPending}
-              submitLabel="Guardar Cambios"
+              submitLabel={t("posts.save")}
             />
           </CardContent>
         </Card>

@@ -1,4 +1,5 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslation } from "react-i18next";
 
 interface FilterTabsProps {
   filter: "all" | "following";
@@ -6,6 +7,8 @@ interface FilterTabsProps {
 }
 
 export function FilterTabs({ filter, onFilterChange }: FilterTabsProps) {
+  const { t } = useTranslation();
+
   return (
     <Tabs
       value={filter}
@@ -13,8 +16,8 @@ export function FilterTabs({ filter, onFilterChange }: FilterTabsProps) {
       className="mb-6"
     >
       <TabsList className="grid w-full max-w-md grid-cols-2">
-        <TabsTrigger value="all">Todas</TabsTrigger>
-        <TabsTrigger value="following">Seguidos</TabsTrigger>
+        <TabsTrigger value="all">{t("news.all")}</TabsTrigger>
+        <TabsTrigger value="following">{t("news.following")}</TabsTrigger>
       </TabsList>
     </Tabs>
   );

@@ -17,8 +17,10 @@ import LoaderLayout from "./components/LoaderLayout";
 import SignOutButton from "./components/SignOutButton";
 import HeaderNewProjectsProfile from "./components/HeaderNewProjectsProfile";
 import HeaderNewPostProfile from "./components/HeaderNewPostProfile";
+import { useTranslation } from "react-i18next";
 
 export default function Profile() {
+  const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const { data: profile, isLoading: profileLoading } = useProfile();
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -49,16 +51,14 @@ export default function Profile() {
 
   // Get initials from username or email
   const getInitials = () => {
-    if (profile?.username) {
-      return profile.username
+    const nameToUse = profile?.username || user.email || "";
+    if (nameToUse) {
+      return nameToUse
         .split(" ")
-        .map((n) => n[0])
+        .map((n: string) => n[0])
         .join("")
         .toUpperCase()
         .slice(0, 2);
-    }
-    if (user.email) {
-      return user.email[0].toUpperCase();
     }
     return "U";
   };
@@ -95,7 +95,9 @@ export default function Profile() {
 
             {activeTab === "saved" && (
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Proyectos Guardados</h2>
+                <h2 className="text-2xl font-bold">
+                  {t("common.saved_projects")}
+                </h2>
                 <FollowingProjectsTab userId={user.id} />
               </div>
             )}

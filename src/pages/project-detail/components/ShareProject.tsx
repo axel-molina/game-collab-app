@@ -20,16 +20,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ShareProjectProps {
   projectName: string;
 }
 
 export function ShareProject({ projectName }: ShareProjectProps) {
-  const shareUrl =
-    "https://gamecollab.site/projects/bf4abe35-8fc1-45fe-9f80-93474b1670b4";
-  const shareTitle = `¡Revisa mi proyecto en GameCollab: ${projectName}!`;
+  const { t } = useTranslation();
+  const shareUrl = window.location.href;
+  const shareTitle = t("projects.share_text", { projectName });
 
   const shareLinks = [
     {
@@ -64,7 +64,7 @@ export function ShareProject({ projectName }: ShareProjectProps) {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareUrl);
-    toast.success("Enlace copiado al portapapeles");
+    toast.success(t("projects.link_copied"));
   };
 
   return (
@@ -72,7 +72,7 @@ export function ShareProject({ projectName }: ShareProjectProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="gap-2 px-3 sm:px-4">
           <Share2 className="h-4 w-4" />
-          <span className="hidden sm:inline">Compartir</span>
+          <span className="hidden sm:inline">{t("projects.share")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
@@ -93,7 +93,7 @@ export function ShareProject({ projectName }: ShareProjectProps) {
           className="flex items-center gap-2 cursor-pointer"
         >
           <Link className="h-4 w-4" />
-          Copiar enlace
+          {t("projects.copy_link")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -12,7 +12,7 @@ import {
   BookmarkCheck,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,7 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
+import { useTranslation } from "react-i18next";
 import { ShareProject } from "./ShareProject";
 
 interface ProjectHeaderProps {
@@ -58,6 +58,9 @@ export function ProjectHeader({
   handleDelete,
   deleteProjectPending,
 }: ProjectHeaderProps) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === "es" ? es : enUS;
+
   return (
     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
       <div>
@@ -78,7 +81,7 @@ export function ProjectHeader({
               to={`/users/${project.profiles?.username}`}
               className="truncate max-w-[120px] hover:text-primary hover:underline transition-colors"
             >
-              {project.profiles?.username || "Anónimo"}
+              {project.profiles?.username || t("common.anonymous")}
             </Link>
           </div>
           <div className="flex items-center gap-1">
@@ -86,7 +89,7 @@ export function ProjectHeader({
             <span>
               {formatDistanceToNow(new Date(project.created_at), {
                 addSuffix: true,
-                locale: es,
+                locale: locale,
               })}
             </span>
           </div>
@@ -119,7 +122,9 @@ export function ProjectHeader({
               disabled={isFollowPending || isOwner}
               className="gap-2 h-9 px-3 sm:px-4"
               title={
-                isFollowing ? "Quitar de favoritos" : "Agregar a favoritos"
+                isFollowing
+                  ? t("projects.remove_favorite")
+                  : t("projects.add_favorite")
               }
             >
               {isFollowPending ? (
@@ -140,26 +145,27 @@ export function ProjectHeader({
           <Button variant="outline" asChild>
             <Link to={`/projects/${project.id}/edit`}>
               <Edit className="h-4 w-4 mr-2" />
-              Editar
+              {t("projects.edit")}
             </Link>
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive">
                 <Trash2 className="h-4 w-4 mr-2" />
-                Eliminar
+                {t("projects.delete")}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>¿Eliminar proyecto?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  {t("projects.delete_title")}
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  Esta acción no se puede deshacer. El proyecto y todos sus
-                  datos serán eliminados permanentemente.
+                  {t("projects.delete_description")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogCancel>{t("posts.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDelete}
                   disabled={deleteProjectPending}
@@ -167,7 +173,7 @@ export function ProjectHeader({
                   {deleteProjectPending && (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   )}
-                  Eliminar
+                  {t("projects.delete_confirm")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

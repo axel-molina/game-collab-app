@@ -11,7 +11,8 @@ import {
 } from "@/lib/constants";
 import { Edit, Trash2, Loader2, Calendar, FolderOpen } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +30,7 @@ interface UserProjectsTabProps {
 }
 
 export function UserProjectsTab({ userId }: UserProjectsTabProps) {
+  const { t, i18n } = useTranslation();
   const { data: allProjects, isLoading } = useProjects();
   const deleteProject = useDeleteProject();
 
@@ -49,12 +51,14 @@ export function UserProjectsTab({ userId }: UserProjectsTabProps) {
     return (
       <div className="text-center py-12">
         <FolderOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold mb-2">No tienes proyectos aún</h3>
+        <h3 className="text-lg font-semibold mb-2">
+          {t("profile.no_projects")}
+        </h3>
         <p className="text-muted-foreground mb-4">
-          Crea tu primer proyecto para empezar a colaborar
+          {t("profile.no_projects_desc")}
         </p>
         <Button asChild>
-          <Link to="/projects/new">Crear Proyecto</Link>
+          <Link to="/projects/new">{t("profile.create_project")}</Link>
         </Button>
       </div>
     );
@@ -116,14 +120,17 @@ export function UserProjectsTab({ userId }: UserProjectsTabProps) {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar proyecto?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          {t("profile.delete_project")}
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                          Esta acción no se puede deshacer. El proyecto y todos
-                          sus datos serán eliminados permanentemente.
+                          {t("profile.delete_project_desc")}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel>
+                          {t("posts.cancel")}
+                        </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => deleteProject.mutate(project.id)}
                           disabled={deleteProject.isPending}
@@ -131,7 +138,7 @@ export function UserProjectsTab({ userId }: UserProjectsTabProps) {
                           {deleteProject.isPending && (
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                           )}
-                          Eliminar
+                          {t("common.delete")}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -192,7 +199,7 @@ export function UserProjectsTab({ userId }: UserProjectsTabProps) {
                     <span>
                       {formatDistanceToNow(new Date(project.created_at), {
                         addSuffix: true,
-                        locale: es,
+                        locale: i18n.language === "es" ? es : enUS,
                       })}
                     </span>
                   </div>

@@ -5,27 +5,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Project } from "@/hooks/useProjects";
 import { getEngineLabel, getEngineColor } from "@/lib/constants";
 import { Calendar, Users } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
 
 interface ProjectAnnouncementCardProps {
   project: Project;
 }
 
 // Helper function to get simplified time format
-const getSimplifiedTime = (date: Date): string => {
+const getSimplifiedTime = (date: Date, t: TFunction): string => {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (diffInSeconds < 60) return `${diffInSeconds}s`;
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
-  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`;
+  if (diffInSeconds < 60) return `${diffInSeconds}${t("common.unit_s")}`;
+  if (diffInSeconds < 3600)
+    return `${Math.floor(diffInSeconds / 60)}${t("common.unit_m")}`;
+  if (diffInSeconds < 86400)
+    return `${Math.floor(diffInSeconds / 3600)}${t("common.unit_h")}`;
+  if (diffInSeconds < 604800)
+    return `${Math.floor(diffInSeconds / 86400)}${t("common.unit_d")}`;
   if (diffInSeconds < 2592000)
-    return `${Math.floor(diffInSeconds / 604800)}sem`;
+    return `${Math.floor(diffInSeconds / 604800)}${t("common.unit_w")}`;
   if (diffInSeconds < 31536000)
-    return `${Math.floor(diffInSeconds / 2592000)}mes`;
-  return `${Math.floor(diffInSeconds / 31536000)}a`;
+    return `${Math.floor(diffInSeconds / 2592000)}${t("common.unit_mo")}`;
+  return `${Math.floor(diffInSeconds / 31536000)}${t("common.unit_y")}`;
 };
 
 // Helper to get user initials
@@ -41,13 +44,14 @@ const getUserInitials = (username: string): string => {
 export function ProjectAnnouncementCard({
   project,
 }: ProjectAnnouncementCardProps) {
+  const { t } = useTranslation();
   const engineLabel =
     project.engine === "other" && project.custom_engine
       ? project.custom_engine
       : getEngineLabel(project.engine);
 
-  const username = project.profiles?.username || "Anónimo";
-  const timeAgo = getSimplifiedTime(new Date(project.created_at));
+  const username = project.profiles?.username || t("common.anonymous");
+  const timeAgo = getSimplifiedTime(new Date(project.created_at), t);
   const mainImage = project.project_images?.[0]?.image_url;
 
   return (
@@ -55,7 +59,7 @@ export function ProjectAnnouncementCard({
       {/* New Project Flag */}
       <div className="absolute top-4 right-4 z-10">
         <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-lg">
-          🎉 Nuevo Proyecto
+          🎉 {t("posts.new_project_badge")}
         </Badge>
       </div>
 
@@ -135,10 +139,12 @@ export function ProjectAnnouncementCard({
           >
             <Users className="h-4 w-4" />
             <span>
-              {project.project_positions?.length || 0} tarea
-              {(project.project_positions?.length || 0) !== 1 ? "s" : ""}{" "}
-              disponible
-              {(project.project_positions?.length || 0) !== 1 ? "s" : ""}
+              {t(
+                (project.project_positions?.length || 0) === 1
+                  ? "projects_common.positions_count"
+                  : "projects_common.positions_count_plural",
+                { count: project.project_positions?.length || 0 }
+              )}
             </span>
           </Link>
         </div>

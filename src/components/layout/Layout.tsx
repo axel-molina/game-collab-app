@@ -3,6 +3,7 @@ import { Navbar } from "./Navbar";
 import { Colors } from "@/lib/colors";
 import { useProfile } from "@/hooks/useProfile";
 import { OnboardingModal } from "@/components/profile/OnboardingModal";
+import { useTranslation } from "react-i18next";
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,6 +11,7 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const { data: profile } = useProfile();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -21,7 +23,7 @@ export function Layout({ children }: LayoutProps) {
           <p>
             © 2025 <span style={{ color: Colors.gameBlue }}>Game</span>
             <span style={{ color: Colors.collabGreen }}>Collab</span>.
-            Conectando desarrolladores de videojuegos.
+            {t("common.footer_text")}
           </p>
         </div>
       </footer>

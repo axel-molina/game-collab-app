@@ -10,19 +10,23 @@ import {
 } from "@/lib/constants";
 import { Calendar, User, Bookmark, BookmarkCheck, Users } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import { useProjectFollows } from "@/hooks/useProjectFollows";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "react-i18next";
 
 interface ProjectCardProps {
   project: Project;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { isFollowing, toggleFollow, useProjectFollowerCount } =
     useProjectFollows(user?.id);
   const { data: followerCount = 0 } = useProjectFollowerCount(project.id);
+
+  const locale = i18n.language === "es" ? es : enUS;
 
   const mainImage = project.project_images?.[0]?.image_url;
   const positions = project.project_positions || [];
@@ -59,7 +63,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
                 >
                   {engineLabel}
                 </Badge>
-                <Badge variant="outline" className="bg-background/80 backdrop-blur-sm">
+                <Badge
+                  variant="outline"
+                  className="bg-background/80 backdrop-blur-sm"
+                >
                   v{project.engine_version}
                 </Badge>
               </div>
@@ -91,7 +98,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
                     ))}
                     {positions.length > 5 && (
                       <Badge variant="outline" className="text-xs">
-                        +{positions.length - 5} más
+                        +{positions.length - 5} {t("common.more")}
                       </Badge>
                     )}
                   </div>
@@ -102,14 +109,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
-                  <span>{project.profiles?.username || "Anónimo"}</span>
+                  <span>
+                    {project.profiles?.username || t("common.anonymous")}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   <span>
                     {formatDistanceToNow(new Date(project.created_at), {
                       addSuffix: true,
-                      locale: es,
+                      locale: locale,
                     })}
                   </span>
                 </div>
@@ -133,8 +142,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
                       }}
                       title={
                         isFollowing(project.id)
-                          ? "Quitar de guardados"
-                          : "Guardar"
+                          ? t("projects.remove_saved")
+                          : t("projects.save")
                       }
                     >
                       {isFollowing(project.id) ? (
@@ -144,8 +153,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
                       )}
                       <span className="sr-only">
                         {isFollowing(project.id)
-                          ? "Quitar de guardados"
-                          : "Guardar"}
+                          ? t("projects.remove_saved")
+                          : t("projects.save")}
                       </span>
                     </Button>
                   )}

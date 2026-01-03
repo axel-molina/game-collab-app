@@ -12,7 +12,8 @@ import {
 import { getEngineLabel, getEngineColor } from "@/lib/constants";
 import { Edit, Trash2, Loader2, Calendar, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +31,7 @@ interface UserPostsTabProps {
 }
 
 export function UserPostsTab({ userId }: UserPostsTabProps) {
+  const { t, i18n } = useTranslation();
   const { data: posts, isLoading } = useUserPosts(userId);
   const deletePost = useDeletePost();
 
@@ -47,12 +49,12 @@ export function UserPostsTab({ userId }: UserPostsTabProps) {
     return (
       <div className="text-center py-12">
         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold mb-2">No tienes posts aún</h3>
+        <h3 className="text-lg font-semibold mb-2">{t("profile.no_posts")}</h3>
         <p className="text-muted-foreground mb-4">
-          Crea tu primer post para compartir novedades de tus proyectos
+          {t("profile.no_posts_desc")}
         </p>
         <Button asChild>
-          <Link to="/posts/new">Crear Post</Link>
+          <Link to="/posts/new">{t("profile.create_post")}</Link>
         </Button>
       </div>
     );
@@ -116,14 +118,17 @@ export function UserPostsTab({ userId }: UserPostsTabProps) {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar post?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                          {t("profile.delete_post")}
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                          Esta acción no se puede deshacer. El post y todos sus
-                          comentarios serán eliminados permanentemente.
+                          {t("profile.delete_post_desc")}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel>
+                          {t("posts.cancel")}
+                        </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => deletePost.mutate(post.id)}
                           disabled={deletePost.isPending}
@@ -131,7 +136,7 @@ export function UserPostsTab({ userId }: UserPostsTabProps) {
                           {deletePost.isPending && (
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                           )}
-                          Eliminar
+                          {t("common.delete")}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -150,7 +155,7 @@ export function UserPostsTab({ userId }: UserPostsTabProps) {
                 <span>
                   {formatDistanceToNow(new Date(post.created_at), {
                     addSuffix: true,
-                    locale: es,
+                    locale: i18n.language === "es" ? es : enUS,
                   })}
                 </span>
               </div>

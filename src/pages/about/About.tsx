@@ -1,10 +1,12 @@
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Gamepad2 } from "lucide-react";
 import IconGamepad from "../../../assets/icon.png";
 import { Colors } from "@/lib/colors";
+import { useTranslation } from "react-i18next";
 
 export default function About() {
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <div className="container max-w-4xl py-16">
@@ -17,7 +19,7 @@ export default function About() {
             />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Sobre nosotros
+            {t("about.title")}
           </h1>
         </div>
 
@@ -30,22 +32,15 @@ export default function About() {
           </CardHeader>
           <CardContent className="space-y-6">
             <p className="text-lg leading-relaxed">
-              GameCollab es la plataforma diseñada para centralizar la
-              colaboración en el desarrollo de videojuegos. Conectamos a
-              desarrolladores, artistas, músicos y otros creativos del sector en
-              un ecosistema dinámico y eficiente.
+              {t("about.description_1")}
             </p>
 
             <p className="text-lg leading-relaxed">
-              En GameCollab, los usuarios pueden compartir sus ideas, mostrar
-              avances y gestionar la planificación de sus proyectos. Además, la
-              plataforma permite a los profesionales destacar sus aptitudes en
-              perfiles personalizados, facilitando que encuentren proyectos que
-              se alineen perfectamente con sus conocimientos y metas.
+              {t("about.description_2")}
             </p>
 
             <p className="text-lg leading-relaxed font-semibold text-primary">
-              Donde las ideas se convierten en juegos.
+              {t("about.motto")}
             </p>
           </CardContent>
         </Card>

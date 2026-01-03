@@ -47,9 +47,11 @@ export default function CreatePost() {
       <div className="container max-w-3xl py-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl">Crear Nueva Novedad</CardTitle>
+            <CardTitle className="text-2xl">
+              {t("posts.create_title")}
+            </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Comparte actualizaciones sobre tu proyecto con la comunidad
+              {t("posts.create_subtitle")}
             </p>
           </CardHeader>
           <CardContent>
@@ -57,7 +59,7 @@ export default function CreatePost() {
               onSubmit={handleSubmit}
               onCancel={handleCancel}
               isSubmitting={createPost.isPending}
-              submitLabel="Publicar"
+              submitLabel={t("posts.submit")}
             />
           </CardContent>
         </Card>

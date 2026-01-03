@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useTranslation } from "react-i18next";
 
 interface PostHeaderProps {
   post: any;
@@ -33,6 +34,8 @@ export function PostHeader({
   handleDelete,
   deletePostPending,
 }: PostHeaderProps) {
+  const { t } = useTranslation();
+
   return (
     <>
       {/* Project Badge */}
@@ -62,7 +65,7 @@ export function PostHeader({
             >
               <Link to={`/posts/${post.id}/edit`}>
                 <Edit className="h-4 w-4 mr-2" />
-                Editar
+                {t("projects.edit")}
               </Link>
             </Button>
             <AlertDialog>
@@ -73,19 +76,20 @@ export function PostHeader({
                   className="flex-1 sm:flex-none"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Eliminar
+                  {t("projects.delete")}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>¿Eliminar post?</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    {t("profile.delete_post")}
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
-                    Esta acción no se puede deshacer. El post y todos sus
-                    comentarios serán eliminados permanentemente.
+                    {t("profile.delete_post_desc")}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel>{t("projects.cancel")}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDelete}
                     disabled={deletePostPending}
@@ -93,7 +97,7 @@ export function PostHeader({
                     {deletePostPending && (
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     )}
-                    Eliminar
+                    {t("projects.delete")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 interface ProjectPositionsProps {
   positions: Array<{ id: string; position: string; is_custom: boolean }>;
@@ -10,12 +11,14 @@ export function ProjectPositions({
   positions,
   getPositionLabel,
 }: ProjectPositionsProps) {
+  const { t } = useTranslation();
+
   if (positions.length === 0) return null;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Se busca</CardTitle>
+        <CardTitle>{t("projects.looking_for")}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-wrap gap-2">

@@ -7,12 +7,14 @@ import { Comment } from "./Comment";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, MessageSquare } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from "react-i18next";
 
 interface CommentSectionProps {
   postId: string;
 }
 
 export function CommentSection({ postId }: CommentSectionProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { data: comments, isLoading } = usePostComments(postId);
   const createComment = useCreateComment();
@@ -37,7 +39,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
-          Comentarios ({commentCount})
+          {t("comments.title")} ({commentCount})
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -47,7 +49,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
             <Textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              placeholder="Escribe un comentario..."
+              placeholder={t("comments.placeholder")}
               rows={3}
               className="resize-none"
             />
@@ -60,13 +62,13 @@ export function CommentSection({ postId }: CommentSectionProps) {
                 {createComment.isPending && (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 )}
-                Comentar
+                {t("comments.submit")}
               </Button>
             </div>
           </form>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-4">
-            Inicia sesión para comentar
+            {t("comments.login_to_comment")}
           </p>
         )}
 
@@ -84,7 +86,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
           </div>
         ) : (
           <p className="text-sm text-muted-foreground text-center py-8">
-            No hay comentarios aún. ¡Sé el primero en comentar!
+            {t("comments.no_comments")}
           </p>
         )}
       </CardContent>

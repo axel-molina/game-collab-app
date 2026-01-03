@@ -43,10 +43,7 @@ export function ProjectList({ projects, isLoading }: ProjectListProps) {
         <Gamepad2 className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
         <h3 className="text-xl font-semibold mb-2">{t("home.no_results")}</h3>
         <p className="text-muted-foreground">
-          {t(
-            "home.filters.no_projects_description",
-            "No se encontraron proyectos con los filtros aplicados."
-          )}
+          {t("home.filters.no_projects_description")}
         </p>
       </div>
     );

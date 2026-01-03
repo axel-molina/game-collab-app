@@ -29,14 +29,15 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import { Colors } from "@/lib/colors";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "react-i18next";
 
 interface OnboardingModalProps {
   profile: Profile;
 }
 
 export function OnboardingModal({ profile }: OnboardingModalProps) {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(0); // 0: Welcome, 1: Bio, 2: Roles, 3: Techs
   const [bio, setBio] = useState("");
@@ -123,19 +124,16 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
             </div>
           </div>
           <DialogTitle className="text-2xl text-center">
-            {step === 0 && "¡Bienvenido a GameCollab!"}
-            {step === 1 && "Cuéntanos sobre ti"}
-            {step === 2 && "¿Cuál es tu rol?"}
-            {step === 3 && "¿Qué herramientas usas?"}
+            {step === 0 && t("profile.onboarding.welcome")}
+            {step === 1 && t("profile.onboarding.about_you")}
+            {step === 2 && t("profile.onboarding.what_is_your_role")}
+            {step === 3 && t("profile.onboarding.what_tools")}
           </DialogTitle>
           <DialogDescription className="text-center">
-            {step === 0 &&
-              "Estamos emocionados de tenerte aquí. Ayúdanos a personalizar tu experiencia."}
-            {step === 1 &&
-              "Una biografía corta ayuda a otros desarrolladores a conocerte mejor."}
-            {step === 2 && "Selecciona las áreas en las que te especializas."}
-            {step === 3 &&
-              "Indica las tecnologías con las que trabajas habitualmente."}
+            {step === 0 && t("profile.onboarding.welcome_desc")}
+            {step === 1 && t("profile.onboarding.about_you_desc")}
+            {step === 2 && t("profile.onboarding.what_is_your_role_desc")}
+            {step === 3 && t("profile.onboarding.what_tools_desc")}
           </DialogDescription>
         </DialogHeader>
 
@@ -143,12 +141,11 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
           {step === 0 && (
             <div className="text-center space-y-4">
               <p className="text-muted-foreground">
-                Completar tu perfil te ayudará a encontrar proyectos que se
-                ajusten a tus habilidades y a que otros te encuentren.
+                {t("profile.onboarding.welcome_help")}
               </p>
               <div className="pt-4">
                 <span className="text-xs font-bold uppercase text-primary tracking-widest">
-                  3 pasos rápidos
+                  {t("profile.onboarding.quick_steps")}
                 </span>
               </div>
             </div>
@@ -157,7 +154,7 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
           {step === 1 && (
             <div className="space-y-4">
               <Textarea
-                placeholder="Ej: Desarrollador indie apasionado por los RPGs y la música electrónica..."
+                placeholder={t("profile.onboarding.about_you_placeholder")}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 className="min-h-[120px] resize-none"
@@ -169,7 +166,7 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
                     : "text-muted-foreground"
                 }`}
               >
-                {bio.length}/300 caracteres
+                {t("posts.characters", { count: bio.length, max: 300 })}
               </p>
             </div>
           )}
@@ -178,7 +175,7 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
             <div className="space-y-4">
               <div className="flex gap-2">
                 <Input
-                  placeholder="Buscar o crear rol (p. ej. VFX Artist)..."
+                  placeholder={t("profile.role_search_placeholder")}
                   value={roleSearch}
                   onChange={(e) => setRoleSearch(e.target.value)}
                   className="h-10"
@@ -198,7 +195,7 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
                       ) : (
                         <Plus className="h-4 w-4" />
                       )}
-                      Añadir
+                      {t("profile.onboarding.add")}
                     </Button>
                   )}
               </div>
@@ -265,14 +262,14 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
               onClick={() => handleFinish(true)}
               className="text-muted-foreground hover:text-foreground"
             >
-              Hacer más tarde
+              {t("profile.onboarding.do_later")}
             </Button>
           </div>
           <div className="flex gap-2">
             {step > 0 && (
               <Button variant="outline" onClick={prevStep}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Atrás
+                {t("profile.back")}
               </Button>
             )}
             {step < 3 ? (
@@ -280,7 +277,7 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
                 onClick={nextStep}
                 disabled={step === 1 && bio.length > 300}
               >
-                Continuar
+                {t("profile.onboarding.continue")}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             ) : (
@@ -291,7 +288,7 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
                 {updateProfile.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                ¡Empezar!
+                {t("profile.onboarding.get_started")}
               </Button>
             )}
           </div>

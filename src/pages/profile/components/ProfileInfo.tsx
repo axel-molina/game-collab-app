@@ -23,6 +23,7 @@ import {
 } from "@/hooks/useProfile";
 import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ProfileInfoProps {
   profile: any;
@@ -30,6 +31,7 @@ interface ProfileInfoProps {
 }
 
 export function ProfileInfo({ profile, user }: ProfileInfoProps) {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [bio, setBio] = useState(profile?.bio || "");
   const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
@@ -100,13 +102,13 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle>Información Personal</CardTitle>
+        <CardTitle>{t("common.personal_info")}</CardTitle>
         <Button
           variant={isEditing ? "ghost" : "outline"}
           size="sm"
           onClick={() => (isEditing ? setIsEditing(false) : setIsEditing(true))}
         >
-          {isEditing ? <X className="h-4 w-4" /> : "Editar Perfil"}
+          {isEditing ? <X className="h-4 w-4" /> : t("common.edit_profile")}
         </Button>
       </CardHeader>
       <CardContent className="space-y-6 pt-4">
@@ -116,10 +118,10 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
             <User className="h-5 w-5 text-muted-foreground" />
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                Nombre de usuario
+                {t("common.username")}
               </p>
               <p className="text-base font-semibold truncate">
-                {profile?.username || "Sin nombre"}
+                {profile?.username || t("common.anonymous_user")}
               </p>
             </div>
           </div>
@@ -128,10 +130,10 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
             <Mail className="h-5 w-5 text-muted-foreground" />
             <div className="flex-1 min-w-0">
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                Correo electrónico
+                {t("common.email")}
               </p>
               <p className="text-base font-semibold truncate">
-                {profile?.email || user.email || "Sin email"}
+                {profile?.email || user.email || t("common.anonymous_user")}
               </p>
             </div>
           </div>
@@ -141,12 +143,12 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <AlignLeft className="h-4 w-4" />
-            Biografía
+            {t("common.bio")}
           </div>
           {isEditing ? (
             <>
               <Textarea
-                placeholder="Cuéntanos un poco sobre ti..."
+                placeholder={t("common.bio_placeholder")}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 className={`min-h-[100px] resize-none ${
@@ -162,12 +164,12 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
                     : "text-muted-foreground"
                 }`}
               >
-                {bio.length}/300 caracteres
+                {t("posts.characters", { count: bio.length, max: 300 })}
               </p>
             </>
           ) : (
             <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap italic">
-              {profile?.bio || "No se ha añadido una biografía todavía."}
+              {profile?.bio || t("common.bio_empty")}
             </p>
           )}
         </div>
@@ -176,14 +178,14 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Briefcase className="h-4 w-4" />
-            Roles
+            {t("common.roles")}
           </div>
           <div className="flex flex-wrap gap-2">
             {isEditing ? (
               <div className="w-full space-y-3">
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Buscar o crear rol (p. ej. VFX Artist)..."
+                    placeholder={t("profile.role_search_placeholder")}
                     value={roleSearch}
                     onChange={(e) => setRoleSearch(e.target.value)}
                     className="h-9"
@@ -204,7 +206,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
                         ) : (
                           <Plus className="h-3 w-3" />
                         )}
-                        Crear
+                        {t("profile.create_role")}
                       </Button>
                     )}
                 </div>
@@ -246,7 +248,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
               ))
             ) : (
               <span className="text-sm text-muted-foreground italic">
-                No se han seleccionado roles.
+                {t("profile.no_roles")}
               </span>
             )}
           </div>
@@ -256,7 +258,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Cpu className="h-4 w-4" />
-            Tecnologías
+            {t("common.techs")}
           </div>
           <div className="flex flex-wrap gap-2">
             {isEditing ? (
@@ -283,7 +285,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
               ))
             ) : (
               <span className="text-sm text-muted-foreground italic">
-                No se han seleccionado tecnologías.
+                {t("profile.no_techs")}
               </span>
             )}
           </div>
@@ -299,7 +301,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
               {updateProfile.isPending && (
                 <Plus className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Guardar Cambios
+              {t("common.save_changes")}
             </Button>
           </div>
         )}

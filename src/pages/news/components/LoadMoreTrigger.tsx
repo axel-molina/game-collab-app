@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { forwardRef } from "react";
+import { useTranslation } from "react-i18next";
 
 interface LoadMoreTriggerProps {
   isFetchingNextPage: boolean;
@@ -10,12 +11,14 @@ interface LoadMoreTriggerProps {
 
 export const LoadMoreTrigger = forwardRef<HTMLDivElement, LoadMoreTriggerProps>(
   ({ isFetchingNextPage, hasNextPage, onLoadMore }, ref) => {
+    const { t } = useTranslation();
+
     return (
       <div ref={ref} className="py-8 flex justify-center">
         {isFetchingNextPage ? (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Cargando más...</span>
+            <span>{t("common.loading_more")}</span>
           </div>
         ) : hasNextPage ? (
           <Button
@@ -23,11 +26,11 @@ export const LoadMoreTrigger = forwardRef<HTMLDivElement, LoadMoreTriggerProps>(
             onClick={onLoadMore}
             disabled={isFetchingNextPage}
           >
-            Cargar más
+            {t("common.load_more")}
           </Button>
         ) : (
           <p className="text-muted-foreground text-sm">
-            No hay más contenido para mostrar
+            {t("common.no_more_content")}
           </p>
         )}
       </div>

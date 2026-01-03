@@ -10,8 +10,10 @@ import { useState } from "react";
 import { UserProfileCard } from "./components/UserProfileCard";
 import { UserNavigation } from "./components/UserNavigation";
 import { NotFoundState } from "./components/NotFoundState";
+import { useTranslation } from "react-i18next";
 
 export default function UserProfile() {
+  const { t } = useTranslation();
   const { username } = useParams<{ username: string }>();
   const { data: profile, isLoading, error } = usePublicProfile(username!);
   const [activeTab, setActiveTab] = useState<"projects" | "posts">("projects");
@@ -57,7 +59,7 @@ export default function UserProfile() {
         <Button variant="ghost" asChild className="mb-6">
           <Link to="/">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Volver
+            {t("profile.back")}
           </Link>
         </Button>
 
@@ -72,14 +74,14 @@ export default function UserProfile() {
           <div className="min-h-[600px]">
             {activeTab === "projects" && (
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Proyectos</h2>
+                <h2 className="text-2xl font-bold">{t("profile.projects")}</h2>
                 <PublicUserProjectsTab userId={profile.id} />
               </div>
             )}
 
             {activeTab === "posts" && (
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold">Posts</h2>
+                <h2 className="text-2xl font-bold">{t("profile.posts")}</h2>
                 <PublicUserPostsTab userId={profile.id} />
               </div>
             )}

@@ -8,6 +8,7 @@ import { ProjectPost, extractTitleFromContent } from "@/hooks/useProjectPosts";
 import { getEngineLabel, getEngineColor } from "@/lib/constants";
 import { MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
+import { useTranslation } from "react-i18next";
 
 interface PostCardProps {
   post: ProjectPost;
@@ -15,19 +16,22 @@ interface PostCardProps {
 }
 
 // Helper function to get simplified time format
-const getSimplifiedTime = (date: Date): string => {
+const getSimplifiedTime = (date: Date, t: (key: string) => string): string => {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  if (diffInSeconds < 60) return `${diffInSeconds}s`;
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h`;
-  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`;
+  if (diffInSeconds < 60) return `${diffInSeconds}${t("common.unit_s")}`;
+  if (diffInSeconds < 3600)
+    return `${Math.floor(diffInSeconds / 60)}${t("common.unit_m")}`;
+  if (diffInSeconds < 86400)
+    return `${Math.floor(diffInSeconds / 3600)}${t("common.unit_h")}`;
+  if (diffInSeconds < 604800)
+    return `${Math.floor(diffInSeconds / 86400)}${t("common.unit_d")}`;
   if (diffInSeconds < 2592000)
-    return `${Math.floor(diffInSeconds / 604800)}sem`;
+    return `${Math.floor(diffInSeconds / 604800)}${t("common.unit_w")}`;
   if (diffInSeconds < 31536000)
-    return `${Math.floor(diffInSeconds / 2592000)}mes`;
-  return `${Math.floor(diffInSeconds / 31536000)}a`;
+    return `${Math.floor(diffInSeconds / 2592000)}${t("common.unit_mo")}`;
+  return `${Math.floor(diffInSeconds / 31536000)}${t("common.unit_y")}`;
 };
 
 // Helper to get user initials
@@ -46,6 +50,7 @@ const isContentLong = (content: string): boolean => {
 };
 
 export function PostCard({ post, commentCount = 0 }: PostCardProps) {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const title = extractTitleFromContent(post.content);
 
@@ -58,8 +63,8 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
       ? post.projects.custom_engine
       : getEngineLabel(post.projects?.engine || "");
 
-  const username = post.profiles?.username || "Anónimo";
-  const timeAgo = getSimplifiedTime(new Date(post.created_at));
+  const username = post.profiles?.username || t("common.anonymous");
+  const timeAgo = getSimplifiedTime(new Date(post.created_at), t);
 
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md">
@@ -134,11 +139,13 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
             >
               {isExpanded ? (
                 <>
-                  Ver menos <ChevronUp className="h-4 w-4 ml-1" />
+                  {t("common.see_less")}
+                  <ChevronUp className="h-4 w-4 ml-1" />
                 </>
               ) : (
                 <>
-                  Ver más <ChevronDown className="h-4 w-4 ml-1" />
+                  {t("common.see_more")}
+                  <ChevronDown className="h-4 w-4 ml-1" />
                 </>
               )}
             </Button>
@@ -152,9 +159,7 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
           >
             <MessageSquare className="h-4 w-4" />
-            <span>
-              {commentCount} comentario{commentCount !== 1 ? "s" : ""}
-            </span>
+            <span>{t("common.comments", { count: commentCount })}</span>
           </Link>
         </div>
       </CardContent>

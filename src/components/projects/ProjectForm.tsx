@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { ENGINES, POSITIONS } from "@/lib/constants";
 import { Plus, X, Upload, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Form,
   FormControl,
@@ -74,6 +75,7 @@ export function ProjectForm({
   onSubmit,
   isLoading,
 }: ProjectFormProps) {
+  const { t } = useTranslation();
   const [images, setImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<ProjectImage[]>(
     project?.project_images || []
@@ -197,7 +199,7 @@ export function ProjectForm({
         {/* Basic Info */}
         <Card>
           <CardHeader>
-            <CardTitle>Información básica</CardTitle>
+            <CardTitle>{t("projects.basic_info")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <FormField
@@ -205,9 +207,12 @@ export function ProjectForm({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nombre del proyecto</FormLabel>
+                  <FormLabel>{t("projects.name_label")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Mi increíble juego" {...field} />
+                    <Input
+                      placeholder={t("projects.name_placeholder")}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -220,14 +225,16 @@ export function ProjectForm({
                 name="engine"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Motor</FormLabel>
+                    <FormLabel>{t("projects.engine_label")}</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecciona un motor" />
+                          <SelectValue
+                            placeholder={t("projects.engine_placeholder")}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -249,9 +256,12 @@ export function ProjectForm({
                   name="custom_engine"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Motor personalizado</FormLabel>
+                      <FormLabel>{t("projects.custom_engine_label")}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ej: Construct 3" {...field} />
+                        <Input
+                          placeholder={t("projects.custom_engine_placeholder")}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -264,9 +274,12 @@ export function ProjectForm({
                 name="engine_version"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Versión del motor</FormLabel>
+                    <FormLabel>{t("projects.version_label")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Ej: 2022.3.10" {...field} />
+                      <Input
+                        placeholder={t("projects.version_placeholder")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -279,10 +292,10 @@ export function ProjectForm({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descripción</FormLabel>
+                  <FormLabel>{t("projects.description_label")}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe tu proyecto, qué tipo de juego es, en qué etapa está..."
+                      placeholder={t("projects.description_placeholder")}
                       rows={5}
                       {...field}
                     />
@@ -297,7 +310,7 @@ export function ProjectForm({
         {/* Images */}
         <Card>
           <CardHeader>
-            <CardTitle>Imágenes</CardTitle>
+            <CardTitle>{t("projects.images_title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -341,7 +354,7 @@ export function ProjectForm({
               ))}
               <label className="aspect-video rounded-lg border-2 border-dashed border-border hover:border-primary cursor-pointer flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors">
                 <Upload className="h-8 w-8 mb-2" />
-                <span className="text-sm">Subir imagen</span>
+                <span className="text-sm">{t("projects.upload_image")}</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -357,12 +370,12 @@ export function ProjectForm({
         {/* Tasks */}
         <Card>
           <CardHeader>
-            <CardTitle>Tareas del proyecto</CardTitle>
+            <CardTitle>{t("projects.tasks_title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex gap-2">
               <Input
-                placeholder="Nueva tarea..."
+                placeholder={t("projects.new_task_placeholder")}
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
                 onKeyDown={(e) =>
@@ -406,7 +419,7 @@ export function ProjectForm({
         {/* Positions */}
         <Card>
           <CardHeader>
-            <CardTitle>Posiciones necesarias</CardTitle>
+            <CardTitle>{t("projects.positions_title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -433,10 +446,10 @@ export function ProjectForm({
 
             {/* Custom positions */}
             <div className="space-y-2">
-              <Label>Posición personalizada</Label>
+              <Label>{t("projects.custom_position_label")}</Label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="Otra posición..."
+                  placeholder={t("projects.custom_position_placeholder")}
                   value={customPosition}
                   onChange={(e) => setCustomPosition(e.target.value)}
                   onKeyDown={(e) =>
@@ -479,7 +492,7 @@ export function ProjectForm({
         {/* Contact */}
         <Card>
           <CardHeader>
-            <CardTitle>Contacto</CardTitle>
+            <CardTitle>{t("projects.contact_title")}</CardTitle>
           </CardHeader>
           <CardContent>
             <FormField
@@ -487,10 +500,10 @@ export function ProjectForm({
               name="contact"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Información de contacto</FormLabel>
+                  <FormLabel>{t("projects.contact_label")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Email, Discord, Twitter, etc."
+                      placeholder={t("projects.contact_placeholder")}
                       {...field}
                     />
                   </FormControl>
@@ -503,7 +516,7 @@ export function ProjectForm({
 
         <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
           {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-          {project ? "Guardar cambios" : "Publicar proyecto"}
+          {project ? t("projects.save_changes") : t("projects.submit")}
         </Button>
       </form>
     </Form>

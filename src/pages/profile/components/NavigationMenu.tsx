@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, FolderOpen, FileText, Bookmark } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface NavigationMenuProps {
   activeTab: "profile" | "projects" | "posts" | "saved";
@@ -11,6 +12,8 @@ export function NavigationMenu({
   activeTab,
   onTabChange,
 }: NavigationMenuProps) {
+  const { t } = useTranslation();
+
   return (
     <Card>
       <CardContent className="p-2">
@@ -21,7 +24,7 @@ export function NavigationMenu({
             onClick={() => onTabChange("profile")}
           >
             <User className="h-4 w-4 mr-2" />
-            Perfil
+            {t("profile.profile")}
           </Button>
           <Button
             variant={activeTab === "projects" ? "secondary" : "ghost"}
@@ -29,7 +32,7 @@ export function NavigationMenu({
             onClick={() => onTabChange("projects")}
           >
             <FolderOpen className="h-4 w-4 mr-2" />
-            Proyectos
+            {t("profile.projects")}
           </Button>
           <Button
             variant={activeTab === "posts" ? "secondary" : "ghost"}
@@ -37,7 +40,7 @@ export function NavigationMenu({
             onClick={() => onTabChange("posts")}
           >
             <FileText className="h-4 w-4 mr-2" />
-            Posts
+            {t("profile.posts")}
           </Button>
           <Button
             variant={activeTab === "saved" ? "secondary" : "ghost"}
@@ -45,7 +48,7 @@ export function NavigationMenu({
             onClick={() => onTabChange("saved")}
           >
             <Bookmark className="h-4 w-4 mr-2" />
-            Guardados
+            {t("profile.saved")}
           </Button>
         </nav>
       </CardContent>

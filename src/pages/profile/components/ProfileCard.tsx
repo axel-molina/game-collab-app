@@ -6,6 +6,8 @@ import { Camera, Trash2, Loader2 } from "lucide-react";
 import { useUpdateProfile, uploadAvatar } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { enUS, es } from "date-fns/locale";
 
 interface ProfileCardProps {
   profile: any;
@@ -14,6 +16,7 @@ interface ProfileCardProps {
 }
 
 export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
+  const { t, i18n } = useTranslation();
   const updateProfile = useUpdateProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -24,13 +27,13 @@ export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      toast.error("Por favor selecciona un archivo de imagen válido");
+      toast.error(t("profile.image_type_error"));
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("La imagen es demasiado grande. Máximo 5MB");
+      toast.error(t("profile.image_size_error"));
       return;
     }
 
@@ -40,7 +43,7 @@ export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
       await updateProfile.mutateAsync({ avatar_url: avatarUrl });
     } catch (error: unknown) {
       console.error("Error uploading avatar:", error);
-      toast.error((error as Error).message || "Error al subir la imagen");
+      toast.error((error as Error).message || t("profile.image_upload_error"));
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -69,7 +72,7 @@ export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
       await updateProfile.mutateAsync({ avatar_url: null });
     } catch (error: unknown) {
       console.error("Error removing avatar:", error);
-      toast.error((error as Error).message || "Error al eliminar la imagen");
+      toast.error((error as Error).message || t("profile.image_delete_error"));
     } finally {
       setIsUploading(false);
     }
@@ -83,7 +86,7 @@ export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
             <Avatar className="h-24 w-24">
               <AvatarImage
                 src={profile?.avatar_url || undefined}
-                alt={profile?.username || "Usuario"}
+                alt={profile?.username || t("common.anonymous_user")}
               />
               <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
                 {getInitials()}
@@ -98,7 +101,7 @@ export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
 
           <div className="text-center w-full">
             <h2 className="text-xl font-bold">
-              {profile?.username || "Usuario"}
+              {profile?.username || t("common.anonymous_user")}
             </h2>
             <p className="text-sm text-muted-foreground truncate">
               {profile?.email || user.email}
@@ -115,7 +118,7 @@ export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
               className="flex-1 gap-2"
             >
               <Camera className="h-4 w-4" />
-              {profile?.avatar_url ? "Cambiar" : "Subir"}
+              {profile?.avatar_url ? t("common.change") : t("common.upload")}
             </Button>
             {profile?.avatar_url && (
               <Button
@@ -139,11 +142,14 @@ export function ProfileCard({ profile, user, getInitials }: ProfileCardProps) {
 
           {profile?.created_at && (
             <div className="text-xs text-muted-foreground text-center pt-2 border-t w-full">
-              Miembro desde{" "}
-              {new Date(profile.created_at).toLocaleDateString("es-ES", {
-                year: "numeric",
-                month: "short",
-              })}
+              {t("common.member_since")}{" "}
+              {new Date(profile.created_at).toLocaleDateString(
+                i18n.language === "es" ? "es-ES" : "en-US",
+                {
+                  year: "numeric",
+                  month: "short",
+                }
+              )}
             </div>
           )}
         </div>

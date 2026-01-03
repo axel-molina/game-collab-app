@@ -15,6 +15,7 @@ import { useUserProjects } from "@/hooks/useProjectPosts";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { Loader2 } from "lucide-react";
 import { getEngineLabel } from "@/lib/constants";
+import { useTranslation } from "react-i18next";
 
 interface PostFormProps {
   initialData?: {
@@ -37,8 +38,9 @@ export function PostForm({
   onSubmit,
   onCancel,
   isSubmitting = false,
-  submitLabel = "Publicar",
+  submitLabel,
 }: PostFormProps) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState(initialData?.title || "");
   const [content, setContent] = useState(initialData?.content || "");
   const [projectId, setProjectId] = useState(initialData?.project_id || "");
@@ -62,11 +64,11 @@ export function PostForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Project Selector */}
       <div className="space-y-2">
-        <Label htmlFor="project">Proyecto *</Label>
+        <Label htmlFor="project">{t("posts.project_label")} *</Label>
         {loadingProjects ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Cargando proyectos...
+            {t("posts.loading_projects")}
           </div>
         ) : projects && projects.length > 0 ? (
           <Select
@@ -75,7 +77,7 @@ export function PostForm({
             disabled={!!initialData?.project_id}
           >
             <SelectTrigger id="project">
-              <SelectValue placeholder="Selecciona un proyecto" />
+              <SelectValue placeholder={t("posts.project_placeholder")} />
             </SelectTrigger>
             <SelectContent>
               {projects.map((project) => {
@@ -93,56 +95,41 @@ export function PostForm({
           </Select>
         ) : (
           <p className="text-sm text-muted-foreground">
-            No tienes proyectos publicados. Crea un proyecto primero para poder
-            publicar posts.
+            {t("posts.no_projects")}
           </p>
         )}
       </div>
 
       {/* Title */}
       <div className="space-y-2">
-        <Label htmlFor="title">Título *</Label>
+        <Label htmlFor="title">{t("posts.title_label")} *</Label>
         <Input
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Título de la novedad"
+          placeholder={t("posts.title_placeholder")}
           maxLength={100}
           required
         />
         <p className="text-xs text-muted-foreground">
-          {title.length}/100 caracteres
+          {t("posts.characters", { count: title.length })}
         </p>
       </div>
 
       {/* Content with Markdown Preview */}
       <div className="space-y-2">
-        <Label htmlFor="content">Contenido *</Label>
+        <Label htmlFor="content">{t("posts.content_label")} *</Label>
         <Tabs defaultValue="write" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="write">Escribir</TabsTrigger>
-            <TabsTrigger value="preview">Vista Previa</TabsTrigger>
+            <TabsTrigger value="write">{t("posts.write")}</TabsTrigger>
+            <TabsTrigger value="preview">{t("posts.preview")}</TabsTrigger>
           </TabsList>
           <TabsContent value="write" className="mt-2">
             <Textarea
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Escribe aquí el contenido de tu novedad usando Markdown...
-
-**Ejemplos de formato:**
-- **Negrita** o __negrita__
-- *Cursiva* o _cursiva_
-- [Enlaces](https://ejemplo.com)
-- [Video de YouTube](https://youtube.com/watch?v=...) (se incrustará automáticamente)
-- `código en línea`
-- # Título grande
-- ## Título mediano
-- ### Título pequeño
-- - Lista con viñetas
-- 1. Lista numerada
-- > Cita
-"
+              placeholder={t("posts.content_placeholder")}
               rows={15}
               required
               className="resize-none font-mono text-sm"
@@ -156,15 +143,14 @@ export function PostForm({
                 </div>
               ) : (
                 <p className="text-muted-foreground text-sm">
-                  Escribe algo para ver la vista previa...
+                  {t("posts.preview_empty")}
                 </p>
               )}
             </div>
           </TabsContent>
         </Tabs>
         <p className="text-xs text-muted-foreground">
-          Usa Markdown para dar formato al texto. Cambia a "Vista Previa" para
-          ver cómo se verá.
+          {t("posts.markdown_help")}
         </p>
       </div>
 
@@ -176,11 +162,11 @@ export function PostForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancelar
+          {t("posts.cancel")}
         </Button>
         <Button type="submit" disabled={!isFormValid || isSubmitting}>
           {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-          {submitLabel}
+          {submitLabel || t(initialData ? "posts.save" : "posts.submit")}
         </Button>
       </div>
     </form>

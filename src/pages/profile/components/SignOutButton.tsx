@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface SignOutButtonProps {
   handleSignOut: () => void;
@@ -8,6 +9,8 @@ interface SignOutButtonProps {
 }
 
 const SignOutButton = ({ handleSignOut, isSigningOut }: SignOutButtonProps) => {
+  const { t } = useTranslation();
+
   return (
     <Button
       variant="outline"
@@ -20,7 +23,7 @@ const SignOutButton = ({ handleSignOut, isSigningOut }: SignOutButtonProps) => {
       ) : (
         <LogOut className="mr-2 h-4 w-4" />
       )}
-      Cerrar sesión
+      {isSigningOut ? t("common.signing_out") : t("common.sign_out")}
     </Button>
   );
 };
