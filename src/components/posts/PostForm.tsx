@@ -134,6 +134,7 @@ export function PostForm({
 - **Negrita** o __negrita__
 - *Cursiva* o _cursiva_
 - [Enlaces](https://ejemplo.com)
+- [Video de YouTube](https://youtube.com/watch?v=...) (se incrustará automáticamente)
 - `código en línea`
 - # Título grande
 - ## Título mediano

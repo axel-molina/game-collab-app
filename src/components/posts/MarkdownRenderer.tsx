@@ -6,6 +6,14 @@ interface MarkdownRendererProps {
   className?: string;
 }
 
+// Helper to extract YouTube video ID
+const getYouTubeVideoId = (url: string) => {
+  const regExp =
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+};
+
 export function MarkdownRenderer({
   content,
   className = "",
@@ -36,14 +44,43 @@ export function MarkdownRenderer({
           <ol className="list-decimal list-inside mb-4 space-y-2" {...props} />
         ),
         // Customize links
-        a: ({ node, ...props }) => (
-          <a
-            className="text-primary hover:underline font-medium break-words"
-            target="_blank"
-            rel="noopener noreferrer"
-            {...props}
-          />
-        ),
+        a: ({ node, children, ...props }) => {
+          const href = props.href || "";
+          const videoId = getYouTubeVideoId(href);
+
+          // If it's a YouTube link and the link text is just the URL (naked link), embed it
+          if (
+            videoId &&
+            children &&
+            children.length > 0 &&
+            typeof children[0] === "string" &&
+            (children[0] === href || href.includes(children[0]))
+          ) {
+            return (
+              <div className="aspect-video w-full my-6 rounded-lg overflow-hidden border border-border bg-black shadow-lg">
+                <iframe
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                ></iframe>
+              </div>
+            );
+          }
+
+          return (
+            <a
+              className="text-primary hover:underline font-medium break-words"
+              target="_blank"
+              rel="noopener noreferrer"
+              {...props}
+            >
+              {children}
+            </a>
+          );
+        },
         // Customize code blocks
         code: ({ node, inline, ...props }) =>
           inline ? (
