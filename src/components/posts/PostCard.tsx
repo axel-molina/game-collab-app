@@ -91,13 +91,15 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
             </div>
             {post.projects && (
               <div className="flex items-center gap-2 mt-1">
-                <Badge
-                  className={`${getEngineColor(
-                    post.projects.engine
-                  )} text-black dark:text-primary-foreground border-0 text-xs font-medium`}
-                >
-                  {post.projects.name}
-                </Badge>
+                <Link to={`/projects/${post.project_id}`}>
+                  <Badge
+                    className={`${getEngineColor(
+                      post.projects.engine
+                    )} text-black dark:text-primary-foreground border-0 text-xs font-medium hover:opacity-80 transition-opacity`}
+                  >
+                    {post.projects.name}
+                  </Badge>
+                </Link>
                 <Badge variant="outline" className="text-xs">
                   {engineLabel}
                 </Badge>

@@ -74,9 +74,12 @@ export function ProjectHeader({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <User className="h-4 w-4" />
-            <span className="truncate max-w-[120px]">
+            <Link
+              to={`/users/${project.profiles?.username}`}
+              className="truncate max-w-[120px] hover:text-primary hover:underline transition-colors"
+            >
               {project.profiles?.username || "Anónimo"}
-            </span>
+            </Link>
           </div>
           <div className="flex items-center gap-1">
             <Calendar className="h-4 w-4" />

@@ -64,7 +64,10 @@ export function ProjectAnnouncementCard({
         <div className="flex items-center gap-3 mb-4">
           <Link to={`/users/${username}`} onClick={(e) => e.stopPropagation()}>
             <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
-              <AvatarImage src={undefined} alt={username} />
+              <AvatarImage
+                src={project.profiles?.avatar_url || undefined}
+                alt={username}
+              />
               <AvatarFallback className="bg-primary text-primary-foreground text-sm">
                 {getUserInitials(username)}
               </AvatarFallback>
@@ -83,13 +86,15 @@ export function ProjectAnnouncementCard({
               <span className="text-muted-foreground text-sm">{timeAgo}</span>
             </div>
             <div className="flex items-center gap-2 mt-1">
-              <Badge
-                className={`${getEngineColor(
-                  project.engine
-                )} text-black dark:text-primary-foreground border-0 text-xs font-medium`}
-              >
-                {project.name}
-              </Badge>
+              <Link to={`/projects/${project.id}`}>
+                <Badge
+                  className={`${getEngineColor(
+                    project.engine
+                  )} text-black dark:text-primary-foreground border-0 text-xs font-medium hover:opacity-80 transition-opacity`}
+                >
+                  {project.name}
+                </Badge>
+              </Link>
               <Badge variant="outline" className="text-xs">
                 {engineLabel}
               </Badge>
