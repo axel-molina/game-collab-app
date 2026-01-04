@@ -49,7 +49,7 @@ export function useNotifications(userId: string | undefined) {
     if (!userId) return;
 
     const channel = supabase
-      .channel("notifications_realtime")
+      .channel("notifications")
       .on(
         "postgres_changes",
         {
@@ -61,14 +61,14 @@ export function useNotifications(userId: string | undefined) {
         (payload) => {
           const newNotification = payload.new as Notification;
 
-          // Show toast
-          toast(newNotification.title, {
+          // Show real-time toast
+          toast.success(newNotification.title, {
             description: newNotification.message,
             duration: 2000,
             position: "bottom-right",
           });
 
-          // Invalidate query to refetch
+          // Update local cache automatically
           queryClient.setQueryData(
             ["notifications", userId],
             (old: Notification[] = []) => [newNotification, ...old]

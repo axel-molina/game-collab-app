@@ -1,11 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useSendNotification } from "./useNotifications";
 
 export function useProjectFollows(userId?: string) {
   const queryClient = useQueryClient();
-  const { sendNotification } = useSendNotification();
 
   // Get all projects followed by the user
   const { data: followedProjects = [], ...query } = useQuery({
@@ -61,17 +59,6 @@ export function useProjectFollows(userId?: string) {
           .insert([{ project_id: projectId, user_id: userId }]);
 
         if (error) throw error;
-
-        // Send notification
-        if (recipientId && projectName && userId !== recipientId) {
-          await sendNotification({
-            recipientId,
-            type: "follow",
-            entityType: "project",
-            entityId: projectId,
-            projectName,
-          });
-        }
 
         return true;
       }

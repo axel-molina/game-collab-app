@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { toast } from "sonner";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { useSendNotification } from "./useNotifications";
 
 export interface ProjectLike {
   id: string;
@@ -77,8 +76,6 @@ export function useProjectLikes(projectId: string) {
       supabase.removeChannel(newChannel);
     };
   }, [projectId, queryClient]);
-
-  const { sendNotification } = useSendNotification();
 
   // Toggle like mutation
   const toggleLike = useMutation({
