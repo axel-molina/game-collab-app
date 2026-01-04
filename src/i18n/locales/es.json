@@ -160,6 +160,7 @@
     "not_found_desc": "El post que buscas no existe o ha sido eliminado."
   },
   "projects": {
+    "cancel": "Cancelar",
     "create_title": "Nuevo Proyecto",
     "create_subtitle": "Comparte tu proyecto con la comunidad y encuentra colaboradores.",
     "edit_title": "Editar Proyecto",

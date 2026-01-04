@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useSendNotification } from "./useNotifications";
 
 export interface PostComment {
   id: string;
@@ -74,7 +73,6 @@ export function usePostComments(postId: string) {
 // Create new comment
 export function useCreateComment() {
   const queryClient = useQueryClient();
-  const { sendNotification } = useSendNotification();
 
   return useMutation({
     mutationFn: async (commentData: CreateCommentData) => {
@@ -113,33 +111,6 @@ export function useCreateComment() {
         .single();
 
       if (error) throw error;
-
-      // Send notifications
-      if (postData) {
-        // Notify post owner
-        if (postData.user_id !== user.id) {
-          await sendNotification({
-            recipientId: postData.user_id,
-            type: "comment",
-            entityType: "post",
-            entityId: commentData.post_id,
-          });
-        }
-
-        // Notify parent comment owner if it's a reply and different from post owner
-        if (
-          parentCommentOwnerId &&
-          parentCommentOwnerId !== user.id &&
-          parentCommentOwnerId !== postData.user_id
-        ) {
-          await sendNotification({
-            recipientId: parentCommentOwnerId,
-            type: "comment",
-            entityType: "post",
-            entityId: commentData.post_id,
-          });
-        }
-      }
 
       return data;
     },
