@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSendNotification } from "./useNotifications";
 
 export interface PostComment {
   id: string;
@@ -73,6 +74,7 @@ export function usePostComments(postId: string) {
 // Create new comment
 export function useCreateComment() {
   const queryClient = useQueryClient();
+  const { sendNotification } = useSendNotification();
 
   return useMutation({
     mutationFn: async (commentData: CreateCommentData) => {
@@ -80,6 +82,24 @@ export function useCreateComment() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error("No user logged in");
+
+      // Fetch post owner and content for notification
+      const { data: postData } = await supabase
+        .from("project_posts")
+        .select("user_id, content")
+        .eq("id", commentData.post_id)
+        .single();
+
+      // Fetch parent comment owner if this is a reply
+      let parentCommentOwnerId: string | undefined;
+      if (commentData.parent_id) {
+        const { data: parentData } = await supabase
+          .from("post_comments")
+          .select("user_id")
+          .eq("id", commentData.parent_id)
+          .single();
+        parentCommentOwnerId = parentData?.user_id;
+      }
 
       const { data, error } = await supabase
         .from("post_comments")
@@ -93,6 +113,34 @@ export function useCreateComment() {
         .single();
 
       if (error) throw error;
+
+      // Send notifications
+      if (postData) {
+        // Notify post owner
+        if (postData.user_id !== user.id) {
+          await sendNotification({
+            recipientId: postData.user_id,
+            type: "comment",
+            entityType: "post",
+            entityId: commentData.post_id,
+          });
+        }
+
+        // Notify parent comment owner if it's a reply and different from post owner
+        if (
+          parentCommentOwnerId &&
+          parentCommentOwnerId !== user.id &&
+          parentCommentOwnerId !== postData.user_id
+        ) {
+          await sendNotification({
+            recipientId: parentCommentOwnerId,
+            type: "comment",
+            entityType: "post",
+            entityId: commentData.post_id,
+          });
+        }
+      }
+
       return data;
     },
     onSuccess: (data) => {

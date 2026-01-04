@@ -28,6 +28,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Colors } from "@/lib/colors";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { NotificationBell } from "./NotificationBell";
 
 const getNavItems = (t: any) => [
   { name: t("nav.home"), path: "/", icon: Home },
@@ -122,6 +123,7 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
+          {user && <NotificationBell />}
           <Button
             variant="ghost"
             size="icon"

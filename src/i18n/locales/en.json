@@ -273,5 +273,18 @@
     "delete_title": "Delete comment?",
     "delete_desc": "This action cannot be undone.",
     "save": "Save"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "mark_all_read": "Mark all as read",
+    "new_like": "New Like",
+    "new_like_desc": "{{username}} liked your project {{projectName}}",
+    "new_favorite": "New Favorite",
+    "new_favorite_desc": "{{username}} added your project {{projectName}} to favorites",
+    "new_join_request": "Join Request",
+    "new_join_request_desc": "{{username}} wants to join {{projectName}}",
+    "new_comment": "New Comment",
+    "new_comment_desc": "{{username}} commented on your post"
   }
 }

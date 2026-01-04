@@ -273,5 +273,18 @@
     "delete_title": "¿Eliminar comentario?",
     "delete_desc": "Esta acción no se puede deshacer.",
     "save": "Guardar"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "empty": "No tienes notificaciones aún",
+    "mark_all_read": "Marcar todas como leídas",
+    "new_like": "Nuevo Me Gusta",
+    "new_like_desc": "A {{username}} le gustó tu proyecto {{projectName}}",
+    "new_favorite": "Nuevo Favorito",
+    "new_favorite_desc": "{{username}} guardó tu proyecto {{projectName}} en favoritos",
+    "new_join_request": "Solicitud de Unión",
+    "new_join_request_desc": "{{username}} quiere unirse a {{projectName}}",
+    "new_comment": "Nuevo Comentario",
+    "new_comment_desc": "{{username}} comentó en tu posteo"
   }
 }

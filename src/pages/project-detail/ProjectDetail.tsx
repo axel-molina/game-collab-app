@@ -94,10 +94,20 @@ export default function ProjectDetail() {
           likesCount={likesCount}
           userLiked={userLiked}
           isToggling={isToggling}
-          toggleLike={toggleLike}
+          toggleLike={() =>
+            toggleLike({
+              recipientId: project.user_id,
+              projectName: project.name,
+            })
+          }
           isFollowing={isFollowing(project.id)}
           toggleFollow={() =>
-            toggleFollow.mutate({ projectId: project.id, userId: user!.id })
+            toggleFollow.mutate({
+              projectId: project.id,
+              userId: user!.id,
+              recipientId: project.user_id,
+              projectName: project.name,
+            })
           }
           isFollowPending={toggleFollow.isPending}
           handleDelete={handleDelete}

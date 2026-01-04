@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { toast } from "sonner";
 import type { RealtimeChannel } from "@supabase/supabase-js";
+import { useSendNotification } from "./useNotifications";
 
 export interface ProjectLike {
   id: string;
@@ -63,7 +64,9 @@ export function useProjectLikes(projectId: string) {
         },
         () => {
           // Invalidate and refetch on any change
-          queryClient.invalidateQueries({ queryKey: ["project-likes", projectId] });
+          queryClient.invalidateQueries({
+            queryKey: ["project-likes", projectId],
+          });
         }
       )
       .subscribe();
@@ -75,9 +78,17 @@ export function useProjectLikes(projectId: string) {
     };
   }, [projectId, queryClient]);
 
+  const { sendNotification } = useSendNotification();
+
   // Toggle like mutation
   const toggleLike = useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({
+      recipientId,
+      projectName,
+    }: {
+      recipientId: string;
+      projectName: string;
+    }) => {
       if (!user) {
         toast.error("Debes iniciar sesión para dar like");
         throw new Error("Not authenticated");
@@ -107,10 +118,16 @@ export function useProjectLikes(projectId: string) {
         return { action: "unliked" as const };
       } else {
         // Like
-        const { error } = await supabase.from("project_likes").insert({
-          project_id: projectId,
-          user_id: user.id,
-        });
+        const { error } = await supabase.from("project_likes").upsert(
+          {
+            project_id: projectId,
+            user_id: user.id,
+          },
+          {
+            onConflict: "project_id,user_id",
+            ignoreDuplicates: true,
+          }
+        );
 
         if (error) {
           // Check if it's because user is the owner
@@ -139,4 +156,3 @@ export function useProjectLikes(projectId: string) {
     isToggling: toggleLike.isPending,
   };
 }
-

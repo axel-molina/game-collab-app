@@ -138,6 +138,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
                         toggleFollow.mutate({
                           projectId: project.id,
                           userId: user.id,
+                          recipientId: project.user_id,
+                          projectName: project.name,
                         });
                       }}
                       title={

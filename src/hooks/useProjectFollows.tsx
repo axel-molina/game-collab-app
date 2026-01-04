@@ -1,23 +1,25 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSendNotification } from "./useNotifications";
 
 export function useProjectFollows(userId?: string) {
   const queryClient = useQueryClient();
+  const { sendNotification } = useSendNotification();
 
   // Get all projects followed by the user
   const { data: followedProjects = [], ...query } = useQuery({
     queryKey: ["followed-projects", userId],
     queryFn: async () => {
       if (!userId) return [];
-      
+
       const { data, error } = await supabase
         .from("project_followers")
         .select("project_id")
         .eq("user_id", userId);
 
       if (error) throw error;
-      return data.map(item => item.project_id);
+      return data.map((item) => item.project_id);
     },
     enabled: !!userId,
   });
@@ -29,7 +31,17 @@ export function useProjectFollows(userId?: string) {
 
   // Toggle follow status for a project
   const toggleFollow = useMutation({
-    mutationFn: async ({ projectId, userId }: { projectId: string; userId: string }) => {
+    mutationFn: async ({
+      projectId,
+      userId,
+      projectName,
+      recipientId,
+    }: {
+      projectId: string;
+      userId: string;
+      projectName?: string;
+      recipientId?: string;
+    }) => {
       const isCurrentlyFollowing = isFollowing(projectId);
 
       if (isCurrentlyFollowing) {
@@ -49,16 +61,28 @@ export function useProjectFollows(userId?: string) {
           .insert([{ project_id: projectId, user_id: userId }]);
 
         if (error) throw error;
+
+        // Send notification
+        if (recipientId && projectName && userId !== recipientId) {
+          await sendNotification({
+            recipientId,
+            type: "follow",
+            entityType: "project",
+            entityId: projectId,
+            projectName,
+          });
+        }
+
         return true;
       }
     },
     onSuccess: (isNowFollowing, { projectId }) => {
       queryClient.invalidateQueries({ queryKey: ["followed-projects"] });
       queryClient.invalidateQueries({ queryKey: ["projects"] });
-      
+
       toast.success(
-        isNowFollowing 
-          ? "¡Ahora sigues este proyecto!" 
+        isNowFollowing
+          ? "¡Ahora sigues este proyecto!"
           : "Has dejado de seguir este proyecto"
       );
     },
