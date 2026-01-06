@@ -19,6 +19,8 @@ GameCollab es una plataforma para conectar desarrolladores de videojuegos, permi
 - **Autenticación**: Supabase Auth
 - **Formularios**: React Hook Form + Zod
 - **Iconos**: Lucide React
+- **Internacionalización**: i18next
+- **Testing**: Vitest + React Testing Library
 - **Bundler**: Vite
 
 ## 📦 Dependencias principales
@@ -27,8 +29,11 @@ GameCollab es una plataforma para conectar desarrolladores de videojuegos, permi
 - `@tanstack/react-query`: Para gestión de estado y caché
 - `react-router-dom`: Enrutamiento de la aplicación
 - `react-hook-form` + `zod`: Manejo y validación de formularios
+- `i18next` + `react-i18next`: Sistema de internacionalización (ES/EN)
 - `lucide-react`: Biblioteca de iconos
 - `tailwindcss` + `tailwindcss-animate`: Estilización y animaciones
+- `sonner`: Sistema de notificaciones (toasts)
+- `react-markdown`: Renderizado de contenido en formato Markdown
 
 ## 🚀 Cómo empezar
 
@@ -67,7 +72,25 @@ GameCollab es una plataforma para conectar desarrolladores de videojuegos, permi
    yarn dev
    ```
 
-5. Abre tu navegador en [http://localhost:5173](http://localhost:5173)
+5. Abre tu navegador en [http://localhost:8080](http://localhost:8080) (o el puerto indicado por Vite)
+
+## 🧪 Testing
+
+La aplicación utiliza **Vitest** y **React Testing Library** para asegurar la calidad del código.
+
+### Ejecutar tests
+
+Para ejecutar todos los tests una vez:
+```bash
+npm run test
+```
+
+Para ejecutar los tests en modo "watch" (observando cambios):
+```bash
+npm run test:watch
+```
+
+Los tests se encuentran en carpetas `__tests__` dentro de sus respectivos directorios (e.g., `src/hooks/__tests__`).
 
 ## 🏗️ Estructura del proyecto
 
