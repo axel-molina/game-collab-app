@@ -24,7 +24,7 @@ export default function EditPost() {
   useEffect(() => {
     if (!user) {
       navigate("/auth");
-      } else if (post && post.user_id !== user.id) {
+    } else if (post && post.user_id !== user.id) {
       navigate(`/posts/${id}`);
     }
   }, [user, post, id, navigate]);
@@ -33,6 +33,7 @@ export default function EditPost() {
     title: string;
     content: string;
     project_id: string;
+    media?: File[];
   }) => {
     if (!id) return;
 
@@ -41,6 +42,7 @@ export default function EditPost() {
       data: {
         title: data.title,
         content: data.content,
+        media: data.media,
       },
     });
 

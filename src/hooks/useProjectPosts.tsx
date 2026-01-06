@@ -44,6 +44,7 @@ export interface CreatePostData {
 export interface UpdatePostData {
   title?: string;
   content?: string;
+  media?: File[];
 }
 
 // Fetch all posts with project and user data
@@ -387,6 +388,28 @@ export function useUpdatePost() {
         .eq("user_id", user.id);
 
       if (error) throw error;
+
+      // Handle media uploads if any
+      if (data.media && data.media.length > 0) {
+        for (const file of data.media) {
+          const fileExt = file.name.split(".").pop();
+          const fileName = `${id}/${crypto.randomUUID()}.${fileExt}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("project-posts")
+            .upload(fileName, file);
+
+          if (uploadError) throw uploadError;
+
+          // Save reference
+          await supabase.from("post_media").insert({
+            post_id: id,
+            type: file.type.startsWith("image") ? "image" : "video",
+            storage_path: fileName,
+          });
+        }
+      }
+
       return { id };
     },
     onSuccess: (data) => {

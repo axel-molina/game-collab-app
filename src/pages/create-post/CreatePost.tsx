@@ -24,11 +24,13 @@ export default function CreatePost() {
     title: string;
     content: string;
     project_id: string;
+    media?: File[];
   }) => {
     const result = await createPost.mutateAsync({
       project_id: data.project_id,
       title: data.title,
       content: data.content,
+      media: data.media,
     });
 
     if (result) {
