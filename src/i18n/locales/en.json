@@ -210,8 +210,8 @@
     "remove_saved": "Remove from saved"
   },
   "profile": {
-    "projects": "My Projects",
-    "posts": "My Posts",
+    "projects": "Projects",
+    "posts": "Posts",
     "back": "Back",
     "saved": "Saved",
     "profile": "Profile",
