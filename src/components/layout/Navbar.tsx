@@ -20,7 +20,6 @@ import {
   Box,
   Bell,
   Info,
-  Languages,
 } from "lucide-react";
 import logo from "../../../assets/icon.png";
 import { useTheme } from "next-themes";
@@ -29,8 +28,9 @@ import { cn } from "@/lib/utils";
 import { Colors } from "@/lib/colors";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { NotificationBell } from "./NotificationBell";
+import { TFunction } from "i18next";
 
-const getNavItems = (t: any) => [
+const getNavItems = (t: TFunction) => [
   { name: t("nav.home"), path: "/", icon: Home },
   { name: t("nav.projects"), path: "/projects", icon: Box },
   { name: t("nav.about"), path: "/about", icon: Info },
@@ -68,10 +68,6 @@ export function Navbar() {
     } catch (error) {
       console.error("Error signing out:", error);
     }
-  };
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   // Don't render anything while loading to prevent layout shifts
