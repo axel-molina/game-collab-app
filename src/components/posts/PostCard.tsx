@@ -10,7 +10,6 @@ import { MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { useTranslation } from "react-i18next";
 import { PostMediaDisplay } from "./PostMediaDisplay";
-import { ShareMenu } from "../shared/ShareMenu";
 
 interface PostCardProps {
   post: ProjectPost;
