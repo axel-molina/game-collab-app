@@ -122,6 +122,7 @@
     "producer": "Producer"
   },
   "news": {
+    "title": "News",
     "description": "Latest news and updates from the best video game projects in development.",
     "list_title": "News Feed",
     "subtitle": "Latest updates and new projects",
