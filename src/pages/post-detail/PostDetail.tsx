@@ -16,6 +16,7 @@ import { PostMeta } from "./components/PostMeta";
 import { NotFoundState } from "./components/NotFoundState";
 import LoadingMultipleSkeleton from "./components/LoadingMultipleSkeleton";
 import BackButton from "./components/BackButton";
+import { SEO } from "@/components/shared/SEO";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -55,6 +56,12 @@ export default function PostDetail() {
 
   return (
     <Layout>
+      <SEO
+        title={title}
+        description={content.substring(0, 160)}
+        url={`/posts/${post.id}`}
+        type="article"
+      />
       <div className="container max-w-4xl py-8">
         {/* Back button */}
         <BackButton />

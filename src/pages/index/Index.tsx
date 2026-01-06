@@ -7,9 +7,11 @@ import { useProjects } from "@/hooks/useProjects";
 import { useDebounce } from "@/hooks/useDebounce";
 import Hero from "./components/Hero";
 import { RecommendedProjects } from "./components/RecommendedProjects";
+import { SEO } from "@/components/shared/SEO";
 
 const Index = () => {
   const { t } = useTranslation();
+  // ... rest of state
   const [search, setSearch] = useState("");
   const [engine, setEngine] = useState("all");
   const [position, setPosition] = useState("all");
@@ -24,6 +26,14 @@ const Index = () => {
 
   return (
     <Layout>
+      <SEO
+        title={t("nav.projects")}
+        description={t(
+          "projects.description_seo",
+          "Explora proyectos de videojuegos, encuentra colaboradores y únete a equipos de desarrollo."
+        )}
+        url="/projects"
+      />
       {/* Hero */}
       <Hero />
       <div className="container mb-4">

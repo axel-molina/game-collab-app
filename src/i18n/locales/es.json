@@ -122,7 +122,8 @@
     "producer": "Producer"
   },
   "news": {
-    "title": "Novedades",
+    "description": "Novedades y actualizaciones de los mejores proyectos de videojuegos en desarrollo.",
+    "list_title": "Novedades",
     "subtitle": "Últimas actualizaciones y proyectos nuevos",
     "all": "Todas",
     "following": "Seguidos",
@@ -173,6 +174,7 @@
     "custom_engine_placeholder": "Ej: Construct 3",
     "version_label": "Versión del motor",
     "version_placeholder": "Ej: 2022.3.10",
+    "description_seo": "Explora proyectos de videojuegos, encuentra colaboradores y únete a equipos de desarrollo.",
     "description_label": "Descripción",
     "description_placeholder": "Describe tu proyecto, qué tipo de juego es, en qué etapa está...",
     "images_title": "Imágenes",
@@ -258,7 +260,8 @@
     "positions_count_plural": "{{count}} tareas disponibles"
   },
   "about": {
-    "title": "Sobre nosotros",
+    "description_seo": "Conoce más sobre GameCollab, la plataforma para conectar desarrolladores de videojuegos de todo el mundo.",
+    "title": "Sobre GameCollab",
     "description_1": "GameCollab es la plataforma diseñada para centralizar la colaboración en el desarrollo de videojuegos. Conectamos a desarrolladores, artistas, músicos y otros creativos del sector en un ecosistema dinámico y eficiente.",
     "description_2": "En GameCollab, los usuarios pueden compartir sus ideas, mostrar avances y gestionar la planificación de sus proyectos. Además, la plataforma permite a los profesionales destacar sus aptitudes en perfiles personalizados, facilitando que encuentren proyectos que se alineen perfectamente con sus conocimientos y metas.",
     "motto": "Donde las ideas se convierten en juegos."

@@ -3,12 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import IconGamepad from "../../../assets/icon.png";
 import { Colors } from "@/lib/colors";
 import { useTranslation } from "react-i18next";
+import { SEO } from "@/components/shared/SEO";
 
 export default function About() {
   const { t } = useTranslation();
 
   return (
     <Layout>
+      <SEO
+        title={t("nav.about")}
+        description={t(
+          "about.description_seo",
+          "Conoce más sobre GameCollab, la plataforma para conectar desarrolladores de videojuegos de todo el mundo."
+        )}
+        url="/about"
+      />
       <div className="container max-w-4xl py-16">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-primary/10 mb-4">

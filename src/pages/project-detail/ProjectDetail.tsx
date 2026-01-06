@@ -20,6 +20,7 @@ import { ProjectTasks } from "./components/ProjectTasks";
 import { ProjectPositions } from "./components/ProjectPositions";
 import { ProjectContact } from "./components/ProjectContact";
 import { NotFoundState } from "./components/NotFoundState";
+import { SEO } from "@/components/shared/SEO";
 
 export default function ProjectDetail() {
   const { t } = useTranslation();
@@ -76,6 +77,13 @@ export default function ProjectDetail() {
 
   return (
     <Layout>
+      <SEO
+        title={project.name}
+        description={project.description}
+        image={project.project_images?.[0]?.image_url}
+        url={`/projects/${project.id}`}
+        type="website"
+      />
       <div className="container max-w-4xl py-8">
         {/* Back button */}
         <Button variant="ghost" asChild className="mb-6">

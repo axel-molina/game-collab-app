@@ -10,8 +10,11 @@ import { FilterTabs } from "./components/FilterTabs";
 import { EmptyFeed } from "./components/EmptyFeed";
 import { LoadMoreTrigger } from "./components/LoadMoreTrigger";
 import { PostCardWithComments } from "./components/PostCardWithComments";
+import { SEO } from "@/components/shared/SEO";
+import { useTranslation } from "react-i18next";
 
 export default function News() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
     useInfiniteFeed(10);
@@ -63,6 +66,14 @@ export default function News() {
 
   return (
     <Layout>
+      <SEO
+        title={t("nav.home")}
+        description={t(
+          "news.description",
+          "Novedades y actualizaciones de los mejores proyectos de videojuegos en desarrollo."
+        )}
+        url="/"
+      />
       <div className="container max-w-3xl py-8">
         <FeedHeader />
 
