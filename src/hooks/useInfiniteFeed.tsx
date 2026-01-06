@@ -16,19 +16,48 @@ export function useInfiniteFeed(pageSize: number = 10) {
       const to = from + pageSize - 1;
 
       // Fetch posts
-      const { data: posts, error: postsError } = await supabase
+      const { data: rawPosts, error: postsError } = await supabase
         .from("project_posts")
         .select(
           `
           *,
           profiles(username, avatar_url),
-          projects(id, name, engine, custom_engine)
+          projects(id, name, engine, custom_engine),
+          post_media(*)
         `
         )
         .order("created_at", { ascending: false })
         .range(from, to);
 
       if (postsError) throw postsError;
+
+      const posts = (rawPosts || []) as ProjectPost[];
+
+      // Populate signed URLs for posts
+      const allMedia = posts.flatMap((p) => p.post_media || []);
+      if (allMedia.length > 0) {
+        const allPaths = allMedia.map((m) => m.storage_path);
+        const { data: signedData, error: signedError } = await supabase.storage
+          .from("project-posts")
+          .createSignedUrls(allPaths, 60 * 60);
+
+        posts.forEach((post) => {
+          if (post.post_media) {
+            post.post_media = post.post_media.map((m) => {
+              const signed = !signedError
+                ? signedData?.find((s) => s.path === m.storage_path)
+                : null;
+              if (signed?.signedUrl) {
+                return { ...m, url: signed.signedUrl };
+              }
+              const { data: publicData } = supabase.storage
+                .from("project-posts")
+                .getPublicUrl(m.storage_path);
+              return { ...m, url: publicData.publicUrl };
+            });
+          }
+        });
+      }
 
       // Fetch projects
       const { data: projects, error: projectsError } = await supabase

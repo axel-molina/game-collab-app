@@ -10,6 +10,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 import LoadingSkeleton from "./components/LoadingSkeleton";
+import { useTranslation } from "react-i18next";
 
 export default function EditPost() {
   const { id } = useParams<{ id: string }>();
@@ -17,12 +18,13 @@ export default function EditPost() {
   const { user } = useAuth();
   const { data: post, isLoading } = useProjectPost(id!);
   const updatePost = useUpdatePost();
+  const { t } = useTranslation();
 
   // Redirect if not authenticated or not the author
   useEffect(() => {
     if (!user) {
       navigate("/auth");
-    } else if (post && post.user_id !== user.id) {
+      } else if (post && post.user_id !== user.id) {
       navigate(`/posts/${id}`);
     }
   }, [user, post, id, navigate]);

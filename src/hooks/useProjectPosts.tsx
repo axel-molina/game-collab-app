@@ -7,6 +7,15 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+export interface PostMedia {
+  id: string;
+  post_id: string;
+  type: "image" | "video";
+  storage_path: string;
+  created_at: string;
+  url?: string; // Signed URL
+}
+
 export interface ProjectPost {
   id: string;
   project_id: string;
@@ -22,12 +31,14 @@ export interface ProjectPost {
     engine: string;
     custom_engine: string | null;
   } | null;
+  post_media?: PostMedia[];
 }
 
 export interface CreatePostData {
   project_id: string;
   title: string;
   content: string;
+  media?: File[];
 }
 
 export interface UpdatePostData {
@@ -46,13 +57,47 @@ export function useProjectPosts() {
           `
           *,
           profiles(username, avatar_url),
-          projects(id, name, engine, custom_engine)
+          projects(id, name, engine, custom_engine),
+          post_media(*)
         `
         )
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data as ProjectPost[];
+
+      const posts = data as ProjectPost[];
+
+      // Collect all media paths to fetch signed URLs in one go
+      const allMedia = posts.flatMap((p) => p.post_media || []);
+      if (allMedia.length > 0) {
+        const allPaths = allMedia.map((m) => m.storage_path);
+        const { data: signedData, error: signedError } = await supabase.storage
+          .from("project-posts")
+          .createSignedUrls(allPaths, 60 * 60);
+
+        if (!signedError && signedData) {
+          // Map signed URLs back to media items
+          posts.forEach((post) => {
+            if (post.post_media) {
+              post.post_media = post.post_media.map((m) => {
+                const signed = signedData.find(
+                  (s) => s.path === m.storage_path
+                );
+                if (signed?.signedUrl) {
+                  return { ...m, url: signed.signedUrl };
+                }
+                // Fallback to public URL
+                const { data: publicData } = supabase.storage
+                  .from("project-posts")
+                  .getPublicUrl(m.storage_path);
+                return { ...m, url: publicData.publicUrl };
+              });
+            }
+          });
+        }
+      }
+
+      return posts;
     },
   });
 }
@@ -71,7 +116,8 @@ export function useInfiniteProjectPosts(pageSize: number = 10) {
           `
           *,
           profiles(username, avatar_url),
-          projects(id, name, engine, custom_engine)
+          projects(id, name, engine, custom_engine),
+          post_media(*)
         `,
           { count: "exact" }
         )
@@ -80,8 +126,32 @@ export function useInfiniteProjectPosts(pageSize: number = 10) {
 
       if (error) throw error;
 
+      const posts = data as ProjectPost[];
+
+      // Collect all media paths to fetch signed URLs in one go
+      const allMedia = posts.flatMap((p) => p.post_media || []);
+      if (allMedia.length > 0) {
+        const allPaths = allMedia.map((m) => m.storage_path);
+        const { data: signedData, error: signedError } = await supabase.storage
+          .from("project-posts")
+          .createSignedUrls(allPaths, 60 * 60);
+
+        if (!signedError && signedData) {
+          posts.forEach((post) => {
+            if (post.post_media) {
+              post.post_media = post.post_media.map((m) => {
+                const signed = signedData.find(
+                  (s) => s.path === m.storage_path
+                );
+                return { ...m, url: signed?.signedUrl };
+              });
+            }
+          });
+        }
+      }
+
       return {
-        posts: data as ProjectPost[],
+        posts,
         nextPage: data.length === pageSize ? pageParam + 1 : undefined,
         totalCount: count || 0,
       };
@@ -102,14 +172,37 @@ export function useProjectPost(id: string) {
           `
           *,
           profiles(username, avatar_url),
-          projects(id, name, engine, custom_engine)
+          projects(id, name, engine, custom_engine),
+          post_media(*)
         `
         )
         .eq("id", id)
         .maybeSingle();
 
       if (error) throw error;
-      return data as ProjectPost | null;
+
+      const post = data as ProjectPost | null;
+      if (post && post.post_media && post.post_media.length > 0) {
+        const paths = post.post_media.map((m) => m.storage_path);
+        const { data: signedData, error: signedError } = await supabase.storage
+          .from("project-posts")
+          .createSignedUrls(paths, 60 * 60);
+
+        if (!signedError && signedData) {
+          post.post_media = post.post_media.map((m) => {
+            const signed = signedData.find((s) => s.path === m.storage_path);
+            if (signed?.signedUrl) {
+              return { ...m, url: signed.signedUrl };
+            }
+            // Fallback to public URL
+            const { data: publicData } = supabase.storage
+              .from("project-posts")
+              .getPublicUrl(m.storage_path);
+            return { ...m, url: publicData.publicUrl };
+          });
+        }
+      }
+      return post;
     },
     enabled: !!id,
   });
@@ -148,14 +241,46 @@ export function useUserPosts(userId: string) {
           `
           *,
           profiles(username, avatar_url),
-          projects(id, name, engine, custom_engine)
+          projects(id, name, engine, custom_engine),
+          post_media(*)
         `
         )
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data as ProjectPost[];
+
+      const posts = data as ProjectPost[];
+
+      // Collect all media paths to fetch signed URLs in one go
+      const allMedia = posts.flatMap((p) => p.post_media || []);
+      if (allMedia.length > 0) {
+        const allPaths = allMedia.map((m) => m.storage_path);
+        const { data: signedData, error: signedError } = await supabase.storage
+          .from("project-posts")
+          .createSignedUrls(allPaths, 60 * 60);
+
+        if (!signedError && signedData) {
+          posts.forEach((post) => {
+            if (post.post_media) {
+              post.post_media = post.post_media.map((m) => {
+                const signed = signedData.find(
+                  (s) => s.path === m.storage_path
+                );
+                if (signed?.signedUrl) {
+                  return { ...m, url: signed.signedUrl };
+                }
+                // Fallback to public URL
+                const { data: publicData } = supabase.storage
+                  .from("project-posts")
+                  .getPublicUrl(m.storage_path);
+                return { ...m, url: publicData.publicUrl };
+              });
+            }
+          });
+        }
+      }
+      return posts;
     },
     enabled: !!userId,
   });
@@ -187,7 +312,7 @@ export function useCreatePost() {
       // Format content with title as first line
       const formattedContent = `# ${postData.title}\n\n${postData.content}`;
 
-      const { data, error } = await supabase
+      const { data: post, error: postError } = await supabase
         .from("project_posts")
         .insert({
           project_id: postData.project_id,
@@ -197,11 +322,34 @@ export function useCreatePost() {
         .select()
         .single();
 
-      if (error) throw error;
-      return data;
+      if (postError) throw postError;
+
+      // Handle media uploads if any
+      if (postData.media && postData.media.length > 0) {
+        for (const file of postData.media) {
+          const fileExt = file.name.split(".").pop();
+          const fileName = `${post.id}/${crypto.randomUUID()}.${fileExt}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("project-posts")
+            .upload(fileName, file);
+
+          if (uploadError) throw uploadError;
+
+          // Save reference
+          await supabase.from("post_media").insert({
+            post_id: post.id,
+            type: file.type.startsWith("image") ? "image" : "video",
+            storage_path: fileName,
+          });
+        }
+      }
+
+      return post;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["project-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["user-posts", data.user_id] });
       toast.success("Post creado exitosamente");
     },
     onError: (error) => {

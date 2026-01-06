@@ -16,6 +16,7 @@ import { MarkdownRenderer } from "./MarkdownRenderer";
 import { Loader2 } from "lucide-react";
 import { getEngineLabel } from "@/lib/constants";
 import { useTranslation } from "react-i18next";
+import { PostMediaUpload } from "./PostMediaUpload";
 
 interface PostFormProps {
   initialData?: {
@@ -27,6 +28,7 @@ interface PostFormProps {
     title: string;
     content: string;
     project_id: string;
+    media?: File[];
   }) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
@@ -44,6 +46,7 @@ export function PostForm({
   const [title, setTitle] = useState(initialData?.title || "");
   const [content, setContent] = useState(initialData?.content || "");
   const [projectId, setProjectId] = useState(initialData?.project_id || "");
+  const [media, setMedia] = useState<File[]>([]);
 
   const { data: projects, isLoading: loadingProjects } = useUserProjects();
 
@@ -55,6 +58,7 @@ export function PostForm({
       title: title.trim(),
       content: content.trim(),
       project_id: projectId,
+      media,
     });
   };
 
@@ -98,6 +102,12 @@ export function PostForm({
             {t("posts.no_projects")}
           </p>
         )}
+      </div>
+
+      {/* Media Upload */}
+      <div className="space-y-2">
+        <Label>{t("posts.media_label")}</Label>
+        <PostMediaUpload files={media} onChange={setMedia} />
       </div>
 
       {/* Title */}

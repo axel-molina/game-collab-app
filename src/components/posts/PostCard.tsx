@@ -9,6 +9,8 @@ import { getEngineLabel, getEngineColor } from "@/lib/constants";
 import { MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { useTranslation } from "react-i18next";
+import { PostMediaDisplay } from "./PostMediaDisplay";
+import { ShareMenu } from "../shared/ShareMenu";
 
 interface PostCardProps {
   post: ProjectPost;
@@ -119,6 +121,11 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
             {title}
           </h3>
         </Link>
+
+        {/* Media */}
+        {post.post_media && post.post_media.length > 0 && (
+          <PostMediaDisplay media={post.post_media} className="mb-4" />
+        )}
 
         {/* Content with expand/collapse */}
         <div className="mb-4">

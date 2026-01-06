@@ -5,11 +5,13 @@ import { PostForm } from "@/components/posts/PostForm";
 import { useCreatePost } from "@/hooks/useProjectPosts";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function CreatePost() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const createPost = useCreatePost();
+  const { t } = useTranslation();
 
   // Redirect if not authenticated
   useEffect(() => {

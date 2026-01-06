@@ -17,6 +17,7 @@ import { NotFoundState } from "./components/NotFoundState";
 import LoadingMultipleSkeleton from "./components/LoadingMultipleSkeleton";
 import BackButton from "./components/BackButton";
 import { SEO } from "@/components/shared/SEO";
+import { PostMediaDisplay } from "@/components/posts/PostMediaDisplay";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -79,6 +80,12 @@ export default function PostDetail() {
             />
             <PostMeta post={post} />
           </CardHeader>
+
+          {post.post_media && post.post_media.length > 0 && (
+            <div className="px-6 pb-4">
+              <PostMediaDisplay media={post.post_media} />
+            </div>
+          )}
 
           <CardContent>
             <MarkdownRenderer content={content} />
