@@ -9,6 +9,7 @@ export type NotificationType =
   | "follow"
   | "comment"
   | "project_request"
+  | "new_project_post"
   | "system";
 
 export interface Notification {
