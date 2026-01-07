@@ -16,6 +16,9 @@ import {
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { useTranslation } from "react-i18next";
 import { PostMediaDisplay } from "./PostMediaDisplay";
+import { usePostLikes } from "@/hooks/usePostLikes";
+import { cn } from "@/lib/utils";
+import { ShareProject } from "@/pages/project-detail/components/ShareProject";
 
 interface PostCardProps {
   post: ProjectPost;
