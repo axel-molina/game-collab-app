@@ -6,7 +6,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ProjectPost, extractTitleFromContent } from "@/hooks/useProjectPosts";
 import { getEngineLabel, getEngineColor } from "@/lib/constants";
-import { MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  Heart,
+  Share2,
+} from "lucide-react";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import { useTranslation } from "react-i18next";
 import { PostMediaDisplay } from "./PostMediaDisplay";
@@ -53,6 +59,10 @@ const isContentLong = (content: string): boolean => {
 export function PostCard({ post, commentCount = 0 }: PostCardProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
+  const { count, userLiked, toggleLike, isAnimating, likesText } = usePostLikes(
+    post.id
+  );
+
   const title = extractTitleFromContent(post.content);
 
   // Remove title from content for display
@@ -159,14 +169,60 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
         </div>
 
         {/* Footer with actions */}
-        <div className="flex items-center gap-4 pt-3 border-t">
-          <Link
-            to={`/posts/${post.id}`}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            <MessageSquare className="h-4 w-4" />
-            <span>{t("common.comments", { count: commentCount })}</span>
-          </Link>
+        <div className="flex flex-col gap-3 pt-3 border-t">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() =>
+                toggleLike({
+                  postUserId: post.user_id,
+                  isCurrentlyLiked: userLiked,
+                })
+              }
+              className={cn(
+                "flex items-center gap-2 text-sm transition-all active:scale-95",
+                userLiked
+                  ? "text-red-500 font-medium"
+                  : "text-muted-foreground hover:text-red-500"
+              )}
+            >
+              <Heart
+                className={cn(
+                  "h-5 w-5 transition-transform",
+                  userLiked && "fill-current",
+                  isAnimating && "animate-bounce scale-125"
+                )}
+              />
+              <span>{count > 0 ? count : ""}</span>
+            </button>
+
+            <Link
+              to={`/posts/${post.id}`}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              <MessageSquare className="h-5 w-5" />
+              <span>{commentCount > 0 ? commentCount : ""}</span>
+            </Link>
+
+            <div className="ml-auto">
+              <ShareProject
+                url={`${window.location.origin}/posts/${post.id}`}
+                projectName={title}
+              >
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Share2 className="h-4 w-4" />
+                  <span className="sr-only font-semibold">
+                    {t("projects.share")}
+                  </span>
+                </Button>
+              </ShareProject>
+            </div>
+          </div>
+
+          {likesText && (
+            <p className="text-xs text-muted-foreground animate-in fade-in slide-in-from-left-1 duration-300">
+              {likesText}
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -18,6 +18,10 @@ import LoadingMultipleSkeleton from "./components/LoadingMultipleSkeleton";
 import BackButton from "./components/BackButton";
 import { SEO } from "@/components/shared/SEO";
 import { PostMediaDisplay } from "@/components/posts/PostMediaDisplay";
+import { usePostLikes } from "@/hooks/usePostLikes";
+import { Heart, Share2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -25,6 +29,10 @@ export default function PostDetail() {
   const navigate = useNavigate();
   const { data: post, isLoading, error } = useProjectPost(id!);
   const deletePost = useDeletePost();
+  const { count, userLiked, toggleLike, isAnimating, likesText } = usePostLikes(
+    id!
+  );
+  const { t } = useTranslation();
 
   if (isLoading) {
     return <LoadingMultipleSkeleton />;
@@ -89,6 +97,42 @@ export default function PostDetail() {
 
           <CardContent>
             <MarkdownRenderer content={content} />
+          </CardContent>
+
+          <CardContent className="pt-0 border-t mt-4">
+            <div className="flex flex-col gap-4 pt-4">
+              <div className="flex items-center gap-6">
+                <button
+                  onClick={() =>
+                    toggleLike({
+                      postUserId: post.user_id,
+                      isCurrentlyLiked: userLiked,
+                    })
+                  }
+                  className={cn(
+                    "flex items-center gap-2 text-sm transition-all active:scale-95",
+                    userLiked
+                      ? "text-red-500 font-medium"
+                      : "text-muted-foreground hover:text-red-500"
+                  )}
+                >
+                  <Heart
+                    className={cn(
+                      "h-6 w-6 transition-transform",
+                      userLiked && "fill-current",
+                      isAnimating && "animate-bounce scale-125"
+                    )}
+                  />
+                  <span className="text-base">{count > 0 ? count : ""}</span>
+                </button>
+
+                <div className="ml-auto flex items-center gap-2"></div>
+              </div>
+
+              {likesText && (
+                <p className="text-sm text-muted-foreground">{likesText}</p>
+              )}
+            </div>
           </CardContent>
         </Card>
 

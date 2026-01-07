@@ -24,11 +24,17 @@ import { useTranslation } from "react-i18next";
 
 interface ShareProjectProps {
   projectName: string;
+  url?: string;
+  children?: React.ReactNode;
 }
 
-export function ShareProject({ projectName }: ShareProjectProps) {
+export function ShareProject({
+  projectName,
+  url,
+  children,
+}: ShareProjectProps) {
   const { t } = useTranslation();
-  const shareUrl = window.location.href;
+  const shareUrl = url || window.location.origin + window.location.pathname;
   const shareTitle = t("projects.share_text", { projectName });
 
   const shareLinks = [
@@ -70,10 +76,12 @@ export function ShareProject({ projectName }: ShareProjectProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2 px-3 sm:px-4">
-          <Share2 className="h-4 w-4" />
-          <span className="hidden sm:inline">{t("projects.share")}</span>
-        </Button>
+        {children || (
+          <Button variant="outline" className="gap-2 px-3 sm:px-4">
+            <Share2 className="h-4 w-4" />
+            <span className="hidden sm:inline">{t("projects.share")}</span>
+          </Button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         {shareLinks.map((link) => (

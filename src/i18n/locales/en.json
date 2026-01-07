@@ -167,7 +167,11 @@
     "new_project_badge": "New Project",
     "back_to_home": "Back to Home",
     "not_found": "Post not found",
-    "not_found_desc": "The post you are looking for does not exist or has been deleted."
+    "not_found_desc": "The post you are looking for does not exist or has been deleted.",
+    "you_liked": "You liked this",
+    "one_person_liked": "One person liked this",
+    "multiple_people_liked": "{{count}} people liked this",
+    "cannot_like_own": "You cannot like your own post"
   },
   "projects": {
     "cancel": "Cancel",
