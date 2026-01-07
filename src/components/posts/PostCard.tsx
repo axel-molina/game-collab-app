@@ -172,35 +172,43 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
         </div>
 
         {/* Footer with actions */}
-        <div className="flex flex-col gap-3 pt-3 border-t">
+        <div className="pt-3 border-t">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() =>
-                toggleLike({
-                  postUserId: post.user_id,
-                  isCurrentlyLiked: userLiked,
-                })
-              }
-              className={cn(
-                "flex items-center gap-2 text-sm transition-all active:scale-95",
-                userLiked
-                  ? "text-red-500 font-medium"
-                  : "text-muted-foreground hover:text-red-500"
-              )}
-            >
-              <Heart
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() =>
+                  toggleLike({
+                    postUserId: post.user_id,
+                    isCurrentlyLiked: userLiked,
+                  })
+                }
                 className={cn(
-                  "h-5 w-5 transition-transform",
-                  userLiked && "fill-current",
-                  isAnimating && "animate-bounce scale-125"
+                  "flex items-center gap-2 text-sm transition-all active:scale-95",
+                  userLiked
+                    ? "text-red-500 font-medium"
+                    : "text-muted-foreground hover:text-red-500"
                 )}
-              />
-              <span>{count > 0 ? count : ""}</span>
-            </button>
+              >
+                <Heart
+                  className={cn(
+                    "h-5 w-5 transition-transform",
+                    userLiked && "fill-current",
+                    isAnimating && "animate-bounce scale-125"
+                  )}
+                />
+                <span>{count > 0 ? count : ""}</span>
+              </button>
+
+              {likesText && (
+                <span className="text-xs text-muted-foreground animate-in fade-in slide-in-from-left-1 duration-300 ml-1">
+                  · {likesText}
+                </span>
+              )}
+            </div>
 
             <Link
               to={`/posts/${post.id}`}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors ml-2"
             >
               <MessageSquare className="h-5 w-5" />
               <span>{commentCount > 0 ? commentCount : ""}</span>
@@ -220,12 +228,6 @@ export function PostCard({ post, commentCount = 0 }: PostCardProps) {
               </ShareProject>
             </div>
           </div>
-
-          {likesText && (
-            <p className="text-xs text-muted-foreground animate-in fade-in slide-in-from-left-1 duration-300">
-              {likesText}
-            </p>
-          )}
         </div>
       </CardContent>
     </Card>

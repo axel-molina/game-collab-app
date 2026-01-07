@@ -100,8 +100,8 @@ export default function PostDetail() {
           </CardContent>
 
           <CardContent className="pt-0 border-t mt-4">
-            <div className="flex flex-col gap-4 pt-4">
-              <div className="flex items-center gap-6">
+            <div className="flex items-center justify-between pt-4">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={() =>
                     toggleLike({
@@ -126,12 +126,12 @@ export default function PostDetail() {
                   <span className="text-base">{count > 0 ? count : ""}</span>
                 </button>
 
-                <div className="ml-auto flex items-center gap-2"></div>
+                {likesText && (
+                  <span className="text-sm text-muted-foreground animate-in fade-in slide-in-from-left-1 duration-300 ml-1">
+                    · {likesText}
+                  </span>
+                )}
               </div>
-
-              {likesText && (
-                <p className="text-sm text-muted-foreground">{likesText}</p>
-              )}
             </div>
           </CardContent>
         </Card>
