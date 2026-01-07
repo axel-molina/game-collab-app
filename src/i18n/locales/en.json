@@ -75,7 +75,8 @@
     "header_title": "Welcome to",
     "header_subtitle": "Log in or create an account to publish projects",
     "reset_header_title": "Reset password",
-    "reset_header_subtitle": "Enter your email to reset your password"
+    "reset_header_subtitle": "Enter your email to reset your password",
+    "login_required": "Login required"
   },
   "hero": {
     "title": "Build the next big game as a team",
