@@ -76,7 +76,7 @@
     "header_subtitle": "Inicia sesión o crea una cuenta para publicar proyectos",
     "reset_header_title": "Restablecer contraseña",
     "reset_header_subtitle": "Ingresa tu correo para restablecer tu contraseña",
-    "login_reqired": "Requiere iniciar sesión"
+    "login_required": "Requiere iniciar sesión"
   },
   "hero": {
     "title": "Crea el próximo gran juego en equipo",
