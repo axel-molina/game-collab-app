@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Navigate, Link, useSearchParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
@@ -25,10 +25,26 @@ export default function Profile() {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
   const { data: profile, isLoading: profileLoading } = useProfile();
+  const [searchParams] = useSearchParams();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "profile" | "projects" | "posts" | "saved" | "collaborations"
   >("profile");
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "collaborations") {
+      setActiveTab("collaborations");
+    } else if (tab === "projects") {
+      setActiveTab("projects");
+    } else if (tab === "posts") {
+      setActiveTab("posts");
+    } else if (tab === "saved") {
+      setActiveTab("saved");
+    } else if (tab === "profile") {
+      setActiveTab("profile");
+    }
+  }, [searchParams]);
 
   const navigate = useNavigate();
 

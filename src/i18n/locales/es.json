@@ -236,7 +236,12 @@
     "view_contact": "Ver contacto",
     "collaboration_requests": "Solicitudes de colaboración",
     "accept": "Aceptar",
-    "reject": "Rechazar"
+    "reject": "Rechazar",
+    "sent": "Enviado",
+    "requests_received": "Solicitudes recibidas",
+    "my_applications": "Mis aplicaciones",
+    "view_project": "Ver proyecto",
+    "contact_info": "Información de contacto"
   },
   "profile": {
     "projects": "Proyectos",

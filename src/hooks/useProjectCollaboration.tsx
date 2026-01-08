@@ -167,3 +167,30 @@ export function useCollaborationRequests(userId: string | undefined) {
     isResponding: respondMutation.isPending,
   };
 }
+
+export function useMyCollaborations(userId: string | undefined) {
+  return useQuery({
+    queryKey: ["my_collaboration_requests", userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      const { data, error } = await supabase
+        .from("project_collaboration_requests")
+        .select(
+          `
+          *,
+          projects (
+            id,
+            name,
+            contact
+          )
+        `
+        )
+        .eq("requester_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data as any[];
+    },
+    enabled: !!userId,
+  });
+}

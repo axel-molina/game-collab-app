@@ -64,8 +64,8 @@ export function NotificationBell() {
             navigate(`/users/${request.profiles.username}`);
           }
         } else if (notification.type === "collaboration_response") {
-          // Lead to the project where the contact info is revealed
-          navigate(`/projects/${request.project_id}`);
+          // As requested: take the requester to their profile's accepted section
+          navigate(`/profile?tab=collaborations&subtab=sent`);
         }
       }
     }
