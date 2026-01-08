@@ -145,7 +145,12 @@ export default function ProjectDetail() {
               positions={positions}
               getPositionLabel={getPositionLabel}
             />
-            <ProjectContact contact={project.contact} />
+            <ProjectContact
+              contact={project.contact}
+              projectId={project.id}
+              ownerId={project.user_id}
+              isOwner={isOwner}
+            />
           </div>
         </div>
       </div>

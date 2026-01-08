@@ -220,7 +220,23 @@
     "looking_for": "Se busca",
     "contact": "Contacto",
     "save": "Guardar",
-    "remove_saved": "Quitar de guardados"
+    "remove_saved": "Quitar de guardados",
+    "request_collaboration": "Quiero colaborar",
+    "request_sent": "Solicitud enviada",
+    "request_pending": "Pendiente de aprobación",
+    "request_accepted": "Solicitud aceptada",
+    "request_rejected": "Solicitud rechazada",
+    "cancel_request": "Cancelar solicitud",
+    "request_sent_success": "Solicitud enviada correctamente",
+    "request_sent_error": "Error al enviar la solicitud",
+    "request_cancelled_success": "Solicitud cancelada",
+    "request_cancelled_error": "Error al cancelar la solicitud",
+    "response_sent_success": "Respuesta enviada",
+    "response_sent_error": "Error al enviar la respuesta",
+    "view_contact": "Ver contacto",
+    "collaboration_requests": "Solicitudes de colaboración",
+    "accept": "Aceptar",
+    "reject": "Rechazar"
   },
   "profile": {
     "projects": "Proyectos",
@@ -303,6 +319,9 @@
     "new_join_request": "Solicitud de Unión",
     "new_join_request_desc": "{{username}} quiere unirse a {{projectName}}",
     "new_comment": "Nuevo Comentario",
-    "new_comment_desc": "{{username}} comentó en tu posteo"
+    "new_comment_desc": "{{username}} comentó en tu posteo",
+    "collaboration_request_title": "Nueva solicitud 🤝",
+    "collaboration_accepted_title": "Solicitud aceptada ✅",
+    "collaboration_rejected_title": "Solicitud rechazada ❌"
   }
 }

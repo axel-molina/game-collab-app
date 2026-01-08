@@ -220,7 +220,23 @@
     "looking_for": "Looking for",
     "contact": "Contact",
     "save": "Save",
-    "remove_saved": "Remove from saved"
+    "remove_saved": "Remove from saved",
+    "request_collaboration": "Request collaboration",
+    "request_sent": "Request sent",
+    "request_pending": "Pending approval",
+    "request_accepted": "Request accepted",
+    "request_rejected": "Request rejected",
+    "cancel_request": "Cancel request",
+    "request_sent_success": "Request sent successfully",
+    "request_sent_error": "Error sending request",
+    "request_cancelled_success": "Request cancelled",
+    "request_cancelled_error": "Error cancelling request",
+    "response_sent_success": "Response sent",
+    "response_sent_error": "Error sending response",
+    "view_contact": "View contact",
+    "collaboration_requests": "Collaboration requests",
+    "accept": "Accept",
+    "reject": "Reject"
   },
   "profile": {
     "projects": "Projects",
@@ -303,6 +319,9 @@
     "new_join_request": "Join Request",
     "new_join_request_desc": "{{username}} wants to join {{projectName}}",
     "new_comment": "New Comment",
-    "new_comment_desc": "{{username}} commented on your post"
+    "new_comment_desc": "{{username}} commented on your post",
+    "collaboration_request_title": "New request 🤝",
+    "collaboration_accepted_title": "Request accepted ✅",
+    "collaboration_rejected_title": "Request rejected ❌"
   }
 }

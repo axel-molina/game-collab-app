@@ -9,6 +9,8 @@ export type NotificationType =
   | "follow"
   | "comment"
   | "project_request"
+  | "collaboration_request"
+  | "collaboration_response"
   | "new_project_post"
   | "system";
 

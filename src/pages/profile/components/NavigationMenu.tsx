@@ -1,11 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { User, FolderOpen, FileText, Bookmark } from "lucide-react";
+import { User, FolderOpen, FileText, Bookmark, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface NavigationMenuProps {
-  activeTab: "profile" | "projects" | "posts" | "saved";
-  onTabChange: (tab: "profile" | "projects" | "posts" | "saved") => void;
+  activeTab: "profile" | "projects" | "posts" | "saved" | "collaborations";
+  onTabChange: (
+    tab: "profile" | "projects" | "posts" | "saved" | "collaborations"
+  ) => void;
 }
 
 export function NavigationMenu({
@@ -41,6 +43,14 @@ export function NavigationMenu({
           >
             <FileText className="h-4 w-4 mr-2" />
             {t("profile.posts")}
+          </Button>
+          <Button
+            variant={activeTab === "collaborations" ? "secondary" : "ghost"}
+            className="w-full justify-start"
+            onClick={() => onTabChange("collaborations")}
+          >
+            <Users className="h-4 w-4 mr-2" />
+            {t("projects.collaboration_requests")}
           </Button>
           <Button
             variant={activeTab === "saved" ? "secondary" : "ghost"}

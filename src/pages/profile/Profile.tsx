@@ -9,6 +9,8 @@ import { Loader2, LogOut, Plus } from "lucide-react";
 import { FollowingProjectsTab } from "@/components/profile/FollowingProjectsTab";
 import { UserPostsTab } from "@/components/profile/UserPostsTab";
 import { UserProjectsTab } from "@/components/profile/UserProjectsTab";
+import { CollaborationsTab } from "@/components/profile/CollaborationsTab";
+
 import { useNavigate } from "react-router-dom";
 import { ProfileCard } from "./components/ProfileCard";
 import { NavigationMenu } from "./components/NavigationMenu";
@@ -25,8 +27,9 @@ export default function Profile() {
   const { data: profile, isLoading: profileLoading } = useProfile();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "profile" | "projects" | "posts" | "saved"
+    "profile" | "projects" | "posts" | "saved" | "collaborations"
   >("profile");
+
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -100,6 +103,10 @@ export default function Profile() {
                 </h2>
                 <FollowingProjectsTab userId={user.id} />
               </div>
+            )}
+
+            {activeTab === "collaborations" && (
+              <CollaborationsTab userId={user.id} />
             )}
           </div>
         </div>

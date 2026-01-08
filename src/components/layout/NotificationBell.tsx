@@ -16,11 +16,14 @@ import { useTranslation } from "react-i18next";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useCollaborationRequests } from "@/hooks/useProjectCollaboration";
+import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 
 export function NotificationBell() {
   const { user } = useAuth();
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications(user?.id);
+  const { respondToRequest, isResponding } = useCollaborationRequests(user?.id);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const locale = i18n.language === "es" ? es : enUS;
@@ -40,6 +43,12 @@ export function NotificationBell() {
       notification.entity_id
     ) {
       navigate(`/profile/${notification.entity_id}`);
+    } else if (
+      notification.entity_type === "collaboration_request" &&
+      notification.entity_id
+    ) {
+      // Maybe navigate to the project or just stay here
+      // For now, let's not navigate automatically as they might want to use the buttons
     }
   };
 
@@ -109,6 +118,46 @@ export function NotificationBell() {
                       {n.message}
                     </p>
                   )}
+
+                  {n.type === "collaboration_request" && !n.is_read && (
+                    <div
+                      className="mt-2 flex gap-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Button
+                        size="sm"
+                        className="h-8 gap-1 bg-green-600 hover:bg-green-700 text-[11px]"
+                        onClick={() => {
+                          respondToRequest({
+                            requestId: n.entity_id!,
+                            status: "accepted",
+                          });
+                          markAsRead(n.id);
+                        }}
+                        disabled={isResponding}
+                      >
+                        <CheckCircle2 className="h-3 w-3" />
+                        {t("projects.accept")}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 gap-1 border-destructive text-destructive hover:bg-destructive/10 text-[11px]"
+                        onClick={() => {
+                          respondToRequest({
+                            requestId: n.entity_id!,
+                            status: "rejected",
+                          });
+                          markAsRead(n.id);
+                        }}
+                        disabled={isResponding}
+                      >
+                        <XCircle className="h-3 w-3" />
+                        {t("projects.reject")}
+                      </Button>
+                    </div>
+                  )}
+
                   <span className="text-[10px] text-muted-foreground">
                     {formatDistanceToNow(new Date(n.created_at), {
                       addSuffix: true,
