@@ -23,16 +23,14 @@ export function NotificationBell() {
   const { user } = useAuth();
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications(user?.id);
-  const { respondToRequest, isResponding } = useCollaborationRequests(user?.id);
+  const { requests, respondToRequest, isResponding } = useCollaborationRequests(
+    user?.id
+  );
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const locale = i18n.language === "es" ? es : enUS;
 
-  const handleNotificationClick = (notification: Notification) => {
-    if (!notification.is_read) {
-      markAsRead(notification.id);
-    }
-
+  const handleNotificationClick = async (notification: Notification) => {
     // Navigate to entity if applicable
     if (notification.entity_type === "project" && notification.entity_id) {
       navigate(`/projects/${notification.entity_id}`);
@@ -44,11 +42,36 @@ export function NotificationBell() {
     ) {
       navigate(`/profile/${notification.entity_id}`);
     } else if (
-      notification.entity_type === "collaboration_request" &&
-      notification.entity_id
+      notification.type === "collaboration_request" ||
+      notification.type === "collaboration_response"
     ) {
-      // Maybe navigate to the project or just stay here
-      // For now, let's not navigate automatically as they might want to use the buttons
+      // Find the request to get more details (project_id or requester username)
+      let request = requests.find((r) => r.id === notification.entity_id);
+
+      if (!request && notification.entity_id) {
+        const { data } = await supabase
+          .from("project_collaboration_requests")
+          .select("*, profiles:requester_id(username)")
+          .eq("id", notification.entity_id)
+          .maybeSingle();
+        request = data;
+      }
+
+      if (request) {
+        if (notification.type === "collaboration_request") {
+          // As requested: always lead to the requester's profile
+          if (request.profiles?.username) {
+            navigate(`/users/${request.profiles.username}`);
+          }
+        } else if (notification.type === "collaboration_response") {
+          // Lead to the project where the contact info is revealed
+          navigate(`/projects/${request.project_id}`);
+        }
+      }
+    }
+
+    if (!notification.is_read) {
+      markAsRead(notification.id);
     }
   };
 
@@ -91,81 +114,88 @@ export function NotificationBell() {
             </div>
           ) : (
             <div className="flex flex-col">
-              {notifications.map((n) => (
-                <button
-                  key={n.id}
-                  onClick={() => handleNotificationClick(n)}
-                  className={cn(
-                    "flex flex-col gap-1 border-b border-border/50 p-4 text-left transition-colors hover:bg-muted/50 last:border-0",
-                    !n.is_read && "bg-muted/30"
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span
-                      className={cn(
-                        "text-sm font-semibold",
-                        !n.is_read && "text-primary"
-                      )}
-                    >
-                      {n.title}
-                    </span>
-                    {!n.is_read && (
-                      <div className="mt-1.5 h-2 w-2 rounded-full bg-primary" />
+              {notifications.map((n) => {
+                const request = requests.find((r) => r.id === n.entity_id);
+                const isPending =
+                  n.type === "collaboration_request" &&
+                  request?.status === "pending";
+
+                return (
+                  <button
+                    key={n.id}
+                    onClick={() => handleNotificationClick(n)}
+                    className={cn(
+                      "flex flex-col gap-1 border-b border-border/50 p-4 text-left transition-colors hover:bg-muted/50 last:border-0",
+                      !n.is_read && "bg-muted/30"
                     )}
-                  </div>
-                  {n.message && (
-                    <p className="line-clamp-2 text-xs text-muted-foreground">
-                      {n.message}
-                    </p>
-                  )}
-
-                  {n.type === "collaboration_request" && !n.is_read && (
-                    <div
-                      className="mt-2 flex gap-2"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Button
-                        size="sm"
-                        className="h-8 gap-1 bg-green-600 hover:bg-green-700 text-[11px]"
-                        onClick={() => {
-                          respondToRequest({
-                            requestId: n.entity_id!,
-                            status: "accepted",
-                          });
-                          markAsRead(n.id);
-                        }}
-                        disabled={isResponding}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <span
+                        className={cn(
+                          "text-sm font-semibold",
+                          !n.is_read && "text-primary"
+                        )}
                       >
-                        <CheckCircle2 className="h-3 w-3" />
-                        {t("projects.accept")}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-8 gap-1 border-destructive text-destructive hover:bg-destructive/10 text-[11px]"
-                        onClick={() => {
-                          respondToRequest({
-                            requestId: n.entity_id!,
-                            status: "rejected",
-                          });
-                          markAsRead(n.id);
-                        }}
-                        disabled={isResponding}
-                      >
-                        <XCircle className="h-3 w-3" />
-                        {t("projects.reject")}
-                      </Button>
+                        {n.title}
+                      </span>
+                      {!n.is_read && (
+                        <div className="mt-1.5 h-2 w-2 rounded-full bg-primary" />
+                      )}
                     </div>
-                  )}
+                    {n.message && (
+                      <p className="line-clamp-2 text-xs text-muted-foreground">
+                        {n.message}
+                      </p>
+                    )}
 
-                  <span className="text-[10px] text-muted-foreground">
-                    {formatDistanceToNow(new Date(n.created_at), {
-                      addSuffix: true,
-                      locale: locale,
-                    })}
-                  </span>
-                </button>
-              ))}
+                    {isPending && (
+                      <div
+                        className="mt-2 flex gap-2"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Button
+                          size="sm"
+                          className="h-8 gap-1 bg-green-600 hover:bg-green-700 text-[11px]"
+                          onClick={() => {
+                            respondToRequest({
+                              requestId: n.entity_id!,
+                              status: "accepted",
+                            });
+                            markAsRead(n.id);
+                          }}
+                          disabled={isResponding}
+                        >
+                          <CheckCircle2 className="h-3 w-3" />
+                          {t("projects.accept")}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 gap-1 border-destructive text-destructive hover:bg-destructive/10 text-[11px]"
+                          onClick={() => {
+                            respondToRequest({
+                              requestId: n.entity_id!,
+                              status: "rejected",
+                            });
+                            markAsRead(n.id);
+                          }}
+                          disabled={isResponding}
+                        >
+                          <XCircle className="h-3 w-3" />
+                          {t("projects.reject")}
+                        </Button>
+                      </div>
+                    )}
+
+                    <span className="text-[10px] text-muted-foreground">
+                      {formatDistanceToNow(new Date(n.created_at), {
+                        addSuffix: true,
+                        locale: locale,
+                      })}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           )}
         </ScrollArea>

@@ -42,18 +42,20 @@ export function PostHeader({
       {/* Project Badge */}
       {post.projects && (
         <div className="flex items-center gap-2 mb-4 justify-between">
-          <div>
-            <Badge
-              className={`${getEngineColor(
-                post.projects.engine
-              )} text-primary-foreground border-0`}
-            >
-              {post.projects.name}
-            </Badge>
+          <div className="flex items-center gap-2">
+            <Link to={`/projects/${post.project_id}`}>
+              <Badge
+                className={`${getEngineColor(
+                  post.projects.engine
+                )} text-primary-foreground border-0 hover:opacity-80 transition-opacity cursor-pointer`}
+              >
+                {post.projects.name}
+              </Badge>
+            </Link>
             <Badge variant="outline">{engineLabel}</Badge>
           </div>
           <div>
-            <ShareProject projectName={post.title} />
+            <ShareProject projectName={title} />
           </div>
         </div>
       )}
