@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ENGINES, POSITIONS } from "@/lib/constants";
+import { ENGINES, POSITIONS, getPositionLabel } from "@/lib/constants";
 import { Plus, X, Upload, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
@@ -470,16 +470,23 @@ export function ProjectForm({
             {/* Selected custom positions */}
             <div className="flex flex-wrap gap-2">
               {selectedPositions
-                .filter((p) => p.is_custom)
+                .filter(
+                  (p) =>
+                    p.is_custom ||
+                    !POSITIONS.some((pos) => pos.value === p.position)
+                )
                 .map((pos) => (
                   <span
                     key={pos.position}
-                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary text-primary-foreground text-sm"
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary text-primary-foreground text-sm animate-in fade-in zoom-in duration-200"
                   >
-                    {pos.position}
+                    {pos.is_custom
+                      ? pos.position
+                      : getPositionLabel(pos.position)}
                     <button
                       type="button"
                       onClick={() => removePosition(pos.position)}
+                      className="hover:text-primary-foreground/80 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>

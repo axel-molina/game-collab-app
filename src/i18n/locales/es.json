@@ -291,8 +291,8 @@
     }
   },
   "projects_common": {
-    "positions_count": "{{count}} tarea disponible",
-    "positions_count_plural": "{{count}} tareas disponibles"
+    "positions_count": "{{count}} rol disponible",
+    "positions_count_plural": "{{count}} roles disponibles"
   },
   "about": {
     "description_seo": "Conoce más sobre GameCollab, la plataforma para conectar desarrolladores de videojuegos de todo el mundo.",
