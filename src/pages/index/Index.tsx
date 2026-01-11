@@ -5,7 +5,7 @@ import { ProjectList } from "@/components/projects/ProjectList";
 import { ProjectFilters } from "@/components/projects/ProjectFilters";
 import { useProjects } from "@/hooks/useProjects";
 import { useDebounce } from "@/hooks/useDebounce";
-import Hero from "./components/Hero";
+import Hero from "@/components/shared/Hero";
 import { RecommendedProjects } from "./components/RecommendedProjects";
 import { SEO } from "@/components/shared/SEO";
 
@@ -36,7 +36,7 @@ const Index = () => {
       />
       {/* Hero */}
       <Hero />
-      <div className="container mb-4">
+      <div id="projects-list" className="container mb-4">
         {/* Recommended Projects (if any) */}
         <RecommendedProjects />
 

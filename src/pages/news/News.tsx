@@ -12,6 +12,7 @@ import { LoadMoreTrigger } from "./components/LoadMoreTrigger";
 import { PostCardWithComments } from "./components/PostCardWithComments";
 import { SEO } from "@/components/shared/SEO";
 import { useTranslation } from "react-i18next";
+import Hero from "@/components/shared/Hero";
 
 export default function News() {
   const { t } = useTranslation();
@@ -74,6 +75,7 @@ export default function News() {
         )}
         url="/"
       />
+      <Hero />
       <div className="container max-w-3xl py-8">
         <FeedHeader />
 
