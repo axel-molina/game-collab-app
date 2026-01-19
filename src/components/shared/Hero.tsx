@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import banner from "../../../assets/banner.jpg";
+import banner from "../../../assets/dragon3d.png";
 
 const Hero = () => {
   const { t } = useTranslation();
