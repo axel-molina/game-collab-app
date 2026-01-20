@@ -1,12 +1,31 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { User, FolderOpen, FileText, Bookmark, Users } from "lucide-react";
+import {
+  User,
+  FolderOpen,
+  FileText,
+  Bookmark,
+  Users,
+  Settings,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface NavigationMenuProps {
-  activeTab: "profile" | "projects" | "posts" | "saved" | "collaborations";
+  activeTab:
+    | "profile"
+    | "projects"
+    | "posts"
+    | "saved"
+    | "collaborations"
+    | "settings";
   onTabChange: (
-    tab: "profile" | "projects" | "posts" | "saved" | "collaborations"
+    tab:
+      | "profile"
+      | "projects"
+      | "posts"
+      | "saved"
+      | "collaborations"
+      | "settings",
   ) => void;
 }
 
@@ -59,6 +78,14 @@ export function NavigationMenu({
           >
             <Bookmark className="h-4 w-4 mr-2" />
             {t("profile.saved")}
+          </Button>
+          <Button
+            variant={activeTab === "settings" ? "secondary" : "ghost"}
+            className="w-full justify-start"
+            onClick={() => onTabChange("settings")}
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            {t("notifications.settings_title")}
           </Button>
         </nav>
       </CardContent>

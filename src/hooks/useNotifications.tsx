@@ -74,9 +74,9 @@ export function useNotifications(userId: string | undefined) {
           // Update local cache automatically
           queryClient.setQueryData(
             ["notifications", userId],
-            (old: Notification[] = []) => [newNotification, ...old]
+            (old: Notification[] = []) => [newNotification, ...old],
           );
-        }
+        },
       )
       .subscribe();
 
@@ -98,7 +98,7 @@ export function useNotifications(userId: string | undefined) {
       queryClient.setQueryData(
         ["notifications", userId],
         (old: Notification[] = []) =>
-          old.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+          old.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
       );
     },
   });
@@ -117,7 +117,7 @@ export function useNotifications(userId: string | undefined) {
     onSuccess: () => {
       queryClient.setQueryData(
         ["notifications", userId],
-        (old: Notification[] = []) => old.map((n) => ({ ...n, is_read: true }))
+        (old: Notification[] = []) => old.map((n) => ({ ...n, is_read: true })),
       );
     },
   });
@@ -187,6 +187,30 @@ export function useSendNotification() {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user || user.id === recipientId) return;
+
+    // Check recipient settings
+    const { data: settings } = await supabase
+      .from("user_notification_settings")
+      .select("*")
+      .eq("user_id", recipientId)
+      .maybeSingle();
+
+    if (settings) {
+      const settingMap: Record<string, string> = {
+        like: "likes_enabled",
+        follow: "follows_enabled",
+        comment: "comments_enabled",
+        project_request: "project_requests_enabled",
+        collaboration_request: "collaboration_requests_enabled",
+        collaboration_response: "collaboration_responses_enabled",
+        new_project_post: "new_project_posts_enabled",
+      };
+
+      const settingKey = settingMap[type];
+      if (settingKey && (settings as any)[settingKey] === false) {
+        return; // Notification disabled by user
+      }
+    }
 
     // Get current user profile for the name
     const { data: profile } = await supabase

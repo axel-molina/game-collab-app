@@ -327,7 +327,25 @@
     "new_comment_desc": "{{username}} comentó en tu posteo",
     "collaboration_request_title": "Nueva solicitud 🤝",
     "collaboration_accepted_title": "Solicitud aceptada ✅",
-    "collaboration_rejected_title": "Solicitud rechazada ❌"
+    "collaboration_rejected_title": "Solicitud rechazada ❌",
+    "settings_title": "Configuración de notificaciones",
+    "settings_desc": "Elige qué notificaciones deseas recibir en tiempo real.",
+    "settings": {
+      "likes": "Me gusta",
+      "likes_desc": "Cuando a alguien le gusta tu proyecto o publicación",
+      "follows": "Nuevos seguidores",
+      "follows_desc": "Cuando alguien comienza a seguir tu perfil o proyecto",
+      "comments": "Comentarios",
+      "comments_desc": "Cuando alguien comenta en tus publicaciones o responde a tus comentarios",
+      "project_requests": "Solicitudes de proyecto",
+      "project_requests_desc": "Cuando alguien solicita participar en uno de tus proyectos",
+      "collaboration_requests": "Solicitudes de colaboración",
+      "collaboration_requests_desc": "Cuando recibes una invitación para colaborar",
+      "collaboration_responses": "Respuestas de colaboración",
+      "collaboration_responses_desc": "Cuando alguien acepta o rechaza tu solicitud de colaboración",
+      "new_project_posts": "Nuevas publicaciones",
+      "new_project_posts_desc": "Cuando hay nuevas actualizaciones en proyectos que sigues"
+    }
   },
   "feedback": {
     "title": "Reportar un error o sugerencia",

@@ -326,9 +326,27 @@
     "new_join_request_desc": "{{username}} wants to join {{projectName}}",
     "new_comment": "New Comment",
     "new_comment_desc": "{{username}} commented on your post",
-    "collaboration_request_title": "New request 🤝",
-    "collaboration_accepted_title": "Request accepted ✅",
-    "collaboration_rejected_title": "Request rejected ❌"
+    "collaboration_request_title": "New Request 🤝",
+    "collaboration_accepted_title": "Request Accepted ✅",
+    "collaboration_rejected_title": "Request Rejected ❌",
+    "settings_title": "Notification Settings",
+    "settings_desc": "Choose which notifications you wish to receive in real-time.",
+    "settings": {
+      "likes": "Likes",
+      "likes_desc": "When someone likes your project or post",
+      "follows": "New followers",
+      "follows_desc": "When someone starts following your profile or project",
+      "comments": "Comments",
+      "comments_desc": "When someone comments on your posts or replies to your comments",
+      "project_requests": "Project requests",
+      "project_requests_desc": "When someone requests to join one of your projects",
+      "collaboration_requests": "Collaboration requests",
+      "collaboration_requests_desc": "When you receive an invitation to collaborate",
+      "collaboration_responses": "Collaboration responses",
+      "collaboration_responses_desc": "When someone accepts or rejects your collaboration request",
+      "new_project_posts": "New posts",
+      "new_project_posts_desc": "When there are new updates on projects you follow"
+    }
   },
   "feedback": {
     "title": "Report a bug or suggestion",

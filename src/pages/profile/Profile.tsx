@@ -10,6 +10,7 @@ import { FollowingProjectsTab } from "@/components/profile/FollowingProjectsTab"
 import { UserPostsTab } from "@/components/profile/UserPostsTab";
 import { UserProjectsTab } from "@/components/profile/UserProjectsTab";
 import { CollaborationsTab } from "@/components/profile/CollaborationsTab";
+import { NotificationSettings } from "./components/NotificationSettings";
 
 import { useNavigate } from "react-router-dom";
 import { ProfileCard } from "./components/ProfileCard";
@@ -28,7 +29,7 @@ export default function Profile() {
   const [searchParams] = useSearchParams();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "profile" | "projects" | "posts" | "saved" | "collaborations"
+    "profile" | "projects" | "posts" | "saved" | "collaborations" | "settings"
   >("profile");
 
   useEffect(() => {
@@ -41,6 +42,8 @@ export default function Profile() {
       setActiveTab("posts");
     } else if (tab === "saved") {
       setActiveTab("saved");
+    } else if (tab === "settings") {
+      setActiveTab("settings");
     } else if (tab === "profile") {
       setActiveTab("profile");
     }
@@ -123,6 +126,10 @@ export default function Profile() {
 
             {activeTab === "collaborations" && (
               <CollaborationsTab userId={user.id} />
+            )}
+
+            {activeTab === "settings" && (
+              <NotificationSettings userId={user.id} />
             )}
           </div>
         </div>
