@@ -42,7 +42,7 @@ const feedbackSchema = z.object({
     .string()
     .min(10, { message: "Message must be at least 10 characters" }),
   email: z.string().email().optional().or(z.literal("")),
-  _gotcha: z.string().optional(), // Honeypot
+  _gotcha: z.string().optional(),
   captcha_answer: z.string().min(1, { message: "Result is required" }),
 });
 
@@ -77,8 +77,6 @@ export default function Feedback() {
 
     setIsSubmitting(true);
     try {
-      // In a real scenario, we send this to Formspree
-      // Note: _gotcha will be sent as part of the body, Formspree handles it
       await fetch("https://formspree.io/f/xvzzregj", {
         method: "POST",
         body: JSON.stringify(values),

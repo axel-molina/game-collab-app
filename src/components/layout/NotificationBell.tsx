@@ -24,7 +24,7 @@ export function NotificationBell() {
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications(user?.id);
   const { requests, respondToRequest, isResponding } = useCollaborationRequests(
-    user?.id
+    user?.id,
   );
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -36,6 +36,20 @@ export function NotificationBell() {
       navigate(`/projects/${notification.entity_id}`);
     } else if (notification.entity_type === "post" && notification.entity_id) {
       navigate(`/posts/${notification.entity_id}`);
+    } else if (
+      notification.entity_type === "comment" &&
+      notification.entity_id
+    ) {
+      // Fetch the post_id associated with the comment
+      const { data: commentData } = await supabase
+        .from("post_comments")
+        .select("post_id")
+        .eq("id", notification.entity_id)
+        .maybeSingle();
+
+      if (commentData?.post_id) {
+        navigate(`/posts/${commentData.post_id}`);
+      }
     } else if (
       notification.entity_type === "profile" &&
       notification.entity_id
@@ -126,14 +140,14 @@ export function NotificationBell() {
                     onClick={() => handleNotificationClick(n)}
                     className={cn(
                       "flex flex-col gap-1 border-b border-border/50 p-4 text-left transition-colors hover:bg-muted/50 last:border-0",
-                      !n.is_read && "bg-muted/30"
+                      !n.is_read && "bg-muted/30",
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <span
                         className={cn(
                           "text-sm font-semibold",
-                          !n.is_read && "text-primary"
+                          !n.is_read && "text-primary",
                         )}
                       >
                         {n.title}

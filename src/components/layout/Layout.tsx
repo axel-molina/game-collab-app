@@ -22,7 +22,7 @@ export function Layout({ children }: LayoutProps) {
       <footer className="border-t border-border py-8 mt-auto">
         <div className="container flex flex-col items-center gap-4 text-center text-sm text-muted-foreground">
           <p>
-            © 2025 <span style={{ color: Colors.gameBlue }}>Game</span>
+            © 2026 <span style={{ color: Colors.gameBlue }}>Game</span>
             <span style={{ color: Colors.collabGreen }}>Collab</span>.
             {t("common.footer_text")}
           </p>
