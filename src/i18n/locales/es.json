@@ -328,5 +328,26 @@
     "collaboration_request_title": "Nueva solicitud 🤝",
     "collaboration_accepted_title": "Solicitud aceptada ✅",
     "collaboration_rejected_title": "Solicitud rechazada ❌"
+  },
+  "feedback": {
+    "title": "Reportar un error o sugerencia",
+    "description": "¿Tienes algún problema o una idea para mejorar GameCollab? ¡Cuéntanos!",
+    "type_label": "Tipo",
+    "bug": "Error / Bug",
+    "suggestion": "Sugerencia / Idea",
+    "subject_label": "Asunto",
+    "subject_placeholder": "Resumen de tu reporte",
+    "message_label": "Mensaje",
+    "message_placeholder": "Describe el error o tu sugerencia con el mayor detalle posible...",
+    "email_label": "Email (opcional)",
+    "email_placeholder": "Para contactarte si necesitamos más info",
+    "submit": "Enviar reporte",
+    "success_title": "¡Reporte enviado!",
+    "success_message": "Muchas gracias por ayudarnos a mejorar GameCollab.",
+    "error_message": "Hubo un error al enviar el reporte. Por favor, intenta de nuevo.",
+    "footer_link": "Reportar error o sugerencia",
+    "captcha_label": "¿Cuánto es {{num1}} + {{num2}}?",
+    "captcha_placeholder": "Escribe el resultado",
+    "captcha_error": "Resultado incorrecto"
   }
 }
