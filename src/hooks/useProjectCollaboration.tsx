@@ -118,7 +118,7 @@ export function useCollaborationRequests(userId: string | undefined) {
           `
           *,
           projects (name),
-          profiles:requester_id (username)
+          profiles:requester_id (username, email)
         `
         )
         .eq("owner_id", userId)

@@ -141,47 +141,63 @@ export function CollaborationsTab({ userId }: CollaborationsTabProps) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(new Date(request.created_at), {
-                          addSuffix: true,
-                          locale: locale,
-                        })}
-                      </span>
+                    <div className="flex flex-col gap-4">
+                      {request.status === "accepted" &&
+                        request.profiles?.email && (
+                          <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                            <p className="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider mb-2">
+                              {t("projects.contact_info")}
+                            </p>
+                            <div className="flex items-start gap-2">
+                              <Mail className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                              <span className="text-sm break-all font-medium">
+                                {request.profiles.email}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">
+                          {formatDistanceToNow(new Date(request.created_at), {
+                            addSuffix: true,
+                            locale: locale,
+                          })}
+                        </span>
 
-                      {request.status === "pending" && (
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            className="gap-1 bg-green-600 hover:bg-green-700 font-semibold"
-                            onClick={() =>
-                              respondToRequest({
-                                requestId: request.id,
-                                status: "accepted",
-                              })
-                            }
-                            disabled={isResponding}
-                          >
-                            <CheckCircle2 className="h-4 w-4" />
-                            {t("projects.accept")}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-1 border-destructive text-destructive hover:bg-destructive/10 font-semibold"
-                            onClick={() =>
-                              respondToRequest({
-                                requestId: request.id,
-                                status: "rejected",
-                              })
-                            }
-                            disabled={isResponding}
-                          >
-                            <XCircle className="h-4 w-4" />
-                            {t("projects.reject")}
-                          </Button>
-                        </div>
-                      )}
+                        {request.status === "pending" && (
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              className="gap-1 bg-green-600 hover:bg-green-700 font-semibold"
+                              onClick={() =>
+                                respondToRequest({
+                                  requestId: request.id,
+                                  status: "accepted",
+                                })
+                              }
+                              disabled={isResponding}
+                            >
+                              <CheckCircle2 className="h-4 w-4" />
+                              {t("projects.accept")}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-1 border-destructive text-destructive hover:bg-destructive/10 font-semibold"
+                              onClick={() =>
+                                respondToRequest({
+                                  requestId: request.id,
+                                  status: "rejected",
+                                })
+                              }
+                              disabled={isResponding}
+                            >
+                              <XCircle className="h-4 w-4" />
+                              {t("projects.reject")}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
