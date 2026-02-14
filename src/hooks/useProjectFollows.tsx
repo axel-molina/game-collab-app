@@ -70,8 +70,67 @@ export function useProjectFollows(userId?: string) {
       toast.success(
         isNowFollowing
           ? "¡Ahora sigues este proyecto!"
-          : "Has dejado de seguir este proyecto"
+          : "Has dejado de seguir este proyecto",
       );
+
+      // Check for follower achievements after following a project
+      if (isNowFollowing && userId) {
+        // Dynamically check achievements
+        setTimeout(async () => {
+          try {
+            const { count } = await supabase
+              .from("project_followers")
+              .select("*", { count: "exact", head: true })
+              .eq("user_id", userId);
+
+            if (count !== null) {
+              // Check for achievements
+              const achievements = await supabase
+                .from("achievements")
+                .select("*")
+                .in("name", ["Seguidor Activo", "Networker"]);
+
+              if (achievements.data) {
+                for (const achievement of achievements.data) {
+                  const requiredCount =
+                    achievement.name === "Networker" ? 10 : 5;
+
+                  if (count >= requiredCount) {
+                    // Check if already unlocked
+                    const { data: existing } = await supabase
+                      .from("user_achievements")
+                      .select("id")
+                      .eq("user_id", userId)
+                      .eq("achievement_id", achievement.id)
+                      .maybeSingle();
+
+                    if (!existing) {
+                      // Unlock achievement
+                      await supabase.from("user_achievements").insert({
+                        user_id: userId,
+                        achievement_id: achievement.id,
+                      });
+
+                      // Show notification
+                      toast.success(`🏆 ¡Logro desbloqueado!`, {
+                        description: `${achievement.name}: ${achievement.description}`,
+                        duration: 5000,
+                      });
+
+                      // Invalidate queries
+                      queryClient.invalidateQueries({
+                        queryKey: ["user-achievements"],
+                      });
+                    }
+                  }
+                }
+              }
+            }
+          } catch (error) {
+            console.error("Error checking achievements:", error);
+          }
+        }, 500);
+      }
     },
     onError: (error) => {
       console.error("Error toggling follow:", error);
