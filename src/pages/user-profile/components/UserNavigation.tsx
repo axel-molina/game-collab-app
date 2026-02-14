@@ -1,11 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, FileText } from "lucide-react";
+import { FolderOpen, FileText, Award } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface UserNavigationProps {
-  activeTab: "projects" | "posts";
-  onTabChange: (tab: "projects" | "posts") => void;
+  activeTab: "projects" | "posts" | "achievements";
+  onTabChange: (tab: "projects" | "posts" | "achievements") => void;
 }
 
 export function UserNavigation({
@@ -33,6 +33,14 @@ export function UserNavigation({
           >
             <FileText className="h-4 w-4 mr-2" />
             {t("profile.posts")}
+          </Button>
+          <Button
+            variant={activeTab === "achievements" ? "secondary" : "ghost"}
+            className="w-full justify-start"
+            onClick={() => onTabChange("achievements")}
+          >
+            <Award className="h-4 w-4 mr-2" />
+            {t("profile.achievements")}
           </Button>
         </nav>
       </CardContent>

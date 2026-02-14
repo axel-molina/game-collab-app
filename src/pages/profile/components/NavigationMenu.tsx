@@ -7,6 +7,7 @@ import {
   Bookmark,
   Users,
   Settings,
+  Award,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +18,7 @@ interface NavigationMenuProps {
     | "posts"
     | "saved"
     | "collaborations"
+    | "achievements"
     | "settings";
   onTabChange: (
     tab:
@@ -25,6 +27,7 @@ interface NavigationMenuProps {
       | "posts"
       | "saved"
       | "collaborations"
+      | "achievements"
       | "settings",
   ) => void;
 }
@@ -78,6 +81,14 @@ export function NavigationMenu({
           >
             <Bookmark className="h-4 w-4 mr-2" />
             {t("profile.saved")}
+          </Button>
+          <Button
+            variant={activeTab === "achievements" ? "secondary" : "ghost"}
+            className="w-full justify-start"
+            onClick={() => onTabChange("achievements")}
+          >
+            <Award className="h-4 w-4 mr-2" />
+            {t("profile.achievements")}
           </Button>
           <Button
             variant={activeTab === "settings" ? "secondary" : "ghost"}

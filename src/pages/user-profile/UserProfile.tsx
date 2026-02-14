@@ -10,13 +10,16 @@ import { useState } from "react";
 import { UserProfileCard } from "./components/UserProfileCard";
 import { UserNavigation } from "./components/UserNavigation";
 import { NotFoundState } from "./components/NotFoundState";
+import { AchievementsSection } from "@/components/profile/AchievementsSection";
 import { useTranslation } from "react-i18next";
 
 export default function UserProfile() {
   const { t } = useTranslation();
   const { username } = useParams<{ username: string }>();
   const { data: profile, isLoading, error } = usePublicProfile(username!);
-  const [activeTab, setActiveTab] = useState<"projects" | "posts">("projects");
+  const [activeTab, setActiveTab] = useState<
+    "projects" | "posts" | "achievements"
+  >("projects");
 
   if (isLoading) {
     return (
@@ -84,6 +87,10 @@ export default function UserProfile() {
                 <h2 className="text-2xl font-bold">{t("profile.posts")}</h2>
                 <PublicUserPostsTab userId={profile.id} />
               </div>
+            )}
+
+            {activeTab === "achievements" && (
+              <AchievementsSection userId={profile.id} isOwnProfile={false} />
             )}
           </div>
         </div>

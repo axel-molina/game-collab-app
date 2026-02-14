@@ -20,6 +20,7 @@ import LoaderLayout from "./components/LoaderLayout";
 import SignOutButton from "./components/SignOutButton";
 import HeaderNewProjectsProfile from "./components/HeaderNewProjectsProfile";
 import HeaderNewPostProfile from "./components/HeaderNewPostProfile";
+import { AchievementsSection } from "@/components/profile/AchievementsSection";
 import { useTranslation } from "react-i18next";
 
 export default function Profile() {
@@ -29,7 +30,13 @@ export default function Profile() {
   const [searchParams] = useSearchParams();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "profile" | "projects" | "posts" | "saved" | "collaborations" | "settings"
+    | "profile"
+    | "projects"
+    | "posts"
+    | "saved"
+    | "collaborations"
+    | "achievements"
+    | "settings"
   >("profile");
 
   useEffect(() => {
@@ -42,6 +49,8 @@ export default function Profile() {
       setActiveTab("posts");
     } else if (tab === "saved") {
       setActiveTab("saved");
+    } else if (tab === "achievements") {
+      setActiveTab("achievements");
     } else if (tab === "settings") {
       setActiveTab("settings");
     } else if (tab === "profile") {
@@ -126,6 +135,10 @@ export default function Profile() {
 
             {activeTab === "collaborations" && (
               <CollaborationsTab userId={user.id} />
+            )}
+
+            {activeTab === "achievements" && (
+              <AchievementsSection userId={user.id} isOwnProfile={true} />
             )}
 
             {activeTab === "settings" && (
