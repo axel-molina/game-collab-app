@@ -58,7 +58,7 @@ export function useProjects(filters: ProjectFilters = {}) {
           project_images(*),
           project_tasks(*),
           project_positions(*)
-        `
+        `,
         )
         .order("created_at", { ascending: false });
 
@@ -80,8 +80,8 @@ export function useProjects(filters: ProjectFilters = {}) {
       if (filters.position && filters.position !== "all") {
         projects = projects.filter((project) =>
           project.project_positions?.some(
-            (pos) => pos.position === filters.position
-          )
+            (pos) => pos.position === filters.position,
+          ),
         );
       }
 
@@ -103,7 +103,7 @@ export function useProject(id: string) {
           project_images(*),
           project_tasks(*),
           project_positions(*)
-        `
+        `,
         )
         .eq("id", id)
         .maybeSingle();
@@ -180,7 +180,10 @@ export function useCreateProject() {
         const { error: imagesError } = await supabase
           .from("project_images")
           .insert(
-            imageUrls.map((url) => ({ project_id: project.id, image_url: url }))
+            imageUrls.map((url) => ({
+              project_id: project.id,
+              image_url: url,
+            })),
           );
 
         if (imagesError) throw imagesError;
@@ -195,7 +198,7 @@ export function useCreateProject() {
               project_id: project.id,
               title: task.title,
               completed: task.completed,
-            }))
+            })),
           );
 
         if (tasksError) throw tasksError;
@@ -210,7 +213,7 @@ export function useCreateProject() {
               project_id: project.id,
               position: pos.position,
               is_custom: pos.is_custom,
-            }))
+            })),
           );
 
         if (positionsError) throw positionsError;
@@ -218,9 +221,68 @@ export function useCreateProject() {
 
       return project;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Proyecto creado exitosamente");
+
+      // Check for project creation achievements
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Count user's projects
+        const { count } = await supabase
+          .from("projects")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", user.id);
+
+        if (count !== null) {
+          // Get achievements
+          const { data: achievements } = await supabase
+            .from("achievements")
+            .select("*")
+            .in("name", ["Primer Proyecto", "Emprendedor"]);
+
+          if (achievements) {
+            for (const achievement of achievements) {
+              const requiredCount = achievement.name === "Emprendedor" ? 3 : 1;
+
+              if (count >= requiredCount) {
+                // Check if already unlocked
+                const { data: existing } = await supabase
+                  .from("user_achievements")
+                  .select("id")
+                  .eq("user_id", user.id)
+                  .eq("achievement_id", achievement.id)
+                  .maybeSingle();
+
+                if (!existing) {
+                  // Unlock achievement
+                  await supabase.from("user_achievements").insert({
+                    user_id: user.id,
+                    achievement_id: achievement.id,
+                  });
+
+                  // Show notification
+                  toast.success(`🏆 ¡Logro desbloqueado!`, {
+                    description: `${achievement.name}: ${achievement.description}`,
+                    duration: 5000,
+                  });
+
+                  // Invalidate queries
+                  queryClient.invalidateQueries({
+                    queryKey: ["user-achievements"],
+                  });
+                }
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error checking achievements:", error);
+      }
     },
     onError: (error) => {
       toast.error("Error al crear el proyecto: " + error.message);
@@ -291,7 +353,7 @@ export function useUpdateProject() {
           await supabase
             .from("project_images")
             .insert(
-              imageUrls.map((url) => ({ project_id: id, image_url: url }))
+              imageUrls.map((url) => ({ project_id: id, image_url: url })),
             );
         }
       }
@@ -305,7 +367,7 @@ export function useUpdateProject() {
               project_id: id,
               title: task.title,
               completed: task.completed,
-            }))
+            })),
           );
         }
       }
@@ -319,7 +381,7 @@ export function useUpdateProject() {
               project_id: id,
               position: pos.position,
               is_custom: pos.is_custom,
-            }))
+            })),
           );
         }
       }

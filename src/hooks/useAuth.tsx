@@ -15,7 +15,7 @@ interface AuthContextType {
   signUp: (
     email: string,
     password: string,
-    username: string
+    username: string,
   ) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -90,7 +90,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      // Force cleanup of local state
+      setSession(null);
+      setUser(null);
+
+      // Clear all supabase related items from local storage
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("sb-") && key.endsWith("-auth-token")) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
   };
 
   const resetPassword = async (email: string) => {
