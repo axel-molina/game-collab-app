@@ -60,7 +60,7 @@ export default function Auth() {
       toast.error(
         error.message === "Invalid credentials"
           ? t("auth.invalid_credentials")
-          : error.message
+          : error.message,
       );
     } else {
       toast.success(t("auth.login_welcome"));
@@ -85,6 +85,8 @@ export default function Auth() {
     if (error) {
       if (error.message.includes("already registered")) {
         toast.error(t("auth.email_already_registered"));
+      } else if (error.message === "Username already taken") {
+        toast.error(t("auth.username_taken"));
       } else {
         toast.error(error.message);
       }

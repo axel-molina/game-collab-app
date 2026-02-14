@@ -66,6 +66,7 @@
     "login_welcome": "¡Bienvenido de nuevo!",
     "invalid_credentials": "Credenciales inválidas",
     "email_already_registered": "Este email ya está registrado",
+    "username_taken": "Este nombre de usuario ya está en uso",
     "password_min_length": "La contraseña debe tener al menos 6 caracteres",
     "reset_password": "Restablecer contraseña",
     "send_reset_link": "Enviar enlace de recuperación",
