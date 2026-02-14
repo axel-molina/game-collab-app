@@ -24,7 +24,7 @@ export function useInfiniteFeed(pageSize: number = 10) {
           profiles(username, avatar_url),
           projects(id, name, engine, custom_engine),
           post_media(*)
-        `
+        `,
         )
         .order("created_at", { ascending: false })
         .range(from, to);
@@ -68,7 +68,7 @@ export function useInfiniteFeed(pageSize: number = 10) {
           profiles(username),
           project_images(id, project_id, image_url),
           project_positions(id, project_id, position, is_custom)
-        `
+        `,
         )
         .order("created_at", { ascending: false })
         .range(from, to);
@@ -104,7 +104,7 @@ export function useInfiniteFeed(pageSize: number = 10) {
 
       return {
         items: feedItems.slice(0, pageSize), // Limit to pageSize after combining
-        nextPage: feedItems.length === pageSize ? pageParam + 1 : undefined,
+        nextPage: feedItems.length >= pageSize ? pageParam + 1 : undefined,
         totalCount,
       };
     },
