@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useCollaborationRequests } from "@/hooks/useProjectCollaboration";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export function NotificationBell() {
   const { user } = useAuth();
