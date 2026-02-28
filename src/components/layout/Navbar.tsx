@@ -20,6 +20,7 @@ import {
   Box,
   Bell,
   Info,
+  Briefcase,
 } from "lucide-react";
 import logo from "../../../assets/icon.png";
 import { useTheme } from "next-themes";
@@ -33,6 +34,7 @@ import { TFunction } from "i18next";
 const getNavItems = (t: TFunction) => [
   { name: t("nav.home"), path: "/", icon: Home },
   { name: t("nav.projects"), path: "/projects", icon: Box },
+  { name: t("nav.services", "Services"), path: "/services", icon: Briefcase },
   { name: t("nav.about"), path: "/about", icon: Info },
 ];
 
@@ -79,7 +81,7 @@ export function Navbar() {
     <header
       className={cn(
         "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-200",
-        isScrolled && "shadow-sm"
+        isScrolled && "shadow-sm",
       )}
     >
       <div className="container flex h-16 items-center justify-between">

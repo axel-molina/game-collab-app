@@ -18,6 +18,9 @@ import EditPost from "./pages/edit-post/EditPost";
 import FollowingProjects from "./pages/following-projects/FollowingProjects";
 import Feedback from "./pages/feedback/Feedback";
 import NotFound from "./pages/not-found/NotFound";
+import ServiceOfferings from "./pages/service-offerings/ServiceOfferings";
+import NewServiceOffering from "./pages/new-service-offering/NewServiceOffering";
+import ServiceOfferingDetail from "./pages/service-offering-detail/ServiceOfferingDetail";
 
 const App = () => (
   <AuthProvider>
@@ -39,6 +42,9 @@ const App = () => (
         <Route path="/posts/:id/edit" element={<EditPost />} />
         <Route path="/following" element={<FollowingProjects />} />
         <Route path="/feedback" element={<Feedback />} />
+        <Route path="/services" element={<ServiceOfferings />} />
+        <Route path="/services/new" element={<NewServiceOffering />} />
+        <Route path="/services/:id" element={<ServiceOfferingDetail />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </TooltipProvider>

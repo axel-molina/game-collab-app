@@ -51,7 +51,13 @@
     "anonymous_user": "Usuario",
     "signing_out": "Cerrando sesión...",
     "sign_out": "Cerrar sesión",
-    "saved_projects": "Proyectos Guardados"
+    "saved_projects": "Proyectos Guardados",
+    "danger_zone": "Zona de Peligro",
+    "are_you_sure": "¿Estás completamente seguro?",
+    "back": "Volver",
+    "back_to_services": "Volver a servicios",
+    "cancel": "Cancelar",
+    "publishing": "Publicando..."
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -369,5 +375,42 @@
     "captcha_label": "¿Cuánto es {{num1}} + {{num2}}?",
     "captcha_placeholder": "Escribe el resultado",
     "captcha_error": "Resultado incorrecto"
+  },
+  "services": {
+    "title": "Ofrecimientos de servicio",
+    "description": "Encuentra colaboradores que ofrecen sus servicios.",
+    "subtitle": "Encuentra personas talentosas para colaborar en tus proyectos.",
+    "new": "Publicar Servicio",
+    "new_title": "Publicar Ofrecimiento de Servicio",
+    "empty_title": "Aún no hay ofrecimientos de servicio",
+    "empty_desc": "¡Sé el primero en ofrecer tus habilidades a la comunidad!",
+    "details": "Detalles del servicio",
+    "about": "Acerca de este servicio",
+    "provider": "Proveedor del servicio",
+    "view_profile": "Ver perfil",
+    "want_to_collaborate": "Quiero colaborar",
+    "contact_info": "Información de contacto",
+    "contact_desc": "Cómo contactar",
+    "delete": "Eliminar Servicio",
+    "delete_confirm": "Esta acción no se puede deshacer. Esto eliminará permanentemente tu ofrecimiento de servicio.",
+    "publish": "Publicar Servicio",
+    "created_success": "Ofrecimiento de servicio creado exitosamente",
+    "create_error": "Error al crear el ofrecimiento de servicio",
+    "deleted_success": "Ofrecimiento de servicio eliminado exitosamente",
+    "delete_error": "Error al eliminar el ofrecimiento de servicio",
+    "not_found": "Servicio no encontrado",
+    "form": {
+        "title": "Título",
+        "title_placeholder": "Ej. Disponibilidad como Modelador 3D de Personajes",
+        "specialty": "Especialidad",
+        "specialty_placeholder": "Ej. Modelado 3D, Animación, Diseño de Sonido",
+        "description": "Descripción",
+        "description_placeholder": "Describe tus habilidades, experiencia y el tipo de colaboración que buscas.",
+        "contact": "Contacto",
+        "contact_placeholder": "Email, usuario de Discord o enlace a portafolio",
+        "image": "Imagen del Servicio (Opcional)",
+        "upload_click": "Haz clic para subir",
+        "upload_drag": "o arrastra y suelta"
+    }
   }
 }

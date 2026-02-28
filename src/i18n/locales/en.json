@@ -51,7 +51,13 @@
     "anonymous_user": "User",
     "signing_out": "Signing out...",
     "sign_out": "Sign out",
-    "saved_projects": "Saved Projects"
+    "saved_projects": "Saved Projects",
+    "danger_zone": "Danger Zone",
+    "are_you_sure": "Are you absolutely sure?",
+    "back": "Back",
+    "back_to_services": "Back to Services",
+    "cancel": "Cancel",
+    "publishing": "Publishing..."
   },
   "auth": {
     "login": "Login",
@@ -370,5 +376,42 @@
     "captcha_label": "What is {{num1}} + {{num2}}?",
     "captcha_placeholder": "Enter the result",
     "captcha_error": "Incorrect result"
+  },
+  "services": {
+    "title": "Service Offerings",
+    "description": "Find collaborators offering their services.",
+    "subtitle": "Find talented people to collaborate on your projects.",
+    "new": "Publish Service",
+    "new_title": "Publish Service Offering",
+    "empty_title": "No service offerings yet",
+    "empty_desc": "Be the first to offer your skills to the community!",
+    "details": "Service Details",
+    "about": "About this service",
+    "provider": "Service Provider",
+    "view_profile": "View profile",
+    "want_to_collaborate": "I want to collaborate",
+    "contact_info": "Contact Info",
+    "contact_desc": "How to reach out",
+    "delete": "Delete Service",
+    "delete_confirm": "This action cannot be undone. This will permanently delete your service offering.",
+    "publish": "Publish Service",
+    "created_success": "Service offering created successfully",
+    "create_error": "Failed to create service offering",
+    "deleted_success": "Service offering deleted successfully",
+    "delete_error": "Failed to delete service offering",
+    "not_found": "Service not found",
+    "form": {
+        "title": "Title",
+        "title_placeholder": "e.g. 3D Character Modeler availability",
+        "specialty": "Specialty",
+        "specialty_placeholder": "e.g. 3D Modeling, Animation, Sound Design",
+        "description": "Description",
+        "description_placeholder": "Describe your skills, experience, and the kind of collaboration you are looking for.",
+        "contact": "Contact",
+        "contact_placeholder": "Email, Discord username, or portfolio link",
+        "image": "Service Image (Optional)",
+        "upload_click": "Click to upload",
+        "upload_drag": "or drag and drop"
+    }
   }
 }
