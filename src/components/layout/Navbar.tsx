@@ -34,7 +34,7 @@ import { TFunction } from "i18next";
 const getNavItems = (t: TFunction) => [
   { name: t("nav.home"), path: "/", icon: Home },
   { name: t("nav.projects"), path: "/projects", icon: Box },
-  { name: t("nav.services", "Services"), path: "/services", icon: Briefcase },
+  { name: t("nav.services"), path: "/services", icon: Briefcase },
   { name: t("nav.about"), path: "/about", icon: Info },
 ];
 
