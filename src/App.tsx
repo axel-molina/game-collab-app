@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/index/Index";
 import Auth from "./pages/auth/Auth";
+import ResetPassword from "./pages/auth/ResetPassword";
 import News from "./pages/news/News";
 import About from "./pages/about/About";
 import Profile from "./pages/profile/Profile";
@@ -30,6 +31,7 @@ const App = () => (
       <Routes>
         <Route path="/" element={<News />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/auth/reset-password" element={<ResetPassword />} />
         <Route path="/projects" element={<Index />} />
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
