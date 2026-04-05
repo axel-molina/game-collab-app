@@ -112,7 +112,7 @@ src/
 
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más información.
+Este proyecto está bajo la Licencia GNU AGPL V3.0. Consulta el archivo [LICENSE](LICENSE) para más información.
 
 ## 🤝 Contribuir
 
