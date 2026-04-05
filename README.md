@@ -1,5 +1,11 @@
 # 🎮 GameCollab
 
+## Copyright
+
+Copyright (C) 2026 GameCollab
+
+This project is licensed under the GNU Affero General Public License v3.0.
+
 GameCollab es una plataforma para conectar desarrolladores de videojuegos, permitiendo a los usuarios encontrar equipos para sus proyectos o unirse a iniciativas existentes. La aplicación facilita la colaboración entre programadores, artistas, diseñadores y otros profesionales del desarrollo de videojuegos.
 
 ## 🚀 Características
@@ -106,7 +112,7 @@ src/
 
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más información.
+Este proyecto está bajo la Licencia GNU AGPL V3.0. Consulta el archivo [LICENSE](LICENSE) para más información.
 
 ## 🤝 Contribuir
 
