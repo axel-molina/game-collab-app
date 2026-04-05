@@ -4,6 +4,7 @@ export const ENGINES = [
   { value: "gamemaker", label: "Game Maker" },
   { value: "unreal", label: "Unreal Engine" },
   { value: "rpgmaker", label: "RPG Maker" },
+  { value: "creative-engine", label: "Creative Engine" },
   { value: "other", label: "Otro" },
 ] as const;
 
@@ -43,6 +44,7 @@ export function getEngineColor(engine: string): string {
     gamemaker: "bg-engine-gamemaker",
     unreal: "bg-engine-unreal",
     rpgmaker: "bg-engine-rpgmaker",
+    "creative-engine": "bg-engine-creative-engine",
     other: "bg-engine-other",
   };
   return colors[engine] || colors.other;

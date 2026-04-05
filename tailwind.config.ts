@@ -60,6 +60,7 @@ export default {
           gamemaker: "hsl(var(--engine-gamemaker))",
           unreal: "hsl(var(--engine-unreal))",
           rpgmaker: "hsl(var(--engine-rpgmaker))",
+          "creative-engine": "hsl(var(--engine-creative-engine))",
           other: "hsl(var(--engine-other))",
         },
       },
