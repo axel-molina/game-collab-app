@@ -2,31 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 
-// Load environment variables manually since this is a script
-const envPath = path.resolve(process.cwd(), '.env');
-const envContent = fs.readFileSync(envPath, 'utf8');
-const envVariables = {};
-envContent.split('\n').forEach(line => {
-  const [key, ...valueParts] = line.split('=');
-  if (key && valueParts.length > 0) {
-    let value = valueParts.join('=').trim();
-    if (value.startsWith('"') && value.endsWith('"')) {
-      value = value.slice(1, -1);
-    }
-    envVariables[key.trim()] = value;
-  }
-});
-
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || envVariables['VITE_SUPABASE_URL'];
-const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || envVariables['VITE_SUPABASE_PUBLISHABLE_KEY'];
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
+const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error("Missing Supabase credentials in .env file");
+  console.error("Missing Supabase credentials. Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY environment variables.");
   process.exit(1);
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const SITE_URL = 'https://gamecollab.site';
+const SITE_URL = process.env.SITE_URL || 'https://gamecollab.site';
 
 async function generateSitemap() {
   const urls = [];
