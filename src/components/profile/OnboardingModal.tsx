@@ -161,12 +161,12 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
               />
               <p
                 className={`text-xs text-right ${
-                  bio.length > 300
+                  bio.length > 500
                     ? "text-destructive font-bold"
                     : "text-muted-foreground"
                 }`}
               >
-                {t("posts.characters", { count: bio.length, max: 300 })}
+                {t("posts.characters", { count: bio.length, max: 500 })}
               </p>
             </div>
           )}
@@ -275,7 +275,7 @@ export function OnboardingModal({ profile }: OnboardingModalProps) {
             {step < 3 ? (
               <Button
                 onClick={nextStep}
-                disabled={step === 1 && bio.length > 300}
+                disabled={step === 1 && bio.length > 500}
               >
                 {t("profile.onboarding.continue")}
                 <ArrowRight className="h-4 w-4 ml-2" />

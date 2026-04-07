@@ -153,7 +153,7 @@
     "no_projects": "You don't have any published projects. Create a project first to be able to publish posts.",
     "title_label": "Title",
     "title_placeholder": "Post title",
-    "characters": "{{count}}/100 characters",
+    "characters": "{{count}}/500 characters",
     "content_label": "Content",
     "write": "Write",
     "preview": "Preview",

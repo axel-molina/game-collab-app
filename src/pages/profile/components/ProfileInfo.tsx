@@ -66,6 +66,12 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
     }
   };
 
+  const validateBio = () => {
+    if (bio.length > 500) {
+      throw new Error("Bio is too long");
+    }
+  };
+
   useEffect(() => {
     if (profile) {
       setBio(profile.bio || "");
@@ -75,6 +81,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
   }, [profile]);
 
   const handleSave = async () => {
+    validateBio();
     await updateProfile.mutateAsync({
       bio,
       role_ids: selectedRoles,
@@ -87,7 +94,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
     setSelectedRoles((prev) =>
       prev.includes(roleId)
         ? prev.filter((id) => id !== roleId)
-        : [...prev, roleId]
+        : [...prev, roleId],
     );
   };
 
@@ -95,9 +102,11 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
     setSelectedTechs((prev) =>
       prev.includes(techId)
         ? prev.filter((id) => id !== techId)
-        : [...prev, techId]
+        : [...prev, techId],
     );
   };
+
+  console.log(bio.length);
 
   return (
     <Card>
@@ -152,19 +161,19 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 className={`min-h-[100px] resize-none ${
-                  bio.length > 300
+                  bio.length > 500
                     ? "border-destructive focus-visible:ring-destructive"
                     : ""
                 }`}
               />
               <p
                 className={`text-xs text-right mt-1 ${
-                  bio.length > 300
+                  bio.length > 500
                     ? "text-destructive font-bold"
                     : "text-muted-foreground"
                 }`}
               >
-                {t("posts.characters", { count: bio.length, max: 300 })}
+                {t("posts.characters", { count: bio.length, max: 500 })}
               </p>
             </>
           ) : (
@@ -192,7 +201,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
                   />
                   {roleSearch &&
                     !allRoles?.some(
-                      (r) => r.name.toLowerCase() === roleSearch.toLowerCase()
+                      (r) => r.name.toLowerCase() === roleSearch.toLowerCase(),
                     ) && (
                       <Button
                         type="button"
@@ -296,7 +305,7 @@ export function ProfileInfo({ profile, user }: ProfileInfoProps) {
           <div className="flex justify-end pt-4">
             <Button
               onClick={handleSave}
-              disabled={updateProfile.isPending || bio.length > 300}
+              disabled={updateProfile.isPending || bio.length > 500}
             >
               {updateProfile.isPending && (
                 <Plus className="mr-2 h-4 w-4 animate-spin" />

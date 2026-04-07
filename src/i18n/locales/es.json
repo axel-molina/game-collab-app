@@ -153,7 +153,7 @@
     "no_projects": "No tienes proyectos publicados. Crea un proyecto primero para poder publicar posts.",
     "title_label": "Título",
     "title_placeholder": "Título de la novedad",
-    "characters": "{{count}}/100 caracteres",
+    "characters": "{{count}}/500 caracteres",
     "content_label": "Contenido",
     "write": "Escribir",
     "preview": "Vista Previa",
