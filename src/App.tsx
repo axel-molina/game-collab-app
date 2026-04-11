@@ -22,6 +22,7 @@ import NotFound from "./pages/not-found/NotFound";
 import ServiceOfferings from "./pages/service-offerings/ServiceOfferings";
 import NewServiceOffering from "./pages/new-service-offering/NewServiceOffering";
 import ServiceOfferingDetail from "./pages/service-offering-detail/ServiceOfferingDetail";
+import Donaciones from "./pages/donaciones/Donaciones";
 
 const App = () => (
   <AuthProvider>
@@ -47,6 +48,7 @@ const App = () => (
         <Route path="/services" element={<ServiceOfferings />} />
         <Route path="/services/new" element={<NewServiceOffering />} />
         <Route path="/services/:id" element={<ServiceOfferingDetail />} />
+        <Route path="/donaciones" element={<Donaciones />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </TooltipProvider>

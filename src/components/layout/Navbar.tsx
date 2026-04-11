@@ -21,6 +21,7 @@ import {
   Bell,
   Info,
   Briefcase,
+  Heart,
 } from "lucide-react";
 import logo from "../../../assets/icon.png";
 import { useTheme } from "next-themes";
@@ -36,6 +37,7 @@ const getNavItems = (t: TFunction) => [
   { name: t("nav.projects"), path: "/projects", icon: Box },
   { name: t("nav.services"), path: "/services", icon: Briefcase },
   { name: t("nav.about"), path: "/about", icon: Info },
+  { name: "Donaciones", path: "/donaciones", icon: Heart },
 ];
 
 export function Navbar() {

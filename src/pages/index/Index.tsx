@@ -8,6 +8,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import Hero from "@/components/shared/Hero";
 import { RecommendedProjects } from "./components/RecommendedProjects";
 import { SEO } from "@/components/shared/SEO";
+import { ThanksModal } from "@/components/shared/ThanksModal";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -36,6 +37,7 @@ const Index = () => {
       />
       {/* Hero */}
       <Hero />
+      <ThanksModal />
       <div id="projects-list" className="container mb-4">
         {/* Recommended Projects (if any) */}
         <RecommendedProjects />
